@@ -1,4 +1,4 @@
-<!-- VERSION: v5.4 -->
+<!-- VERSION: v5.6 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,7 +162,7 @@
       <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
       <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-2">
         <p data-i18n="prepStep1">• Click <b>"Ready, Start Practice"</b> to enter the ticketing session.</p>
-        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session selection menu!</p>
+        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the date selection menu!</p>
         <p class="text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200/70 font-medium leading-normal" data-i18n="prepStep3">
           • Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!
         </p>
@@ -433,6 +433,7 @@
 
   </div>
 
+  <!-- Date Selection Menu Modal -->
   <div id="drawer-date-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex flex-col justify-end">
     <div id="drawer-date-panel" class="w-full bg-white rounded-t-2xl p-4 drawer-enter flex flex-col max-h-[80vh] shadow-2xl">
       <div class="flex items-center justify-between pb-3 border-b border-gray-100">
@@ -562,18 +563,18 @@
         </div>
       </div>
 
-      <!-- Mobile Authentic Global Pass Top Sticky Header (< 768px) -->
+      <!-- Mobile Authentic Global Pass Top Sticky Header (< 768px) matching screenshot 4 -->
       <div class="flex md:hidden bg-white border-b border-gray-200 flex-col shrink-0 text-xs">
         <!-- Row 1: Title & Close -->
         <div class="px-3 py-2.5 flex items-center justify-between border-b border-gray-100">
-          <span class="font-bold text-sm text-gray-900 tracking-tight">WORLD TOUR LIVE IN SEOUL</span>
+          <span class="font-bold text-sm text-gray-900 tracking-tight">2027 EPIK HIGH CONCERT</span>
           <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-400 hover:text-gray-700 text-lg font-light px-1 leading-none">✕</button>
         </div>
 
         <!-- Row 2: Authentic Date & Zone Status Rows -->
-        <div class="flex items-center bg-gray-50 px-3 py-2 gap-3">
+        <div class="flex items-center bg-gray-100/80 px-3 py-2 gap-3">
           <!-- Mini Map Thumbnail Preview Box -->
-          <div class="w-10 h-10 bg-white border border-gray-300 rounded shrink-0 flex items-center justify-center p-0.5 overflow-hidden relative">
+          <div class="w-11 h-11 bg-white border border-gray-300 rounded shrink-0 flex items-center justify-center p-0.5 overflow-hidden relative">
             <svg viewBox="0 0 760 520" class="w-full h-auto select-none">
               <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="#e2e8f0"/>
               <rect x="206" y="85" width="168" height="110" fill="#b79b71"/>
@@ -584,15 +585,15 @@
           <!-- Date & Zone Interactive Rows -->
           <div class="flex-1 flex flex-col space-y-1">
             <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
-              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 truncate">Sat, Oct 31, 2026 06:00 PM</span>
-              <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-[#2563EB] font-bold flex items-center space-x-0.5 shrink-0 pl-2">
-                <span>↺ Date</span>
+              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 text-[11px] truncate">Fri, Jan 22, 2027 08:00 PM</span>
+              <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+                <span>↻ Date</span>
               </button>
             </div>
             <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
-              <span id="mobile-sticky-zone-label" class="font-medium text-gray-800 truncate">Select Section</span>
-              <button type="button" onclick="app.backToVenue()" class="text-[11px] text-[#2563EB] font-bold flex items-center space-x-0.5 shrink-0 pl-2">
-                <span>↺ Zone</span>
+              <span id="mobile-sticky-zone-label" class="font-medium text-gray-800 text-[11px] truncate">Please select a grade first</span>
+              <button type="button" onclick="app.backToVenue()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+                <span>↻ Zone</span>
               </button>
             </div>
           </div>
@@ -1421,15 +1422,6 @@
       },
 
       startWaitingQueue() {
-        // 35% 403 test probability on entering queue/session
-        if (Math.random() < 0.35) {
-          const msg = this.currentLang === 'zh'
-            ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
-            : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
-          this.showMelonAlert(msg);
-          return;
-        }
-
         this.state = 'QUEUE';
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.remove('hidden');
@@ -1452,16 +1444,11 @@
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        // Total duration set strictly between 5.0 to 7.0 seconds
-        const totalDurationSec = 5.0 + Math.random() * 2.0;
+        const totalDurationSec = 3.6 + Math.random() * 1.8;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
         const averageStep = Math.max(1, Math.ceil(this.queueInitialTotal / totalTicks));
         let tickCount = 0;
-
-        // Single realistic estimated wait time (not a range, calculated once from initial queue position)
-        const initialEstSec = Math.max(45, Math.floor((this.queueInitialTotal / 1200) * 22));
-        this.updateSingleEstimatedTime(estElem, initialEstSec);
 
         clearInterval(this.queueTimer);
         this.queueTimer = setInterval(() => {
@@ -1472,8 +1459,10 @@
 
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-            const currentEstSec = Math.max(4, Math.round(initialEstSec * (this.queueNumber / this.queueInitialTotal)));
-            this.updateSingleEstimatedTime(estElem, currentEstSec);
+            const secLeft = Math.max(1, Math.ceil((totalTicks - tickCount) * (tickIntervalMs / 1000)));
+            if (estElem) {
+              estElem.innerText = this.currentLang === 'zh' ? `0分 0${secLeft}秒` : `0min 0${secLeft}sec`;
+            }
           } else {
             clearInterval(this.queueTimer);
             this.queueNumber = 0;
@@ -1483,29 +1472,26 @@
             }
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
+              
+              // 403 Server Traffic Jam Check at the END of Waiting Queue (35% test probability)
+              if (Math.random() < 0.35) {
+                const msg = this.currentLang === 'zh'
+                  ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
+                  : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
+                this.showMelonAlert(msg);
+                return;
+              }
+
               this.openSeatmapWorkspace();
             }, 300);
           }
         }, tickIntervalMs);
       },
 
-      updateSingleEstimatedTime(elem, totalSecs) {
-        if (!elem) return;
-        const m = Math.floor(totalSecs / 60);
-        const s = totalSecs % 60;
-        const sStr = s < 10 ? '0' + s : s;
-        if (this.currentLang === 'zh') {
-          elem.innerText = m > 0 ? `${m}分 ${sStr}秒` : `${s}秒`;
-        } else {
-          elem.innerText = m > 0 ? `${m}min ${sStr}sec` : `${s}sec`;
-        }
-      },
-
       cancelWaitingQueue() {
         clearInterval(this.queueTimer);
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.add('hidden');
-        // Fully reset selected section and seats so user returns to clean main venue map
         this.selectedSection = null;
         this.selectedSeats = [];
       },
@@ -1710,7 +1696,7 @@
         if (svgWrap) svgWrap.classList.remove('hidden');
         if (notice) notice.classList.remove('hidden');
         if (backBtn) backBtn.classList.add('hidden');
-        if (mobileZoneLabel) mobileZoneLabel.innerText = this.currentLang === 'zh' ? '選擇區域' : 'Select Section';
+        if (mobileZoneLabel) mobileZoneLabel.innerText = this.currentLang === 'zh' ? '請先選擇區域' : 'Please select a grade first';
         
         this.selectedSection = null;
         this.selectedSeats = [];
@@ -1740,21 +1726,11 @@
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeR;
         const isFloor = sectionName.startsWith('Floor');
 
-        // Distinct layouts: Floor sections are full dense rectangular grids without empty edge cutouts
-        const floorConfig = [
-          { row: 1, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 2, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 3, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 4, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 5, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 6, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 7, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 8, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 9, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 10, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 11, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
-          { row: 12, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 }
-        ];
+        // Upgraded Floor Matrix: 16 rows, 20 seats per row (Dense Standing Arena)
+        const floorConfig = [];
+        for (let r = 1; r <= 16; r++) {
+          floorConfig.push({ row: r, leftEmpty: 0, leftCols: 10, midCols: 10, rightCols: 0, rightEmpty: 0 });
+        }
 
         const grandstandConfig = [
           { row: 1,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 5, rightEmpty: 1 },
@@ -1842,7 +1818,8 @@
       },
 
       createSeatCube(sectionName, row, colIdentifier, theme, isFloor) {
-        const availThreshold = isFloor ? 0.12 : (row <= 6 ? 0.88 : 0.76);
+        // Floor sections (VIP standing) have higher initial occupancy (fewer available seats) and deplete much faster
+        let availThreshold = isFloor ? 0.45 : (row <= 6 ? 0.88 : 0.76);
         const isAvail = Math.random() > availThreshold;
         const seatId = `${sectionName}-R${row}-${colIdentifier}`;
 
@@ -1959,7 +1936,9 @@
           available.sort(() => 0.5 - Math.random());
         }
 
-        const toDeplete = Math.min(available.length, count);
+        // Floor sections deplete 2.5x faster to mimic high-demand standing arena
+        const multiplier = (this.selectedSection && this.selectedSection.startsWith('Floor')) ? 2.5 : 1.0;
+        const toDeplete = Math.min(available.length, Math.ceil(count * multiplier));
         const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeR;
 
         for (let i = 0; i < toDeplete; i++) {
