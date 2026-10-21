@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v6.2 -->
+  <!-- VERSION: v6.3 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -554,7 +554,7 @@
 
           <div class="flex-1 flex flex-col space-y-1">
             <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
-              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 text-[11px] truncate">Fri, Jan 22, 2027 08:00 PM</span>
+              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 text-[11px] truncate">Sat, Oct 31, 2026 06:00 PM</span>
               <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
                 <span>↻ Date</span>
               </button>
@@ -571,7 +571,7 @@
 
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
-        <!-- Desktop Layout matched to Melon Image 1: Main Venue Map left, Sidebar right -->
+        <!-- Main Venue Map left, Sidebar right -->
         <div class="flex-1 bg-white relative p-2 sm:p-4 flex flex-col items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
           
           <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-500 text-center max-w-xl mb-2 leading-relaxed shrink-0 font-medium" data-i18n="venueNoticeText">
@@ -603,7 +603,7 @@
           </div>
         </div>
 
-        <!-- Desktop Right Sidebar matched to Melon Image 1 & 5 -->
+        <!-- Desktop Right Sidebar -->
         <div class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
           <div>
             <!-- Desktop Mini Map Container (Always visible in Melon style) -->
@@ -1327,6 +1327,11 @@
       selectMobileDateSession(idx) {
         this.selectDate(idx);
         this.closeMobileDateDrawer();
+
+        if (this.selectedSection) {
+          this.backToVenue();
+          return;
+        }
 
         const spinner = document.getElementById('view-spinner');
         if (spinner) spinner.classList.remove('hidden');
