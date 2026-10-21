@@ -481,6 +481,10 @@
               <span class="font-mono font-bold text-[#2563EB]" id="res-total-time">-</span>
             </div>
             <div class="flex justify-between">
+              <span class="text-gray-500" data-i18n="statReactionTime">Opening Click Reaction:</span>
+              <span class="font-mono font-bold text-indigo-600" id="res-reaction-time">-</span>
+            </div>
+            <div class="flex justify-between">
               <span class="text-gray-500" data-i18n="statCaptchaTime">Captcha Entry Time:</span>
               <span class="font-mono font-bold text-emerald-600" id="res-captcha-time">-</span>
             </div>
@@ -531,14 +535,28 @@
 
     <!-- ================= 7. START PRACTICE PREPARATION OVERLAY (Always on Top Initially) ================= -->
     <div id="ready-prep-overlay" class="absolute inset-0 bg-white/95 backdrop-blur-[2px] z-50 flex items-center justify-center p-4">
-      <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-2xl text-center animate-fade-in">
+      <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-2xl text-center animate-fade-in relative">
+        
+        <!-- Language Switcher inside Preparation Card -->
+        <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-3.5 border border-gray-200">
+          <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3 py-1 rounded-full text-xs transition-all cursor-pointer">
+            English
+          </button>
+          <button type="button" id="prep-lang-btn-zh" onclick="app.setLanguage('zh')" class="text-gray-500 hover:text-gray-900 font-medium px-3 py-1 rounded-full text-xs transition-all cursor-pointer">
+            繁體中文
+          </button>
+        </div>
+
         <div class="inline-block px-3 py-1 bg-blue-50 text-[#2563EB] border border-blue-200 text-xs font-bold rounded-full mb-3" data-i18n="prepBadge">
           Global Ticket Simulator
         </div>
         <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
-        <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-1.5">
+        <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-2">
           <p data-i18n="prepStep1">• Click <b>"Ready, Start Countdown"</b> to begin the realistic pre-sale countdown.</p>
           <p data-i18n="prepStep2">• Once the countdown reaches 00:00, ticketing opens. Select a date and click <b>Get Tickets</b>.</p>
+          <p class="text-amber-700 bg-amber-50 p-2 rounded border border-amber-200/60 font-medium" data-i18n="prepStep3">
+            ※ Queue order is assigned based on how fast you click the instant the countdown finishes, requiring a brief queue wait. Stay sharp and click the moment it opens!
+          </p>
         </div>
         <button type="button" onclick="app.startPracticeFromPrep()" class="w-full py-3.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer" data-i18n="prepStartBtn">
           Ready, Start Countdown
@@ -610,6 +628,7 @@
         successSubheading: "You successfully locked the ticket before competitors!",
         statSelectedSeats: "Selected Seats:",
         statTotalTime: "Total Practice Elapsed:",
+        statReactionTime: "Opening Reaction Speed:",
         statCaptchaTime: "Captcha Entry Time:",
         statTryAgainCount: "\"Please Try Again\" Overcome:",
         statConflictCount: "Seat Conflicts (Another Customer):",
@@ -620,6 +639,7 @@
         prepHeading: "Ticketing Practice Session",
         prepStep1: "• Click <b>\"Ready, Start Countdown\"</b> to begin the realistic pre-sale countdown.",
         prepStep2: "• Once the countdown reaches 00:00, ticketing opens. Select a date and click <b>Get Tickets</b>.",
+        prepStep3: "※ Queue order is assigned based on how fast you click the instant the countdown finishes, requiring a brief queue wait. Stay sharp and click the moment it opens!",
         prepStartBtn: "Ready, Start Countdown",
         footerDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice.",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
@@ -648,6 +668,8 @@
         adviceRapidSubmit: "💡 Key Takeaway: Double-clicking submit caused rate-limiting. Dismiss alerts calmly and click 'Seat Selection Completed' with a deliberate 400ms rhythm.",
         adviceBot: "💡 Key Takeaway: Transitioning from seat selection to submit under 250ms mimics automation bots. Maintain a natural 300–450ms human stroke pace.",
         adviceSlowCaptcha: "💡 Key Takeaway: Captcha verification took over 4.0s. Practice typing 6 uppercase letters blindly to save critical seconds!",
+        adviceSlowReaction: "💡 Key Takeaway: Opening click latency took over {time}s. Many competitors slipped ahead into the queue! Aim to click within 400ms of countdown completion.",
+        adviceFastReaction: "⚡ Outstanding Reaction: Lightning-fast opening click ({ms}ms) secured a top-tier queue order!",
         adviceGood: "💡 Key Takeaway: Clean rhythm! You handled server concurrency hurdles efficiently without triggering user-induced rate limits."
       },
       zh: {
@@ -695,6 +717,7 @@
         successSubheading: "恭喜您在激烈競爭中成功搶下門票！",
         statSelectedSeats: "選定座位：",
         statTotalTime: "本次練習總耗時：",
+        statReactionTime: "開賣點擊反應：",
         statCaptchaTime: "驗證碼輸入耗時：",
         statTryAgainCount: "克服「Please Try Again」次數：",
         statConflictCount: "遭遇座位被搶付款衝突次數：",
@@ -705,6 +728,7 @@
         prepHeading: "搶票實戰練習模式",
         prepStep1: "• 點擊 <b>「準備完成，開始倒數」</b> 啟動真實預售即時倒數計時。",
         prepStep2: "• 倒數歸零（00:00）後立即開賣，確認日期後點擊 <b>立即購票</b> 搶進排隊室。",
+        prepStep3: "※ 倒數結束後，系統會根據你的點擊反應速度給予真實排隊序號，因此進入時需要稍微等待排隊推進。請集中注意力在按鈕變亮的那一刻！",
         prepStartBtn: "準備完成，開始倒數",
         footerDisclaimer: "※ 獨立搶票模擬練習工具，專供測試反應手速與實戰演練使用。",
         countdownPrefix: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 剩餘時間: ",
@@ -733,6 +757,8 @@
         adviceRapidSubmit: "💡 實戰改進建議：連續狂按確認引發了二次送出錯誤。遇到警告時請保持從容，以約 400ms 的穩定間隔再次點擊送出。",
         adviceBot: "💡 實戰改進建議：點下座位到按送出小於 250ms 會被伺服器誤判為自動化腳本，請保持 300～450ms 的自然人手敲擊節奏。",
         adviceSlowCaptcha: "💡 實戰改進建議：驗證碼耗時超過 4.0 秒。建議多練習盲打 6 碼大寫英文字母，縮短進入選位盤的時間！",
+        adviceSlowReaction: "💡 實戰改進建議：開賣點擊延遲了 {time} 秒，導致排隊序號被千名對手超前！建議倒數最後 1 秒將手指緊貼滑鼠左鍵預備，爭取 400ms 內點擊。",
+        adviceFastReaction: "⚡ 神經刀級手速：開賣點擊反應極快（{ms}ms），成功卡位前排排隊序號！",
         adviceGood: "💡 實戰改進建議：節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
       }
     };
@@ -965,13 +991,19 @@
         this.currentLang = lang;
         const btnEn = document.getElementById('lang-btn-en');
         const btnZh = document.getElementById('lang-btn-zh');
+        const prepBtnEn = document.getElementById('prep-lang-btn-en');
+        const prepBtnZh = document.getElementById('prep-lang-btn-zh');
 
         if (lang === 'zh') {
           if (btnZh) btnZh.className = 'text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors';
           if (btnEn) btnEn.className = 'text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
+          if (prepBtnZh) prepBtnZh.className = 'text-[#2563EB] bg-white font-bold shadow-sm px-3 py-1 rounded-full text-xs transition-all cursor-pointer';
+          if (prepBtnEn) prepBtnEn.className = 'text-gray-500 hover:text-gray-900 font-medium px-3 py-1 rounded-full text-xs transition-all cursor-pointer';
         } else {
           if (btnEn) btnEn.className = 'text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors';
           if (btnZh) btnZh.className = 'text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
+          if (prepBtnEn) prepBtnEn.className = 'text-[#2563EB] bg-white font-bold shadow-sm px-3 py-1 rounded-full text-xs transition-all cursor-pointer';
+          if (prepBtnZh) prepBtnZh.className = 'text-gray-500 hover:text-gray-900 font-medium px-3 py-1 rounded-full text-xs transition-all cursor-pointer';
         }
 
         this.applyLanguage();
@@ -1158,14 +1190,14 @@
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         this.updateQueueEstimatedTime(estElem, this.queueNumber);
 
-        // Realistic, suspenseful pace: steps every 450ms, draining smoothly over 9 ~ 16 seconds
+        // Faster, realistic pace: updates every 220ms, draining in approximately 3.5 ~ 5.2 seconds
         clearInterval(this.queueTimer);
-        const totalEstimatedSteps = Math.floor(Math.random() * 8) + 20; // 20-28 ticks (~10-14 seconds)
+        const totalEstimatedSteps = Math.floor(Math.random() * 5) + 16; // 16-20 ticks (~3.5-4.5s)
         const stepBase = Math.max(1, Math.ceil(this.queueInitialTotal / totalEstimatedSteps));
 
         this.queueTimer = setInterval(() => {
           // Dynamic drain jitter
-          const jitterPercent = 0.7 + Math.random() * 0.6;
+          const jitterPercent = 0.8 + Math.random() * 0.5;
           const drain = Math.max(1, Math.floor(stepBase * jitterPercent));
           this.queueNumber -= drain;
 
@@ -1182,15 +1214,15 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               this.openSeatmapWorkspace();
-            }, 600);
+            }, 450);
           }
-        }, 460);
+        }, 220);
       },
 
       updateQueueEstimatedTime(elem, remaining) {
         if (!elem) return;
-        // Remaining time approximation
-        const approxSeconds = Math.max(2, Math.ceil((remaining / this.queueInitialTotal) * 14));
+        // Remaining time approximation scaled for the faster waiting progression
+        const approxSeconds = Math.max(1, Math.ceil((remaining / this.queueInitialTotal) * 5));
         const mins = Math.floor(approxSeconds / 60);
         const secs = approxSeconds % 60;
         if (this.currentLang === 'zh') {
@@ -1733,9 +1765,15 @@
       handleBookingSuccess() {
         const elapsedSec = ((Date.now() - this.practiceStartTime) / 1000).toFixed(2);
         const captchaSec = this.captchaDurationSec ? `${this.captchaDurationSec}s` : (this.currentLang === 'zh' ? '已預覽跳過' : 'Previewed');
+        const reactionStr = this.reactionLatencyMs 
+          ? (this.reactionLatencyMs >= 1000 
+              ? `${(this.reactionLatencyMs / 1000).toFixed(2)}s (#${this.queueInitialTotal})` 
+              : `${this.reactionLatencyMs}ms (#${this.queueInitialTotal})`)
+          : '-';
 
         const seatLabel = document.getElementById('res-seat-label');
         const timeLabel = document.getElementById('res-total-time');
+        const reactionLabel = document.getElementById('res-reaction-time');
         const captchaLabel = document.getElementById('res-captcha-time');
         const tryAgainLabel = document.getElementById('res-tryagain-count');
         const conflictLabel = document.getElementById('res-conflict-count');
@@ -1746,6 +1784,7 @@
           seatLabel.innerText = seatNames || (this.currentLang === 'zh' ? '已成功鎖定' : 'Secured');
         }
         if (timeLabel) timeLabel.innerText = `${elapsedSec}s`;
+        if (reactionLabel) reactionLabel.innerText = reactionStr;
         if (captchaLabel) captchaLabel.innerText = captchaSec;
         if (tryAgainLabel) tryAgainLabel.innerText = `${this.tryAgainCount} ${this.t('unitTimes')}`;
         if (conflictLabel) conflictLabel.innerText = `${this.conflictCount} ${this.t('unitTimes')}`;
@@ -1782,8 +1821,12 @@
             adviceBox.innerText = this.t('adviceRapidSubmit');
           } else if (this.diagnosticsHistory.some(d => d.category === 'Bot Detection')) {
             adviceBox.innerText = this.t('adviceBot');
+          } else if (this.reactionLatencyMs && this.reactionLatencyMs > 1100) {
+            adviceBox.innerText = this.t('adviceSlowReaction').replace('{time}', (this.reactionLatencyMs / 1000).toFixed(2));
           } else if (this.captchaDurationSec && parseFloat(this.captchaDurationSec) > 4.0) {
             adviceBox.innerText = this.t('adviceSlowCaptcha');
+          } else if (this.reactionLatencyMs && this.reactionLatencyMs < 400) {
+            adviceBox.innerText = this.t('adviceFastReaction').replace('{ms}', this.reactionLatencyMs);
           } else {
             adviceBox.innerText = this.t('adviceGood');
           }
