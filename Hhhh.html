@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v6.1 -->
+  <!-- VERSION: v6.2 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -932,7 +932,7 @@
         adviceRapidSubmit: "💡 實戰改進建議：連續狂按確認引發了二次送出錯誤。遇到警告時請保持從容以約 400ms 間隔再按。",
         adviceBot: "💡 實戰改進建議：點下座位到按送出小於 250ms會被伺服器誤判為腳本，請保持 300～450ms 人手敲擊節奏。",
         adviceSlowCaptcha: "💡 實戰改進建議：驗證碼耗時超過 4.0 秒。建議多練習盲打 6 碼大寫英文字母！",
-        adviceGood: "💡 實戰改進建議：節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
+        adviceGood: "💡 實戰改進建議 : 節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
       }
     };
 
@@ -988,22 +988,22 @@
 
         <g class="${blockClass}" data-section="Floor F1" onclick="app.onSectionSelectedTrigger('Floor F1', 'gradeVIP')">
           <rect x="206" y="85" width="168" height="110" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="290" y="152" fill="#ffffff" font-size="${isMini ? '16' : '22'}" font-weight="bold" text-anchor="middle">F1</text>
+          <text x="290" y="152" fill="#ffffff" font-size="${isMini ? '15' : '20'}" font-weight="bold" text-anchor="middle">F1</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F2" onclick="app.onSectionSelectedTrigger('Floor F2', 'gradeVIP')">
           <rect x="386" y="85" width="168" height="110" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="470" y="152" fill="#ffffff" font-size="${isMini ? '16' : '22'}" font-weight="bold" text-anchor="middle">F2</text>
+          <text x="470" y="152" fill="#ffffff" font-size="${isMini ? '15' : '20'}" font-weight="bold" text-anchor="middle">F2</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F3" onclick="app.onSectionSelectedTrigger('Floor F3', 'gradeVIP')">
           <polygon points="206,203 374,203 374,295 252,295 206,249" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="290" y="260" fill="#ffffff" font-size="${isMini ? '16' : '22'}" font-weight="bold" text-anchor="middle">F3</text>
+          <text x="290" y="260" fill="#ffffff" font-size="${isMini ? '15' : '20'}" font-weight="bold" text-anchor="middle">F3</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F4" onclick="app.onSectionSelectedTrigger('Floor F4', 'gradeVIP')">
           <polygon points="386,203 554,203 554,249 508,295 386,295" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="470" y="260" fill="#ffffff" font-size="${isMini ? '16' : '22'}" font-weight="bold" text-anchor="middle">F4</text>
+          <text x="470" y="260" fill="#ffffff" font-size="${isMini ? '15' : '20'}" font-weight="bold" text-anchor="middle">F4</text>
         </g>
 
         <g>
@@ -1481,7 +1481,7 @@
       },
 
       promptCaptcha() {
-        if (this.captchaVerified) return;
+        this.captchaVerified = false;
         const modal = document.getElementById('modal-captcha');
         if (modal) modal.classList.remove('hidden');
         const input = document.getElementById('captcha-input');
