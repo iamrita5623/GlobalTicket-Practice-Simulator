@@ -1,1452 +1,1979 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Melon Ticket Global Simulator - KSPO DOME</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+TC:wght@400;500;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <style>
-    body {
-      font-family: 'Inter', 'Noto Sans TC', 'Noto Sans KR', sans-serif;
-      background-color: #f3f4f6;
-      user-select: none;
-      -webkit-user-select: none;
-      touch-action: manipulation;
-    }
-
-    /* Modal Transitions */
-    .modal-backdrop {
-      background-color: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(2px);
-    }
-
-    /* SVG Hover & Selected Feedback */
-    .kspo-block {
-      cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
-    }
-    .kspo-block:hover {
-      filter: brightness(1.15) drop-shadow(0 4px 6px rgba(0, 0, 0, 0.25));
-      opacity: 0.92;
-    }
-    .kspo-block:active {
-      transform: scale(0.985);
-    }
-    .mini-kspo-block {
-      cursor: pointer;
-      transition: filter 0.12s ease;
-    }
-    .mini-kspo-block:hover {
-      filter: brightness(1.2);
-    }
-    .mini-kspo-block.active-section {
-      stroke: #1e293b !important;
-      stroke-width: 3.5px !important;
-      filter: brightness(1.1) drop-shadow(0 0 5px rgba(37,99,235,0.8));
-    }
-
-    /* Seat Grid Cubes */
-    .seat-cube {
-      width: 14px;
-      height: 14px;
-      margin: 1.5px;
-      border-radius: 2px;
-      cursor: pointer;
-      transition: transform 0.1s ease, outline 0.1s ease;
-      box-sizing: border-box;
-      display: inline-block;
-      flex-shrink: 0;
-    }
-    @media (max-width: 640px) {
-      .seat-cube {
-        width: 11px;
-        height: 11px;
-        margin: 1px;
-      }
-    }
-    .seat-cube.available:hover {
-      transform: scale(1.25);
-      z-index: 10;
-    }
-    .seat-cube.selected {
-      outline: 2.5px solid #000000 !important;
-      outline-offset: -1px;
-      z-index: 20;
-      animation: pulse-select 0.25s ease-out;
-    }
-    @keyframes pulse-select {
-      0% { transform: scale(0.85); }
-      50% { transform: scale(1.3); }
-      100% { transform: scale(1.0); }
-    }
-    .seat-cube.sold {
-      background-color: #cbd5e1 !important;
-      cursor: not-allowed;
-      opacity: 0.45;
-    }
-
-    /* Mobile Bottom Drawer Animation */
-    .drawer-enter {
-      transform: translateY(100%);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .drawer-active {
-      transform: translateY(0);
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Global Pass Ticket Simulator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#2563EB',
+              hover: '#1D4ED8',
+              light: '#EFF6FF'
+            },
+            gradeR: '#b79b71',
+            gradeS: '#7f6aff',
+            gradeA: '#ff719e'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
+      background-color: #eaedf1;
+      margin: 0;
+      padding: 0;
+      color: #333;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .seat-cube {
+      width: 11px;
+      height: 11px;
+      border-radius: 1.5px;
+      margin: 1px;
+      display: inline-block;
+      transition: transform 0.04s ease, filter 0.04s ease;
+      box-sizing: border-box;
+      touch-action: manipulation;
+    }
+    @media (min-width: 640px) {
+      .seat-cube {
+        width: 16px;
+        height: 16px;
+        margin: 1.5px;
+        border-radius: 2px;
+      }
+    }
+    @media (min-width: 768px) {
+      .seat-cube {
+        width: 17px;
+        height: 17px;
+        margin: 2px;
+        border-radius: 2px;
+      }
+    }
+    .seat-cube.sold {
+      background-color: #e2e2e4 !important;
+      cursor: not-allowed !important;
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      outline: none !important;
+    }
+    .seat-cube.available {
+      cursor: pointer;
+    }
+    .seat-cube.available:hover {
+      filter: brightness(0.9);
+      transform: scale(1.05);
+    }
+    .seat-cube.selected {
+      outline: 2.5px solid #000000 !important;
+      outline-offset: -1px;
+      z-index: 10;
+      position: relative;
+    }
+    .seat-row-number {
+      width: 18px;
+      text-align: right;
+      padding-right: 4px;
+      font-size: 11px;
+      color: #a0a6b2;
+      font-weight: 400;
+      line-height: 13px;
+      user-select: none;
+    }
+    @media (min-width: 640px) {
+      .seat-row-number {
+        width: 24px;
+        padding-right: 8px;
+        font-size: 13px;
+        line-height: 18px;
+      }
+    }
+    @media (min-width: 768px) {
+      .seat-row-number {
+        width: 28px;
+        padding-right: 10px;
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+    .kspo-block:hover {
+      filter: brightness(0.9);
+      cursor: pointer;
+    }
+    .mini-kspo-block {
+      cursor: pointer;
+      transition: filter 0.15s ease, stroke-width 0.15s ease;
+    }
+    .mini-kspo-block:hover {
+      filter: brightness(0.85);
+      stroke: #ffffff !important;
+      stroke-width: 2.5px !important;
+    }
+    .mini-kspo-block.active-section {
+      stroke: #2563EB !important;
+      stroke-width: 3.5px !important;
+      filter: drop-shadow(0 0 4px rgba(37,99,235,0.7));
+    }
+    .drawer-enter {
+      transform: translateY(100%);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .drawer-active {
+      transform: translateY(0);
+    }
+    .loader-spin {
+      border: 3.5px solid #e5e7eb;
+      border-top-color: #2563EB;
+      border-radius: 50%;
+      width: 44px;
+      height: 44px;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
 </head>
-<body class="min-h-screen text-gray-800 flex flex-col justify-between">
-
-  <!-- ==================== TOP NAVIGATION HEADER ==================== -->
-  <header class="w-full bg-white border-b border-gray-200 sticky top-0 z-40 shadow-sm">
-    <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
-      <div class="flex items-center space-x-2">
-        <div class="w-7 h-7 bg-[#2563EB] rounded-lg flex items-center justify-center text-white font-black text-sm shadow">
-          M
-        </div>
-        <span class="font-extrabold text-base tracking-tight text-gray-900">
-          Melon<span class="text-[#2563EB]">Ticket</span> <span class="text-xs bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded border border-gray-300 font-medium ml-1">GLOBAL</span>
-        </span>
-      </div>
-
-      <!-- Language & Reset Controls -->
-      <div class="flex items-center space-x-3 text-xs font-semibold">
-        <div class="bg-gray-100 p-0.5 rounded-md flex border border-gray-200">
-          <button id="lang-btn-en" type="button" onclick="app.setLanguage('en')" class="px-2.5 py-1 rounded bg-[#2563EB] text-white shadow-xs transition">EN</button>
-          <button id="lang-btn-zh" type="button" onclick="app.setLanguage('zh')" class="px-2.5 py-1 rounded text-gray-600 hover:text-gray-900 transition">繁中</button>
-        </div>
-        <button type="button" onclick="app.resetSession()" class="text-gray-500 hover:text-gray-800 underline underline-offset-2">
-          Reset
-        </button>
-      </div>
-    </div>
-  </header>
-
-  <!-- ==================== MAIN CONTENT AREA ==================== -->
-  <main class="flex-1 w-full max-w-6xl mx-auto p-3 sm:p-6 flex flex-col items-center">
-
-    <!-- DESKTOP TICKETING HERO (Visible on sm/md/lg >= 768px) -->
-    <div id="desktop-hero-view" class="hidden md:grid md:grid-cols-12 gap-6 w-full bg-white rounded-xl shadow-sm border border-gray-200 p-6 my-auto">
-      <!-- Left Poster & Overview -->
-      <div class="md:col-span-4 flex flex-col items-center text-center border-r border-gray-100 pr-6">
-        <div class="w-48 h-64 bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 rounded-lg shadow-md flex flex-col justify-end p-4 text-left border border-slate-700 relative overflow-hidden">
-          <div class="absolute top-2 left-2 text-[10px] bg-blue-600/90 text-white px-2 py-0.5 rounded font-bold tracking-wider">
-            SEOUL CONCERT
-          </div>
-          <p class="text-[11px] text-gray-400 font-mono tracking-widest uppercase">2026 WORLD TOUR</p>
-          <h2 class="text-lg font-black text-white leading-tight">WORLD TOUR LIVE IN SEOUL</h2>
-          <p class="text-xs text-indigo-300 mt-1">KSPO DOME (Olympic Gymnastics)</p>
-        </div>
-        <div class="mt-4 text-xs text-gray-500 space-y-1 w-full text-left bg-gray-50 p-3 rounded-lg border border-gray-100">
-          <p><strong class="text-gray-700" data-i18n="durationLabel">Duration:</strong> 150 mins</p>
-          <p><strong class="text-gray-700" data-i18n="ageLabel">Age Limit:</strong> 7 years &amp; over</p>
-          <p><strong class="text-gray-700" data-i18n="ticketLimitLabel">Ticket Limit:</strong> 1 ticket per ID</p>
-        </div>
-      </div>
-
-      <!-- Right Selection & Real-time Countdown Panel -->
-      <div class="md:col-span-8 flex flex-col justify-between pl-2">
-        <div>
-          <!-- Countdown Strip -->
-          <div class="bg-blue-50 border border-blue-200 text-blue-900 px-4 py-3 rounded-lg flex items-center justify-between shadow-xs mb-5">
-            <span class="text-xs sm:text-sm font-semibold flex items-center" id="desktop-countdown-banner">
-              <span class="w-2 h-2 rounded-full bg-blue-600 animate-ping mr-2"></span>
-              <span id="countdown-banner-text">Booking starts: 2026.10.31 (Sat) 20:00 (Time left: 00:03)</span>
-            </span>
-            <span class="text-xs bg-white border border-blue-300 text-blue-700 px-2 py-1 rounded font-mono font-bold" id="countdown-badge">
-              00:03
-            </span>
-          </div>
-
-          <!-- Selection Columns -->
-          <div class="grid grid-cols-2 gap-4">
-            <!-- 1. Select Date -->
-            <div class="border border-gray-200 rounded-lg p-3">
-              <span class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-2" data-i18n="selectDateTitle">Select Date</span>
-              <div id="desktop-date-active-list" class="space-y-1.5">
-                <button type="button" onclick="app.selectDate(0)" id="d-date-0" class="w-full text-left px-3 py-2 text-xs font-bold rounded border border-blue-600 bg-blue-50 text-blue-800 transition">
-                  2026.10.31 (Sat)
-                </button>
-                <button type="button" onclick="app.selectDate(1)" id="d-date-1" class="w-full text-left px-3 py-2 text-xs font-medium rounded border border-gray-200 hover:bg-gray-50 text-gray-700 transition">
-                  2026.11.01 (Sun)
-                </button>
-              </div>
-            </div>
-
-            <!-- 2. Select Time -->
-            <div class="border border-gray-200 rounded-lg p-3">
-              <span class="text-xs font-bold text-gray-500 uppercase tracking-wide block mb-2" data-i18n="selectTimeTitle">Select Time</span>
-              <div id="desktop-time-active-box" class="space-y-1.5">
-                <div id="desktop-time-val" class="w-full text-left px-3 py-2 text-xs font-bold rounded border border-blue-600 bg-blue-50 text-blue-800">
-                  18:00 (Session 1)
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Price Tiers Reference matching KSPO Map -->
-          <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between text-xs text-gray-600">
-            <span class="font-bold text-gray-500">Seat Tiers:</span>
-            <div class="flex items-center space-x-3">
-              <span class="inline-flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-[#b79b71] mr-1.5"></span>Floor (R) ₩198,000</span>
-              <span class="inline-flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-[#7f6aff] mr-1.5"></span>1F (S) ₩154,000</span>
-              <span class="inline-flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-[#ff719e] mr-1.5"></span>2F (A) ₩132,000</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Desktop Action Button -->
-        <div class="mt-6">
-          <button id="desktop-btn-get-tickets" type="button" disabled class="w-full py-3.5 rounded-lg font-bold text-sm tracking-wide transition duration-150 bg-gray-300 text-gray-500 cursor-not-allowed">
-            <span data-i18n="getTicketsBtn">Get Tickets</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-
-    <!-- MOBILE VIEW: 1:1 Layout matching provided screenshots (Visible on < 768px) -->
-    <div id="mobile-hero-view" class="block md:hidden w-full max-w-md mx-auto bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
-      
-      <!-- Dark Hero Header matching screenshot 00:00 -->
-      <div class="bg-[#1b1533] text-white p-4 flex space-x-3.5">
-        <div class="w-20 h-28 bg-gradient-to-br from-indigo-950 via-purple-900 to-indigo-900 rounded shadow-md border border-purple-800/60 p-2 flex flex-col justify-end shrink-0">
-          <span class="text-[8px] font-mono text-purple-300 uppercase tracking-widest">2026 WORLD TOUR</span>
-          <span class="text-[11px] font-bold text-white leading-tight">WORLD TOUR LIVE</span>
-        </div>
-        <div class="flex flex-col justify-center space-y-1">
-          <div class="flex space-x-1">
-            <span class="text-[10px] bg-purple-700/70 border border-purple-500/40 text-purple-200 px-1.5 py-0.2 rounded font-medium" data-i18n="practiceTag">Practice Mode</span>
-            <span class="text-[10px] bg-purple-700/70 border border-purple-500/40 text-purple-200 px-1.5 py-0.2 rounded font-medium" data-i18n="liveAccurateTag">Real Engine</span>
-          </div>
-          <h1 class="text-sm font-black tracking-tight text-white leading-snug">
-            WORLD TOUR LIVE 2026 IN SEOUL
-          </h1>
-          <p class="text-[11px] text-purple-200" id="mobile-hero-meta">
-            • Concert • 90 mins • 7 years &amp; over
-          </p>
-        </div>
-      </div>
-
-      <!-- Performance Info Rows matching screenshot 00:00 -->
-      <div class="p-4 space-y-2 text-xs border-b border-gray-100">
-        <div class="flex">
-          <span class="w-20 text-gray-400" data-i18n="eventPeriod">Period</span>
-          <span class="font-medium text-gray-800">2026.10.31 - 2026.11.01</span>
-        </div>
-        <div class="flex">
-          <span class="w-20 text-gray-400" data-i18n="eventVenue">Venue</span>
-          <span class="font-medium text-gray-800 flex items-center">KSPO DOME <span class="text-gray-400 ml-1">›</span></span>
-        </div>
-        <div class="flex">
-          <span class="w-20 text-gray-400" data-i18n="eventDuration">Duration</span>
-          <span class="font-medium text-gray-800">150 mins</span>
-        </div>
-      </div>
-
-      <!-- Mobile Pre-Select Date Strip (Pre-select Date before countdown hits 0) -->
-      <div class="px-4 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
-        <div>
-          <span class="text-[10px] text-gray-500 font-semibold uppercase block" data-i18n="selectDateTitle">Target Session</span>
-          <span id="mobile-selected-date-preview" class="text-xs font-bold text-gray-900">
-            Sat, Oct 31, 2026 06:00 PM
-          </span>
-        </div>
-        <button type="button" onclick="app.openMobileDateDrawer()" class="px-2.5 py-1.5 bg-white border border-gray-300 rounded text-xs font-semibold text-gray-700 hover:bg-gray-100 flex items-center space-x-1 shadow-2xs">
-          <span data-i18n="changeDateBtn">Change</span>
-          <span>▾</span>
-        </button>
-      </div>
-
-      <!-- Price Breakdown matching video -->
-      <div class="p-4">
-        <h4 class="text-xs font-bold text-gray-700 mb-2" data-i18n="priceInfo">Price Information</h4>
-        <div class="space-y-1.5 text-xs">
-          <div class="flex justify-between items-center py-1 border-b border-gray-50">
-            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-[#b79b71] mr-2"></span>Floor (R)</span>
-            <span class="font-bold text-gray-900">₩ 198,000</span>
-          </div>
-          <div class="flex justify-between items-center py-1 border-b border-gray-50">
-            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-[#7f6aff] mr-2"></span>1F (S)</span>
-            <span class="font-bold text-gray-900">₩ 154,000</span>
-          </div>
-          <div class="flex justify-between items-center py-1">
-            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-sm bg-[#ff719e] mr-2"></span>2F (A)</span>
-            <span class="font-bold text-gray-900">₩ 132,000</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mobile Sticky Bottom Bar (Integrated Countdown matching video 00:00~00:07) -->
-      <div class="p-3 bg-white border-t border-gray-200">
-        <button id="mobile-btn-buy-now" type="button" disabled class="w-full py-3.5 px-4 rounded font-bold text-center transition duration-150 bg-gray-300 text-gray-700 cursor-not-allowed text-xs flex flex-col items-center justify-center">
-          <span id="m-btn-line1" class="font-bold">General Booking : 10.31(Sat) 20:00</span>
-          <span id="m-btn-line2" class="font-mono text-[11px] opacity-90 mt-0.5">(Time left : 00:03)</span>
-        </button>
-      </div>
-    </div>
-  </main>
-
-
-  <!-- ==================== MOBILE DATE DRAWER ==================== -->
-  <div id="drawer-date-backdrop" class="fixed inset-0 modal-backdrop z-50 hidden flex flex-col justify-end" onclick="app.closeMobileDateDrawer()">
-    <div id="drawer-date-panel" class="bg-white rounded-t-2xl p-5 w-full max-w-md mx-auto drawer-enter shadow-2xl" onclick="event.stopPropagation()">
-      <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-3">
-        <h3 class="font-bold text-sm text-gray-900" data-i18n="selectDateTitle">Select Date</h3>
-        <button type="button" onclick="app.closeMobileDateDrawer()" class="text-gray-400 hover:text-gray-600 text-lg p-1">✕</button>
-      </div>
-      <div class="space-y-2 mb-4">
-        <button type="button" onclick="app.selectMobileDateSession(0)" class="w-full text-left p-3.5 rounded-xl border border-blue-600 bg-blue-50 text-blue-900 text-xs font-bold flex justify-between items-center">
-          <span id="drawer-session-0-text">Sat, Oct 31, 2026 06:00 PM</span>
-          <span class="text-blue-600">✓</span>
-        </button>
-        <button type="button" onclick="app.selectMobileDateSession(1)" class="w-full text-left p-3.5 rounded-xl border border-gray-200 hover:bg-gray-50 text-gray-800 text-xs font-semibold flex justify-between items-center">
-          <span id="drawer-session-1-text">Sun, Nov 01, 2026 05:00 PM</span>
-        </button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ==================== WAITING QUEUE MODAL ==================== -->
-  <div id="modal-waiting-queue" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-sm p-6 text-center shadow-2xl border border-gray-100 animate-in fade-in zoom-in-95 duration-150">
-      <div class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1" data-i18n="queueNotice">Information</div>
-      <h3 class="text-sm font-black text-gray-900 mb-4">WORLD TOUR LIVE IN SEOUL</h3>
-      
-      <div class="py-4 border-y border-gray-100 my-2">
-        <p class="text-xs text-blue-600 font-bold mb-1" data-i18n="queueWaitPrompt">Please, Wait!</p>
-        <div class="text-xs text-gray-500 mb-1" data-i18n="queueYourOrder">Your waiting order:</div>
-        <div class="text-4xl font-extrabold text-blue-600 tracking-tight my-2 font-mono" id="queue-order-number">
-          352
-        </div>
-        <div class="text-xs text-gray-600 font-medium">
-          <span data-i18n="queueEstTime">Estimated wait:</span> <span id="queue-time-est" class="font-bold text-gray-900">0min 12sec</span>
-        </div>
-      </div>
-
-      <div class="text-[11px] text-gray-400 text-left my-3 space-y-1 bg-gray-50 p-2.5 rounded-lg leading-relaxed">
-        <p>• <span data-i18n="queueRule1">Do not close or refresh this window, or your queue position will reset.</span></p>
-        <p>• <span data-i18n="queueRule2">You will be redirected automatically once your queue finishes.</span></p>
-      </div>
-
-      <button type="button" onclick="app.cancelQueue()" class="w-full mt-2 py-2.5 rounded-lg border border-gray-300 text-xs font-bold text-gray-600 hover:bg-gray-100" data-i18n="queueCancelBtn">
-        Cancel
-      </button>
-    </div>
-  </div>
-
-
-  <!-- ==================== CAPTCHA MODAL ==================== -->
-  <div id="modal-captcha" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl border border-gray-100 text-center animate-in fade-in zoom-in-95 duration-150">
-      <h3 class="text-base font-bold text-gray-900 mb-1" data-i18n="captchaTitle">Secure booking service</h3>
-      <p class="text-xs text-gray-500 mb-4" data-i18n="captchaSubtitle">Please enter the security characters below to verify you are human.</p>
-      
-      <!-- Captcha Graphic Box -->
-      <div class="bg-gray-100 border border-gray-300 rounded-lg p-2.5 flex items-center justify-between mb-3 shadow-inner">
-        <canvas id="captcha-canvas" width="210" height="52" class="bg-white rounded border border-gray-200 select-none"></canvas>
-        <button type="button" onclick="app.generateCaptcha()" class="p-2 text-gray-500 hover:text-gray-800 rounded hover:bg-gray-200 transition" title="Refresh Captcha">
-          🔄
-        </button>
-      </div>
-
-      <!-- Input Field -->
-      <input type="text" id="captcha-input" maxlength="6" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" placeholder="ENTER CHARACTERS" class="w-full uppercase tracking-widest text-center text-lg font-bold border-2 border-gray-300 rounded-lg py-2.5 focus:border-blue-600 focus:outline-none mb-3 shadow-xs">
-
-      <!-- Submit Button -->
-      <button type="button" onclick="app.verifyCaptcha()" class="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-lg text-sm shadow-md transition duration-150">
-        <span data-i18n="captchaSubmit">Submit</span>
-      </button>
-
-      <!-- Skip to seats option -->
-      <button type="button" onclick="app.dismissCaptchaToViewSeats()" class="mt-3 text-xs text-gray-500 hover:text-gray-800 underline underline-offset-2" data-i18n="captchaPreviewSeats">
-        To See the seats first, Click here
-      </button>
-    </div>
-  </div>
-
-
-  <!-- ==================== SEAT SELECTION WORKSPACE MODAL ==================== -->
-  <div id="modal-seatmap-workspace" class="fixed inset-0 z-50 bg-[#f8fafc] hidden flex flex-col">
-    
-    <!-- Top Workspace Header Strip -->
-    <div class="h-12 bg-white border-b border-gray-200 px-4 flex items-center justify-between shrink-0 shadow-2xs">
-      <div class="flex items-center space-x-2">
-        <button type="button" onclick="app.backToVenue()" id="btn-back-venue" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center hidden">
-          ‹ <span data-i18n="backToVenue">Back to Venue Map</span>
-        </button>
-        <span id="workspace-session-display" class="text-xs font-bold text-gray-700">
-          Sat, Oct 31, 2026 18:00
-        </span>
-      </div>
-      <div class="flex items-center space-x-2">
-        <span id="selected-badge-indicator" class="text-xs font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-300">
-          0 / 1 SEATS
-        </span>
-        <button type="button" onclick="app.closeSeatmapWorkspace()" class="text-gray-400 hover:text-gray-600 font-bold p-1 text-sm">
-          ✕
-        </button>
-      </div>
-    </div>
-
-    <!-- Workspace Body: Split View (Map or Matrix on Left / Mini-map & Tiers on Right) -->
-    <div class="flex-1 overflow-hidden flex flex-col lg:flex-row">
-      
-      <!-- Left Main Interactive Canvas -->
-      <div class="flex-1 bg-white relative flex flex-col items-center justify-center p-2 sm:p-4 overflow-auto" id="workspace-main-pane">
-        
-        <!-- View 1: KSPO DOME Full Layout Replica (Stage Y=10..60, Floor Y=95..310, 1F & 2F Radial Alignment) -->
-        <div id="view-venue-map" class="w-full max-w-2xl flex flex-col items-center justify-center my-auto">
-          <div class="text-[10px] sm:text-xs text-gray-400 text-center mb-2 leading-relaxed shrink-0" data-i18n="venueNoticeText">
-            The stage location is for ticket purchasing reference only. Top represents the stage direction.
-          </div>
-
-          <!-- Main KSPO SVG (Center X=400, Center Y=115 for Arcs) -->
-          <svg viewBox="0 0 800 480" class="w-full h-auto drop-shadow-sm select-none" id="kspo-main-svg">
-            
-            <!-- STAGE Outer Box (Y=10 to Y=62, completely above Floor A/B which start at Y=95) -->
-            <rect x="290" y="14" width="220" height="48" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.6" rx="4"/>
-            <text x="400" y="45" fill="#475569" font-size="22" font-weight="900" text-anchor="middle" letter-spacing="4">STAGE</text>
-
-            <!-- T-Runway & Center Pentagon Sub-stage structure -->
-            <!-- Vertical Runway from Stage to Pentagon -->
-            <rect x="391" y="62" width="18" height="52" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4"/>
-            
-            <!-- Pentagon Sub-stage in Center -->
-            <polygon points="400,114 434,142 421,180 379,180 366,142" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.4"/>
-
-            <!-- Diagonal Walkways extending outward -->
-            <polygon points="366,158 335,198 347,204 374,166" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
-            <polygon points="434,158 465,198 453,204 426,166" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.2"/>
-
-            <!-- 1F & 2F Circular Level Badges on sides -->
-            <g transform="translate(196, 68)">
-              <circle cx="14" cy="14" r="14" fill="#64748b"/>
-              <text x="14" y="18" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">1F</text>
-            </g>
-            <g transform="translate(138, 52)">
-              <circle cx="14" cy="14" r="14" fill="#64748b"/>
-              <text x="14" y="18" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">2F</text>
-            </g>
-
-            <g transform="translate(576, 68)">
-              <circle cx="14" cy="14" r="14" fill="#64748b"/>
-              <text x="14" y="18" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">1F</text>
-            </g>
-            <g transform="translate(634, 52)">
-              <circle cx="14" cy="14" r="14" fill="#64748b"/>
-              <text x="14" y="18" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">2F</text>
-            </g>
-
-            <!-- FLOOR ROCKING 5 SECTIONS (A, B, C, D, E) Color: #b79b71 (Grade R) -->
-            <!-- Floor A (Top Left) -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor A', 'gradeR')">
-              <polygon points="282,95 380,95 362,152 264,152" fill="#b79b71" stroke="#ffffff" stroke-width="2.5"/>
-              <text x="322" y="130" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">A</text>
-            </g>
-
-            <!-- Floor B (Top Right) -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor B', 'gradeR')">
-              <polygon points="420,95 518,95 536,152 438,152" fill="#b79b71" stroke="#ffffff" stroke-width="2.5"/>
-              <text x="478" y="130" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">B</text>
-            </g>
-
-            <!-- Floor C (Mid-Left Angled) -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor C', 'gradeR')">
-              <polygon points="266,166 358,166 382,218 322,268 290,218" fill="#b79b71" stroke="#ffffff" stroke-width="2.5"/>
-              <text x="320" y="218" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">C</text>
-            </g>
-
-            <!-- Floor D (Center Pentagon-bottom Wing) -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor D', 'gradeR')">
-              <polygon points="368,202 432,202 468,244 432,274 400,256 368,274 332,244" fill="#b79b71" stroke="#ffffff" stroke-width="2.5"/>
-              <text x="400" y="248" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">D</text>
-            </g>
-
-            <!-- Floor E (Mid-Right Angled) -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor E', 'gradeR')">
-              <polygon points="442,166 534,166 510,218 478,268 418,218" fill="#b79b71" stroke="#ffffff" stroke-width="2.5"/>
-              <text x="480" y="218" fill="#ffffff" font-size="20" font-weight="bold" text-anchor="middle">E</text>
-            </g>
-
-            <!-- Floor Badge below D -->
-            <g transform="translate(372, 292)">
-              <rect width="56" height="22" rx="4" fill="#64748b"/>
-              <text x="28" y="15" fill="#ffffff" font-size="11.5" font-weight="bold" text-anchor="middle">Floor</text>
-            </g>
-
-            <!-- 1F TIER (1 ~ 15) All #7f6aff (Arc Center=(400, 115), Rin=205, Rout=248) -->
-            <!-- Right side 1 ~ 7 -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeS')"><path d="M 648,115 A 248 248 0 0 1 645,150 L 602,147 A 205 205 0 0 0 605,115 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="625" y="135" fill="#fff" font-size="11.5" font-weight="bold">1</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeS')"><path d="M 645,153 A 248 248 0 0 1 635,188 L 594,178 A 205 205 0 0 0 602,149 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="618" y="172" fill="#fff" font-size="11.5" font-weight="bold">2</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeS')"><path d="M 634,191 A 248 248 0 0 1 616,224 L 579,208 A 205 205 0 0 0 593,181 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="600" y="209" fill="#fff" font-size="11.5" font-weight="bold">3</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeS')"><path d="M 614,227 A 248 248 0 0 1 588,258 L 555,237 A 205 205 0 0 0 577,211 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="578" y="243" fill="#fff" font-size="11.5" font-weight="bold">4</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeS')"><path d="M 585,261 A 248 248 0 0 1 552,289 L 526,263 A 205 205 0 0 0 553,239 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="548" y="276" fill="#fff" font-size="11.5" font-weight="bold">5</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeS')"><path d="M 548,292 A 248 248 0 0 1 509,316 L 491,286 A 205 205 0 0 0 523,266 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="512" y="305" fill="#fff" font-size="11.5" font-weight="bold">6</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeS')"><path d="M 505,318 A 248 248 0 0 1 462,335 L 451,304 A 205 205 0 0 0 487,289 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="472" y="326" fill="#fff" font-size="11.5" font-weight="bold">7</text></g>
-
-            <!-- Center Back 8 -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 8', 'gradeS')"><path d="M 458,336 A 248 248 0 0 1 400,341 L 400,304 A 205 205 0 0 0 447,304 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="424" y="329" fill="#fff" font-size="11.5" font-weight="bold">8</text></g>
-
-            <!-- Left side 9 ~ 15 -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeS')"><path d="M 400,341 A 248 248 0 0 1 342,336 L 353,304 A 205 205 0 0 0 400,304 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="374" y="329" fill="#fff" font-size="11.5" font-weight="bold">9</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeS')"><path d="M 338,335 A 248 248 0 0 1 295,318 L 313,289 A 205 205 0 0 0 349,304 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="324" y="326" fill="#fff" font-size="11.5" font-weight="bold">10</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeS')"><path d="M 291,316 A 248 248 0 0 1 252,292 L 277,266 A 205 205 0 0 0 309,286 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="282" y="305" fill="#fff" font-size="11.5" font-weight="bold">11</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeS')"><path d="M 248,289 A 248 248 0 0 1 215,261 L 247,239 A 205 205 0 0 0 274,263 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="246" y="276" fill="#fff" font-size="11.5" font-weight="bold">12</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeS')"><path d="M 212,258 A 248 248 0 0 1 186,227 L 223,211 A 205 205 0 0 0 245,237 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="216" y="243" fill="#fff" font-size="11.5" font-weight="bold">13</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeS')"><path d="M 184,224 A 248 248 0 0 1 166,191 L 207,181 A 205 205 0 0 0 221,208 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="194" y="209" fill="#fff" font-size="11.5" font-weight="bold">14</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeS')"><path d="M 165,188 A 248 248 0 0 1 155,153 L 198,149 A 205 205 0 0 0 206,178 Z" fill="#7f6aff" stroke="#ffffff" stroke-width="1.8"/><text x="178" y="172" fill="#fff" font-size="11.5" font-weight="bold">15</text></g>
-
-            <!-- 2F TIER (24 ~ 43) All #ff719e (Arc Center=(400, 115), Rin=260, Rout=315) -->
-            <!-- Right side 24 ~ 33 -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 24', 'gradeA')"><path d="M 715,115 A 315 315 0 0 1 711,151 L 658,148 A 260 260 0 0 0 660,115 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="686" y="137" fill="#fff" font-size="11" font-weight="bold">24</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 710,155 A 315 315 0 0 1 698,195 L 647,184 A 260 260 0 0 0 657,151 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="678" y="177" fill="#fff" font-size="11" font-weight="bold">25</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 696,198 A 315 315 0 0 1 674,238 L 628,219 A 260 260 0 0 0 645,187 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="660" y="218" fill="#fff" font-size="11" font-weight="bold">26</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 671,241 A 315 315 0 0 1 640,278 L 599,253 A 260 260 0 0 0 625,222 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="635" y="257" fill="#fff" font-size="11" font-weight="bold">27</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeA')"><path d="M 637,281 A 315 315 0 0 1 599,315 L 565,284 A 260 260 0 0 0 596,256 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="600" y="294" fill="#fff" font-size="11" font-weight="bold">28</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeA')"><path d="M 595,318 A 315 315 0 0 1 549,348 L 524,311 A 260 260 0 0 0 562,286 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="560" y="327" fill="#fff" font-size="11" font-weight="bold">29</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeA')"><path d="M 545,350 A 315 315 0 0 1 494,374 L 477,333 A 260 260 0 0 0 520,313 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="512" y="355" fill="#fff" font-size="11" font-weight="bold">30</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeA')"><path d="M 490,376 A 315 315 0 0 1 432,388 L 426,344 A 260 260 0 0 0 473,335 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="460" y="374" fill="#fff" font-size="11" font-weight="bold">31</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeA')"><path d="M 428,389 A 315 315 0 0 1 372,389 L 374,344 A 260 260 0 0 0 422,344 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="400" y="376" fill="#fff" font-size="11" font-weight="bold">32</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeA')"><path d="M 368,388 A 315 315 0 0 1 310,376 L 327,335 A 260 260 0 0 0 374,344 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="340" y="374" fill="#fff" font-size="11" font-weight="bold">33</text></g>
-
-            <!-- Left side 34 ~ 43 -->
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeA')"><path d="M 306,374 A 315 315 0 0 1 255,350 L 280,313 A 260 260 0 0 0 323,333 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="288" y="355" fill="#fff" font-size="11" font-weight="bold">34</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeA')"><path d="M 251,348 A 315 315 0 0 1 205,318 L 238,286 A 260 260 0 0 0 276,311 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="240" y="327" fill="#fff" font-size="11" font-weight="bold">35</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeA')"><path d="M 201,315 A 315 315 0 0 1 163,281 L 204,256 A 260 260 0 0 0 235,284 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="200" y="294" fill="#fff" font-size="11" font-weight="bold">36</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeA')"><path d="M 160,278 A 315 315 0 0 1 129,241 L 175,222 A 260 260 0 0 0 201,253 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="165" y="257" fill="#fff" font-size="11" font-weight="bold">37</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeA')"><path d="M 126,238 A 315 315 0 0 1 104,198 L 155,187 A 260 260 0 0 0 172,219 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="140" y="218" fill="#fff" font-size="11" font-weight="bold">38</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeA')"><path d="M 102,195 A 315 315 0 0 1 90,155 L 143,151 A 260 260 0 0 0 153,184 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="122" y="177" fill="#fff" font-size="11" font-weight="bold">39</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 89,151 A 315 315 0 0 1 85,115 L 140,115 A 260 260 0 0 0 142,148 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="114" y="137" fill="#fff" font-size="11" font-weight="bold">40</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 85,111 A 315 315 0 0 1 89,75 L 144,84 A 260 260 0 0 0 140,111 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="114" y="98" fill="#fff" font-size="11" font-weight="bold">41</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 91,71 A 315 315 0 0 1 106,35 L 157,53 A 260 260 0 0 0 146,80 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="127" y="60" fill="#fff" font-size="11" font-weight="bold">42</text></g>
-            <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 43', 'gradeA')"><path d="M 108,32 A 315 315 0 0 1 133,5 L 178,30 A 260 260 0 0 0 159,50 Z" fill="#ff719e" stroke="#ffffff" stroke-width="1.8"/><text x="145" y="27" fill="#fff" font-size="11" font-weight="bold">43</text></g>
-          </svg>
-        </div>
-
-        <!-- View 2: Detailed Matrix Grid for Selected Section -->
-        <div id="view-seat-grid" class="w-full h-full flex flex-col items-center justify-center hidden">
-          <div class="mb-2 text-center">
-            <span id="grid-current-section-name" class="text-sm font-bold text-gray-800">Section Floor A</span>
-            <span class="text-xs text-gray-400 block" data-i18n="gridStageDirection">↑ STAGE (Stage is above) ↑</span>
-          </div>
-
-          <!-- Dynamic Grid Container -->
-          <div class="bg-gray-50 border border-gray-200 rounded-xl p-3 sm:p-5 shadow-inner max-w-full overflow-hidden flex flex-col items-center">
-            <div id="seat-cubes-container" class="flex flex-col items-center justify-center">
-              <!-- Dynamically populated rows and cubes -->
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Right Control & Mini-Map Sidebar (Desktop / Tablet) -->
-      <div class="w-full lg:w-72 bg-gray-50 border-t lg:border-t-0 lg:border-l border-gray-200 p-3 sm:p-4 flex flex-col justify-between shrink-0">
-        
-        <!-- Upper Section: Mini-Map Replica with All Sections Included -->
-        <div>
-          <div class="flex items-center justify-between mb-2">
-            <span class="text-xs font-bold text-gray-600 uppercase tracking-wider" data-i18n="miniMapTitle">Mini Map</span>
-            <div class="flex space-x-1">
-              <button type="button" onclick="app.zoomMiniMap(0.15)" class="w-6 h-6 rounded bg-white border border-gray-300 text-xs font-bold hover:bg-gray-100 flex items-center justify-center shadow-2xs">+</button>
-              <button type="button" onclick="app.zoomMiniMap(-0.15)" class="w-6 h-6 rounded bg-white border border-gray-300 text-xs font-bold hover:bg-gray-100 flex items-center justify-center shadow-2xs">-</button>
-              <button type="button" onclick="app.resetMiniMapZoom()" class="px-1.5 h-6 rounded bg-white border border-gray-300 text-[10px] font-semibold hover:bg-gray-100 flex items-center justify-center shadow-2xs">1:1</button>
-            </div>
-          </div>
-
-          <!-- Mini SVG Mirroring Main SVG completely -->
-          <div class="bg-white border border-gray-200 rounded-lg p-2 h-44 overflow-hidden flex items-center justify-center shadow-xs">
-            <div id="mini-map-transform-wrap" class="w-full h-full flex items-center justify-center transition-transform duration-200" style="transform: scale(1);">
-              <svg viewBox="0 0 800 480" class="w-full h-auto drop-shadow-xs select-none" id="mini-kspo-svg">
-                <!-- Mini Stage -->
-                <rect x="290" y="14" width="220" height="48" fill="#f1f5f9" stroke="#94a3b8" rx="4"/>
-                <text x="400" y="45" fill="#475569" font-size="22" font-weight="900" text-anchor="middle">STAGE</text>
-                <rect x="391" y="62" width="18" height="52" fill="#ffffff" stroke="#cbd5e1"/>
-                <polygon points="400,114 434,142 421,180 379,180 366,142" fill="#ffffff" stroke="#cbd5e1"/>
-
-                <!-- Mini Floor A ~ E (#b79b71) -->
-                <g class="mini-kspo-block" data-section="Floor A" onclick="app.onSectionSelectedTrigger('Floor A', 'gradeR')">
-                  <polygon points="282,95 380,95 362,152 264,152" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                </g>
-                <g class="mini-kspo-block" data-section="Floor B" onclick="app.onSectionSelectedTrigger('Floor B', 'gradeR')">
-                  <polygon points="420,95 518,95 536,152 438,152" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                </g>
-                <g class="mini-kspo-block" data-section="Floor C" onclick="app.onSectionSelectedTrigger('Floor C', 'gradeR')">
-                  <polygon points="266,166 358,166 382,218 322,268 290,218" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                </g>
-                <g class="mini-kspo-block" data-section="Floor D" onclick="app.onSectionSelectedTrigger('Floor D', 'gradeR')">
-                  <polygon points="368,202 432,202 468,244 432,274 400,256 368,274 332,244" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                </g>
-                <g class="mini-kspo-block" data-section="Floor E" onclick="app.onSectionSelectedTrigger('Floor E', 'gradeR')">
-                  <polygon points="442,166 534,166 510,218 478,268 418,218" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                </g>
-
-                <!-- Mini 1F 1 ~ 15 (#7f6aff) -->
-                <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeS')"><path d="M 648,115 A 248 248 0 0 1 645,150 L 602,147 A 205 205 0 0 0 605,115 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 2" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeS')"><path d="M 645,153 A 248 248 0 0 1 635,188 L 594,178 A 205 205 0 0 0 602,149 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 3" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeS')"><path d="M 634,191 A 248 248 0 0 1 616,224 L 579,208 A 205 205 0 0 0 593,181 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 4" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeS')"><path d="M 614,227 A 248 248 0 0 1 588,258 L 555,237 A 205 205 0 0 0 577,211 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 5" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeS')"><path d="M 585,261 A 248 248 0 0 1 552,289 L 526,263 A 205 205 0 0 0 553,239 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 6" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeS')"><path d="M 548,292 A 248 248 0 0 1 509,316 L 491,286 A 205 205 0 0 0 523,266 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 7" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeS')"><path d="M 505,318 A 248 248 0 0 1 462,335 L 451,304 A 205 205 0 0 0 487,289 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 8" onclick="app.onSectionSelectedTrigger('1F Sec 8', 'gradeS')"><path d="M 458,336 A 248 248 0 0 1 400,341 L 400,304 A 205 205 0 0 0 447,304 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 9" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeS')"><path d="M 400,341 A 248 248 0 0 1 342,336 L 353,304 A 205 205 0 0 0 400,304 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 10" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeS')"><path d="M 338,335 A 248 248 0 0 1 295,318 L 313,289 A 205 205 0 0 0 349,304 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 11" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeS')"><path d="M 291,316 A 248 248 0 0 1 252,292 L 277,266 A 205 205 0 0 0 309,286 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 12" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeS')"><path d="M 248,289 A 248 248 0 0 1 215,261 L 247,239 A 205 205 0 0 0 274,263 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 13" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeS')"><path d="M 212,258 A 248 248 0 0 1 186,227 L 223,211 A 205 205 0 0 0 245,237 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 14" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeS')"><path d="M 184,224 A 248 248 0 0 1 166,191 L 207,181 A 205 205 0 0 0 221,208 Z" fill="#7f6aff" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="1F Sec 15" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeS')"><path d="M 165,188 A 248 248 0 0 1 155,153 L 198,149 A 205 205 0 0 0 206,178 Z" fill="#7f6aff" stroke="#fff"/></g>
-
-                <!-- Mini 2F 24 ~ 43 (#ff719e) -->
-                <g class="mini-kspo-block" data-section="2F Sec 24" onclick="app.onSectionSelectedTrigger('2F Sec 24', 'gradeA')"><path d="M 715,115 A 315 315 0 0 1 711,151 L 658,148 A 260 260 0 0 0 660,115 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 25" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 710,155 A 315 315 0 0 1 698,195 L 647,184 A 260 260 0 0 0 657,151 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 26" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 696,198 A 315 315 0 0 1 674,238 L 628,219 A 260 260 0 0 0 645,187 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 27" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 671,241 A 315 315 0 0 1 640,278 L 599,253 A 260 260 0 0 0 625,222 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 28" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeA')"><path d="M 637,281 A 315 315 0 0 1 599,315 L 565,284 A 260 260 0 0 0 596,256 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 29" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeA')"><path d="M 595,318 A 315 315 0 0 1 549,348 L 524,311 A 260 260 0 0 0 562,286 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 30" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeA')"><path d="M 545,350 A 315 315 0 0 1 494,374 L 477,333 A 260 260 0 0 0 520,313 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 31" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeA')"><path d="M 490,376 A 315 315 0 0 1 432,388 L 426,344 A 260 260 0 0 0 473,335 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 32" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeA')"><path d="M 428,389 A 315 315 0 0 1 372,389 L 374,344 A 260 260 0 0 0 422,344 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 33" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeA')"><path d="M 368,388 A 315 315 0 0 1 310,376 L 327,335 A 260 260 0 0 0 374,344 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 34" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeA')"><path d="M 306,374 A 315 315 0 0 1 255,350 L 280,313 A 260 260 0 0 0 323,333 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 35" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeA')"><path d="M 251,348 A 315 315 0 0 1 205,318 L 238,286 A 260 260 0 0 0 276,311 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 36" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeA')"><path d="M 201,315 A 315 315 0 0 1 163,281 L 204,256 A 260 260 0 0 0 235,284 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 37" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeA')"><path d="M 160,278 A 315 315 0 0 1 129,241 L 175,222 A 260 260 0 0 0 201,253 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 38" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeA')"><path d="M 126,238 A 315 315 0 0 1 104,198 L 155,187 A 260 260 0 0 0 172,219 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 39" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeA')"><path d="M 102,195 A 315 315 0 0 1 90,155 L 143,151 A 260 260 0 0 0 153,184 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 40" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 89,151 A 315 315 0 0 1 85,115 L 140,115 A 260 260 0 0 0 142,148 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 41" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 85,111 A 315 315 0 0 1 89,75 L 144,84 A 260 260 0 0 0 140,111 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 42" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 91,71 A 315 315 0 0 1 106,35 L 157,53 A 260 260 0 0 0 146,80 Z" fill="#ff719e" stroke="#fff"/></g>
-                <g class="mini-kspo-block" data-section="2F Sec 43" onclick="app.onSectionSelectedTrigger('2F Sec 43', 'gradeA')"><path d="M 108,32 A 315 315 0 0 1 133,5 L 178,30 A 260 260 0 0 0 159,50 Z" fill="#ff719e" stroke="#fff"/></g>
-              </svg>
-            </div>
-          </div>
-        </div>
-
-        <!-- Middle Section: Tiers & Prices -->
-        <div class="my-3 space-y-1.5 text-xs">
-          <div class="flex items-center justify-between p-2 rounded bg-white border border-gray-200">
-            <span class="flex items-center font-bold text-gray-700">
-              <span class="w-2.5 h-2.5 rounded-sm bg-[#b79b71] mr-2"></span>Floor (R)
-            </span>
-            <span class="font-mono font-bold text-gray-900">₩198,000</span>
-          </div>
-          <div class="flex items-center justify-between p-2 rounded bg-white border border-gray-200">
-            <span class="flex items-center font-bold text-gray-700">
-              <span class="w-2.5 h-2.5 rounded-sm bg-[#7f6aff] mr-2"></span>1F (S)
-            </span>
-            <span class="font-mono font-bold text-gray-900">₩154,000</span>
-          </div>
-          <div class="flex items-center justify-between p-2 rounded bg-white border border-gray-200">
-            <span class="flex items-center font-bold text-gray-700">
-              <span class="w-2.5 h-2.5 rounded-sm bg-[#ff719e] mr-2"></span>2F (A)
-            </span>
-            <span class="font-mono font-bold text-gray-900">₩132,000</span>
-          </div>
-        </div>
-
-        <!-- Lower Section: Complete Order & Refresh Bar -->
-        <div class="pt-2 border-t border-gray-200 flex space-x-2">
-          <!-- Refresh Button (Desktop small icon / Mobile square icon) -->
-          <button type="button" onclick="app.refreshSectionSeats()" class="px-3 py-3 rounded-lg border border-gray-300 bg-white hover:bg-gray-100 text-gray-700 font-bold text-sm shadow-2xs flex items-center justify-center shrink-0" title="Refresh available seats">
-            🔄
-          </button>
-          
-          <!-- Complete Seat Selection Action Button -->
-          <button id="btn-complete-selection" type="button" onclick="app.submitSeatSelection()" disabled class="flex-1 py-3 px-3 rounded-lg font-bold text-xs sm:text-sm tracking-wide transition duration-150 bg-gray-300 text-gray-500 cursor-not-allowed shadow-sm text-center">
-            <span data-i18n="completeSeatSelection">Seat Selection Completed ›</span>
-          </button>
-        </div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- ==================== GENERIC ALERT MODAL ==================== -->
-  <div id="modal-alert" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl w-full max-w-xs p-5 shadow-2xl text-center border border-gray-100 animate-in fade-in zoom-in-95 duration-100">
-      <p id="alert-modal-msg" class="text-xs sm:text-sm font-semibold text-gray-800 leading-relaxed mb-4">
-        Please try again.
-      </p>
-      <button type="button" onclick="app.closeAlertModal()" class="w-full py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-xs rounded-md shadow-xs transition">
-        OK
-      </button>
-    </div>
-  </div>
-
-
-  <!-- ==================== SUCCESSFUL BOOKING & DIAGNOSTIC MODAL ==================== -->
-  <div id="modal-success" class="fixed inset-0 modal-backdrop z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl border border-gray-100 text-center animate-in fade-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
-      
-      <!-- Green Check Badge -->
-      <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl shadow-inner font-black">
-        ✓
-      </div>
-
-      <h3 class="text-lg font-black text-gray-900 mb-1" data-i18n="bookingSuccessTitle">Seat Reserved Successfully!</h3>
-      <p class="text-xs text-gray-500 mb-4" data-i18n="bookingSuccessSubtitle">Your practice booking has passed the payment security gate.</p>
-
-      <!-- Stat Cards -->
-      <div class="grid grid-cols-2 gap-2 text-left mb-4">
-        <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-          <span class="text-[10px] text-gray-400 uppercase font-bold block" data-i18n="totalDuration">Total Time</span>
-          <span id="stat-total-time" class="text-sm font-black text-gray-900 font-mono">14.28s</span>
-        </div>
-        <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200">
-          <span class="text-[10px] text-gray-400 uppercase font-bold block" data-i18n="captchaDuration">Captcha Time</span>
-          <span id="stat-captcha-time" class="text-sm font-black text-gray-900 font-mono">2.14s</span>
-        </div>
-        <div class="bg-gray-50 p-2.5 rounded-lg border border-gray-200 col-span-2">
-          <span class="text-[10px] text-gray-400 uppercase font-bold block" data-i18n="bookedSeatLabel">Allocated Seat</span>
-          <span id="stat-seat-label" class="text-xs font-black text-blue-700">Floor A - Row 03, Seat 12</span>
-        </div>
-      </div>
-
-      <!-- Action & Speed Diagnostics Report -->
-      <div class="text-left border-t border-gray-100 pt-3 mb-4">
-        <h4 class="text-xs font-bold text-gray-700 mb-2 flex items-center justify-between">
-          <span data-i18n="diagnosticsTitle">Ticketing Diagnostics</span>
-          <span id="stat-try-again-count" class="text-[10px] font-mono bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full font-bold">Try Again: 0</span>
-        </h4>
-        <div id="diagnostics-list-container" class="space-y-1.5 text-xs max-h-36 overflow-y-auto pr-1">
-          <!-- Populated by JS -->
-        </div>
-      </div>
-
-      <!-- Button -->
-      <button type="button" onclick="app.resetSession()" class="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-lg text-xs shadow-md transition">
-        <span data-i18n="practiceAgainBtn">Practice Again</span>
-      </button>
-
-    </div>
-  </div>
-
-
-  <!-- ==================== LOADING SPINNER ==================== -->
-  <div id="view-spinner" class="fixed inset-0 modal-backdrop z-50 hidden flex flex-col items-center justify-center">
-    <div class="w-10 h-10 border-4 border-white/30 border-t-white rounded-full animate-spin mb-3"></div>
-    <span class="text-white text-xs font-semibold tracking-wider font-mono">Connecting to Melon Secure Server...</span>
-  </div>
-
-
-  <!-- ==================== APPLICATION SCRIPT ==================== -->
-  <script>
-  const i18nData = {
-    en: {
-      selectDateTitle: "Select Date",
-      selectTimeTitle: "Select Time",
-      durationLabel: "Duration:",
-      ageLabel: "Age Limit:",
-      ticketLimitLabel: "Ticket Limit:",
-      getTicketsBtn: "Get Tickets",
-      changeDateBtn: "Change",
-      practiceTag: "Practice Mode",
-      liveAccurateTag: "Real Engine",
-      eventPeriod: "Period",
-      eventVenue: "Venue",
-      eventDuration: "Duration",
-      priceInfo: "Price Information",
-      queueNotice: "Information",
-      queueWaitPrompt: "Please, Wait!",
-      queueYourOrder: "Your waiting order:",
-      queueEstTime: "Estimated wait:",
-      queueRule1: "Do not close or refresh this window, or your queue position will reset.",
-      queueRule2: "You will be redirected automatically once your queue finishes.",
-      queueCancelBtn: "Cancel",
-      captchaTitle: "Secure booking service",
-      captchaSubtitle: "Please enter the security characters below to verify you are human.",
-      captchaSubmit: "Submit",
-      captchaPreviewSeats: "To See the seats first, Click here",
-      backToVenue: "Back to Venue Map",
-      miniMapTitle: "Mini Map",
-      completeSeatSelection: "Seat Selection Completed ›",
-      venueNoticeText: "The stage location is for ticket purchasing reference only. Top represents the stage direction.",
-      gridStageDirection: "↑ STAGE (Stage is above) ↑",
-      bookingSuccessTitle: "Seat Reserved Successfully!",
-      bookingSuccessSubtitle: "Your practice booking has passed the payment security gate.",
-      totalDuration: "Total Time",
-      captchaDuration: "Captcha Time",
-      bookedSeatLabel: "Allocated Seat",
-      diagnosticsTitle: "Ticketing Diagnostics",
-      practiceAgainBtn: "Practice Again",
-      drawerSession0: "Sat, Oct 31, 2026 06:00 PM",
-      drawerSession1: "Sun, Nov 01, 2026 05:00 PM"
-    },
-    zh: {
-      selectDateTitle: "選擇日期",
-      selectTimeTitle: "選擇時間",
-      durationLabel: "演出時間：",
-      ageLabel: "觀賞年齡：",
-      ticketLimitLabel: "限購張數：",
-      getTicketsBtn: "立即購票",
-      changeDateBtn: "變更場次",
-      practiceTag: "練習模式",
-      liveAccurateTag: "真實引擎",
-      eventPeriod: "演出期間",
-      eventVenue: "演出場館",
-      eventDuration: "演出長度",
-      priceInfo: "票價資訊",
-      queueNotice: "排隊資訊",
-      queueWaitPrompt: "請稍候！",
-      queueYourOrder: "您的排隊順序：",
-      queueEstTime: "預計等待時間：",
-      queueRule1: "請勿關閉或重新整理此頁面，否則排隊序號將會重設。",
-      queueRule2: "排隊完成後將會自動導向購票工作台。",
-      queueCancelBtn: "取消排隊",
-      captchaTitle: "安全預訂驗證服務",
-      captchaSubtitle: "為避免自動程式搶票，請在下方輸入正確的驗證字元。",
-      captchaSubmit: "確認送出",
-      captchaPreviewSeats: "點此先查看空位分佈",
-      backToVenue: "返回全區地圖",
-      miniMapTitle: "迷你全區圖",
-      completeSeatSelection: "完成座位選取 ›",
-      venueNoticeText: "舞台位置僅供購票參考，可能與實際舞台配置稍有不同。上方最靠近舞台。",
-      gridStageDirection: "↑ 舞台方向 (上方為舞台) ↑",
-      bookingSuccessTitle: "座位預訂成功！",
-      bookingSuccessSubtitle: "恭喜！您已在時限內突破安全機制並鎖定席位。",
-      totalDuration: "總計耗時",
-      captchaDuration: "驗證碼耗時",
-      bookedSeatLabel: "鎖定座位",
-      diagnosticsTitle: "操作與速率診斷報告",
-      practiceAgainBtn: "再次練習",
-      drawerSession0: "2026.10.31 (六) 18:00 (第一場)",
-      drawerSession1: "2026.11.01 (日) 17:00 (第二場)"
-    }
-  };
-
-  const app = {
-    currentLang: 'en',
-    state: 'COUNTDOWN', // COUNTDOWN | QUEUE | SEATING | SUCCESS
-    countdownRemaining: 3,
-    countdownTimer: null,
-    queueTimer: null,
-    queueNumber: 352,
-    selectedDateIndex: 0,
-    dates: [
-      { labelEn: "2026.10.31 (Sat)", labelZh: "2026.10.31 (六)", time: "18:00" },
-      { labelEn: "2026.11.01 (Sun)", labelZh: "2026.11.01 (日)", time: "17:00" }
-    ],
-
-    // Session Metrics
-    sessionStartTime: null,
-    captchaStartTime: null,
-    captchaDurationSeconds: 0,
-    tryAgainIncidents: [],
-    lastClickTime: 0,
-    refreshClickTimestamps: [],
-    lastSeatClickTimestamp: 0,
-    lastSubmitTimestamp: 0,
-
-    // Seating State
-    currentSection: null,
-    currentGrade: null,
-    selectedSeats: [], // Max 1 seat
-    maxSeatsAllowed: 1,
-    miniMapScale: 1.0,
-    generatedCaptchaText: "",
-
-    init() {
-      this.setLanguage('en');
-      this.startCountdown();
-      this.generateCaptcha();
-    },
-
-    setLanguage(lang) {
-      this.currentLang = lang;
-      const btnEn = document.getElementById('lang-btn-en');
-      const btnZh = document.getElementById('lang-btn-zh');
-
-      if (lang === 'en') {
-        btnEn.className = "px-2.5 py-1 rounded bg-[#2563EB] text-white shadow-xs transition";
-        btnZh.className = "px-2.5 py-1 rounded text-gray-600 hover:text-gray-900 transition";
-      } else {
-        btnZh.className = "px-2.5 py-1 rounded bg-[#2563EB] text-white shadow-xs transition";
-        btnEn.className = "px-2.5 py-1 rounded text-gray-600 hover:text-gray-900 transition";
-      }
-
-      // Update static texts
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (i18nData[lang] && i18nData[lang][key]) {
-          el.innerText = i18nData[lang][key];
-        }
-      });
-
-      // Update dynamic elements
-      const s0 = document.getElementById('drawer-session-0-text');
-      const s1 = document.getElementById('drawer-session-1-text');
-      if (s0) s0.innerText = i18nData[lang].drawerSession0;
-      if (s1) s1.innerText = i18nData[lang].drawerSession1;
-
-      this.renderCountdownText();
-      this.updateSelectedDatePreview();
-    },
-
-    startCountdown() {
-      this.countdownRemaining = 3;
-      this.renderCountdownText();
-
-      this.countdownTimer = setInterval(() => {
-        this.countdownRemaining--;
-        if (this.countdownRemaining >= 0) {
-          this.renderCountdownText();
-        } else {
-          clearInterval(this.countdownTimer);
-          this.onCountdownFinished();
-        }
-      }, 1000);
-    },
-
-    renderCountdownText() {
-      const secStr = String(Math.max(0, this.countdownRemaining)).padStart(2, '0');
-      
-      // Desktop Countdown
-      const dText = document.getElementById('countdown-banner-text');
-      const dBadge = document.getElementById('countdown-badge');
-      if (dBadge) dBadge.innerText = `00:${secStr}`;
-      if (dText) {
-        if (this.countdownRemaining > 0) {
-          dText.innerText = this.currentLang === 'zh'
-            ? `優先預訂開放：2026.10.31(六) 20:00 ( 剩餘時間: 00:${secStr} )`
-            : `Booking starts: 2026.10.31 (Sat) 20:00 (Time left: 00:${secStr})`;
-        } else {
-          dText.innerText = this.currentLang === 'zh' ? "優先預訂已開放！請點擊立即購票" : "General Booking is now Open!";
-        }
-      }
-
-      // Mobile Countdown Button
-      const mLine1 = document.getElementById('m-btn-line1');
-      const mLine2 = document.getElementById('m-btn-line2');
-      if (mLine1 && mLine2) {
-        if (this.countdownRemaining > 0) {
-          mLine1.innerText = this.currentLang === 'zh' ? "普通預訂開啟 : 10.31(六) 20:00" : "General Booking : 10.31(Sat) 20:00";
-          mLine2.innerText = `(Time left : 00:${secStr})`;
-        } else {
-          mLine1.innerText = this.currentLang === 'zh' ? "立即購買" : "BUY NOW";
-          mLine2.innerText = "";
-        }
-      }
-    },
-
-    onCountdownFinished() {
-      this.state = 'OPEN';
-      this.sessionStartTime = Date.now();
-
-      // Enable Desktop Button
-      const dBtn = document.getElementById('desktop-btn-get-tickets');
-      if (dBtn) {
-        dBtn.disabled = false;
-        dBtn.className = "w-full py-3.5 rounded-lg font-bold text-sm tracking-wide transition duration-150 bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-md cursor-pointer";
-        dBtn.onclick = () => this.startWaitingQueue();
-      }
-
-      // Enable Mobile Button (Turns into Electric Royal Blue)
-      const mBtn = document.getElementById('mobile-btn-buy-now');
-      if (mBtn) {
-        mBtn.disabled = false;
-        mBtn.className = "w-full py-3.5 px-4 rounded font-bold text-center transition duration-150 bg-[#2563EB] hover:bg-[#1D4ED8] text-white shadow-md cursor-pointer text-sm flex flex-col items-center justify-center";
-        mBtn.onclick = () => this.startWaitingQueue();
-      }
-    },
-
-    // Session Pre-Selection (Before or after countdown)
-    selectDate(idx) {
-      this.selectedDateIndex = idx;
-      
-      const d0 = document.getElementById('d-date-0');
-      const d1 = document.getElementById('d-date-1');
-      if (d0 && d1) {
-        if (idx === 0) {
-          d0.className = "w-full text-left px-3 py-2 text-xs font-bold rounded border border-blue-600 bg-blue-50 text-blue-800 transition";
-          d1.className = "w-full text-left px-3 py-2 text-xs font-medium rounded border border-gray-200 hover:bg-gray-50 text-gray-700 transition";
-        } else {
-          d1.className = "w-full text-left px-3 py-2 text-xs font-bold rounded border border-blue-600 bg-blue-50 text-blue-800 transition";
-          d0.className = "w-full text-left px-3 py-2 text-xs font-medium rounded border border-gray-200 hover:bg-gray-50 text-gray-700 transition";
-        }
-      }
-
-      const dTimeVal = document.getElementById('desktop-time-val');
-      if (dTimeVal) {
-        dTimeVal.innerText = `${this.dates[idx].time} (Session ${idx + 1})`;
-      }
-
-      this.updateSelectedDatePreview();
-    },
-
-    updateSelectedDatePreview() {
-      const mPreview = document.getElementById('mobile-selected-date-preview');
-      const wDisplay = document.getElementById('workspace-session-display');
-      const cur = this.dates[this.selectedDateIndex || 0];
-
-      const formatted = this.currentLang === 'zh'
-        ? `${cur.labelZh} ${cur.time}`
-        : `${cur.labelEn} ${cur.time}`;
-
-      if (mPreview) mPreview.innerText = formatted;
-      if (wDisplay) wDisplay.innerText = formatted;
-    },
-
-    openMobileDateDrawer() {
-      const backdrop = document.getElementById('drawer-date-backdrop');
-      const panel = document.getElementById('drawer-date-panel');
-      if (backdrop) backdrop.classList.remove('hidden');
-      setTimeout(() => {
-        if (panel) panel.classList.add('drawer-active');
-      }, 10);
-    },
-
-    closeMobileDateDrawer() {
-      const backdrop = document.getElementById('drawer-date-backdrop');
-      const panel = document.getElementById('drawer-date-panel');
-      if (panel) panel.classList.remove('drawer-active');
-      setTimeout(() => {
-        if (backdrop) backdrop.classList.add('hidden');
-      }, 250);
-    },
-
-    selectMobileDateSession(idx) {
-      this.selectDate(idx);
-      this.closeMobileDateDrawer();
-    },
-
-    // Queue Stage
-    startWaitingQueue() {
-      this.state = 'QUEUE';
-      const modal = document.getElementById('modal-waiting-queue');
-      if (modal) modal.classList.remove('hidden');
-
-      this.queueNumber = Math.floor(Math.random() * 100) + 260;
-      const orderElem = document.getElementById('queue-order-number');
-      const estElem = document.getElementById('queue-time-est');
-      if (orderElem) orderElem.innerText = this.queueNumber;
-
-      this.queueTimer = setInterval(() => {
-        const step = Math.floor(Math.random() * 55) + 35;
-        this.queueNumber -= step;
-
-        if (this.queueNumber > 0) {
-          if (orderElem) orderElem.innerText = this.queueNumber;
-          const sec = Math.max(3, Math.floor(this.queueNumber / 2.5));
-          if (estElem) {
-            estElem.innerText = this.currentLang === 'zh' ? `0分 ${sec}秒` : `0min ${sec}sec`;
-          }
-        } else {
-          clearInterval(this.queueTimer);
-          if (modal) modal.classList.add('hidden');
-          
-          // Brief server spinner then launch seating
-          const spinner = document.getElementById('view-spinner');
-          if (spinner) spinner.classList.remove('hidden');
-          setTimeout(() => {
-            if (spinner) spinner.classList.add('hidden');
-            this.openSeatmapWorkspace();
-          }, 500);
-        }
-      }, 240);
-    },
-
-    cancelQueue() {
-      clearInterval(this.queueTimer);
-      const modal = document.getElementById('modal-waiting-queue');
-      if (modal) modal.classList.add('hidden');
-    },
-
-    // Seating Map & Workspace
-    openSeatmapWorkspace() {
-      this.state = 'SEATING';
-      this.updateSelectedDatePreview();
-
-      const modal = document.getElementById('modal-seatmap-workspace');
-      if (modal) modal.classList.remove('hidden');
-
-      // Pop Captcha automatically
-      this.openCaptcha();
-    },
-
-    closeSeatmapWorkspace() {
-      const modal = document.getElementById('modal-seatmap-workspace');
-      if (modal) modal.classList.add('hidden');
-      this.backToVenue();
-    },
-
-    backToVenue() {
-      const viewMap = document.getElementById('view-venue-map');
-      const viewGrid = document.getElementById('view-seat-grid');
-      const btnBack = document.getElementById('btn-back-venue');
-
-      if (viewMap) viewMap.classList.remove('hidden');
-      if (viewGrid) viewGrid.classList.add('hidden');
-      if (btnBack) btnBack.classList.add('hidden');
-
-      this.currentSection = null;
-      this.updateMiniMapHighlight(null);
-    },
-
-    // Captcha Logic
-    generateCaptcha() {
-      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-      let code = "";
-      for (let i = 0; i < 6; i++) {
-        code += chars.charAt(Math.floor(Math.random() * chars.length));
-      }
-      this.generatedCaptchaText = code;
-
-      const canvas = document.getElementById('captcha-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Noise lines
-      ctx.strokeStyle = "#cbd5e1";
-      for (let i = 0; i < 4; i++) {
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.lineWidth = 1.2;
-        ctx.stroke();
-      }
-
-      // Draw Characters with slight rotation
-      ctx.font = "bold 28px monospace";
-      ctx.fillStyle = "#1e293b";
-      ctx.textBaseline = "middle";
-
-      for (let i = 0; i < code.length; i++) {
-        const char = code[i];
-        const x = 20 + i * 30;
-        const y = canvas.height / 2 + (Math.random() * 6 - 3);
-        const rot = (Math.random() * 0.35 - 0.175);
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(rot);
-        ctx.fillText(char, 0, 0);
-        ctx.restore();
-      }
-    },
-
-    openCaptcha() {
-      const modal = document.getElementById('modal-captcha');
-      const input = document.getElementById('captcha-input');
-      this.generateCaptcha();
-      this.captchaStartTime = Date.now();
-
-      if (modal) modal.classList.remove('hidden');
-      if (input) {
-        input.value = "";
-        setTimeout(() => input.focus(), 150);
-        input.onkeydown = (e) => {
-          if (e.key === 'Enter') this.verifyCaptcha();
-        };
-      }
-    },
-
-    verifyCaptcha() {
-      const input = document.getElementById('captcha-input');
-      const val = input ? input.value.trim().toUpperCase() : "";
-
-      if (val === this.generatedCaptchaText) {
-        this.captchaDurationSeconds = ((Date.now() - this.captchaStartTime) / 1000).toFixed(2);
-        const modal = document.getElementById('modal-captcha');
-        if (modal) modal.classList.add('hidden');
-        if (input) {
-          input.classList.remove('border-red-500');
-        }
-      } else {
-        // Authentic behavior: Keep the current captcha characters intact (do not regenerate)
-        if (input) {
-          input.value = "";
-          input.classList.add('border-red-500');
-          input.focus();
-        }
-        this.showAlert(this.currentLang === 'zh' ? "驗證碼不正確，請重新輸入。" : "Characters do not match. Please try again.");
-      }
-    },
-
-    dismissCaptchaToViewSeats() {
-      const modal = document.getElementById('modal-captcha');
-      if (modal) modal.classList.add('hidden');
-    },
-
-    // Trigger Section Selection
-    onSectionSelectedTrigger(sectionName, gradeKey) {
-      this.currentSection = sectionName;
-      this.currentGrade = gradeKey;
-
-      const viewMap = document.getElementById('view-venue-map');
-      const viewGrid = document.getElementById('view-seat-grid');
-      const btnBack = document.getElementById('btn-back-venue');
-      const nameElem = document.getElementById('grid-current-section-name');
-
-      if (viewMap) viewMap.classList.add('hidden');
-      if (viewGrid) viewGrid.classList.remove('hidden');
-      if (btnBack) btnBack.classList.remove('hidden');
-      if (nameElem) nameElem.innerText = sectionName;
-
-      this.updateMiniMapHighlight(sectionName);
-      this.renderSeatMatrix(sectionName, gradeKey);
-    },
-
-    updateMiniMapHighlight(sectionName) {
-      document.querySelectorAll('.mini-kspo-block').forEach(el => {
-        if (sectionName && el.getAttribute('data-section') === sectionName) {
-          el.classList.add('active-section');
-        } else {
-          el.classList.remove('active-section');
-        }
-      });
-    },
-
-    renderSeatMatrix(sectionName, gradeKey) {
-      const container = document.getElementById('seat-cubes-container');
-      if (!container) return;
-      container.innerHTML = "";
-
-      this.selectedSeats = [];
-      this.updateSelectedIndicator();
-
-      const numRows = 10;
-      const numCols = 16;
-      let colorClass = "#b79b71";
-      if (gradeKey === 'gradeS') colorClass = "#7f6aff";
-      if (gradeKey === 'gradeA') colorClass = "#ff719e";
-
-      for (let r = 1; r <= numRows; r++) {
-        const rowDiv = document.createElement('div');
-        rowDiv.className = "flex items-center justify-center";
-
-        // Row Label
-        const label = document.createElement('span');
-        label.className = "text-[9px] font-mono font-bold text-gray-400 w-5 text-right mr-1.5";
-        label.innerText = String(r).padStart(2, '0');
-        rowDiv.appendChild(label);
-
-        for (let c = 1; c <= numCols; c++) {
-          const seatId = `${sectionName}_R${r}_S${c}`;
-          const cube = document.createElement('span');
-          cube.className = "seat-cube available";
-          cube.id = `cube-${seatId}`;
-          cube.style.backgroundColor = colorClass;
-
-          // 25% seats initially sold
-          if (Math.random() < 0.25) {
-            cube.className = "seat-cube sold";
-          } else {
-            cube.onclick = () => this.toggleSeat(seatId, r, c, sectionName, cube);
-          }
-
-          rowDiv.appendChild(cube);
-        }
-
-        container.appendChild(rowDiv);
-      }
-    },
-
-    toggleSeat(seatId, row, col, section, elem) {
-      const now = Date.now();
-      const interval = now - (this.lastClickTime || 0);
-      this.lastClickTime = now;
-      this.lastSeatClickTimestamp = now;
-
-      // Check if already selected
-      const existingIdx = this.selectedSeats.findIndex(s => s.id === seatId);
-      if (existingIdx !== -1) {
-        // Unselect
-        this.selectedSeats.splice(existingIdx, 1);
-        elem.classList.remove('selected');
-        this.updateSelectedIndicator();
-        return;
-      }
-
-      // Max 1 seat limit check
-      if (this.selectedSeats.length >= this.maxSeatsAllowed) {
-        this.showAlert("You can select up to 1 seat.");
-        return;
-      }
-
-      // Select seat
-      this.selectedSeats.push({ id: seatId, row, col, section, elem });
-      elem.classList.add('selected');
-      this.updateSelectedIndicator();
-    },
-
-    updateSelectedIndicator() {
-      const badge = document.getElementById('selected-badge-indicator');
-      const btn = document.getElementById('btn-complete-selection');
-      const count = this.selectedSeats.length;
-
-      if (badge) {
-        badge.innerText = `${count} / ${this.maxSeatsAllowed} SEATS`;
-        if (count > 0) {
-          badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-blue-100 text-blue-800 border border-blue-300";
-        } else {
-          badge.className = "text-xs font-bold px-2 py-0.5 rounded bg-gray-100 text-gray-600 border border-gray-300";
-        }
-      }
-
-      if (btn) {
-        if (count > 0) {
-          btn.disabled = false;
-          btn.className = "flex-1 py-3 px-3 rounded-lg font-bold text-xs sm:text-sm tracking-wide transition duration-150 bg-[#2563EB] hover:bg-[#1D4ED8] text-white cursor-pointer shadow-md text-center";
-        } else {
-          btn.disabled = true;
-          btn.className = "flex-1 py-3 px-3 rounded-lg font-bold text-xs sm:text-sm tracking-wide transition duration-150 bg-gray-300 text-gray-500 cursor-not-allowed shadow-sm text-center";
-        }
-      }
-    },
-
-    refreshSectionSeats() {
-      const now = Date.now();
-      this.refreshClickTimestamps.push(now);
-      this.refreshClickTimestamps = this.refreshClickTimestamps.filter(t => now - t < 1500);
-
-      if (this.refreshClickTimestamps.length >= 3) {
-        this.logTryAgainIncident("Spamming Refresh", "Clicked Refresh 3+ times within 1.5 seconds.");
-        this.showAlert("Please try again.");
-        return;
-      }
-
-      // Simulate natural seat depletion & release
-      document.querySelectorAll('.seat-cube.available').forEach(cube => {
-        if (!cube.classList.contains('selected') && Math.random() < 0.08) {
-          cube.className = "seat-cube sold";
-          cube.onclick = null;
-        }
-      });
-    },
-
-    submitSeatSelection() {
-      if (this.selectedSeats.length === 0) return;
-
-      const now = Date.now();
-      const intervalFromLastSubmit = now - (this.lastSubmitTimestamp || 0);
-      this.lastSubmitTimestamp = now;
-
-      // 1. Rapid submission throttle
-      if (intervalFromLastSubmit < 400 && this.lastSubmitTimestamp !== 0) {
-        this.logTryAgainIncident("Rapid Submit", "Double-clicked submission button within 400ms.");
-        this.showAlert("Please try again.");
-        return;
-      }
-
-      // 2. Simulated Random Conflict (30% chance on first attempt)
-      if (Math.random() < 0.28) {
-        const victimSeat = this.selectedSeats[0];
-        this.logTryAgainIncident("Seat Conflict", "Seat grabbed by another customer in the payment gateway.");
-
-        // Cleanly mark seat as sold & wipe selection
-        if (victimSeat && victimSeat.elem) {
-          victimSeat.elem.classList.remove('selected');
-          victimSeat.elem.className = "seat-cube sold";
-          victimSeat.elem.onclick = null;
-        }
-        this.selectedSeats = [];
-        this.updateSelectedIndicator();
-
-        this.showAlert("Another customer is in payments for the seat.");
-        return;
-      }
-
-      // 3. Success!
-      this.triggerBookingSuccess();
-    },
-
-    logTryAgainIncident(reason, details) {
-      const elapsed = ((Date.now() - (this.sessionStartTime || Date.now())) / 1000).toFixed(1);
-      this.tryAgainIncidents.push({ elapsed, reason, details });
-    },
-
-    triggerBookingSuccess() {
-      const modal = document.getElementById('modal-success');
-      const totalSec = ((Date.now() - (this.sessionStartTime || Date.now())) / 1000).toFixed(2);
-      
-      const statTotal = document.getElementById('stat-total-time');
-      const statCaptcha = document.getElementById('stat-captcha-time');
-      const statSeat = document.getElementById('stat-seat-label');
-      const statCount = document.getElementById('stat-try-again-count');
-      const listContainer = document.getElementById('diagnostics-list-container');
-
-      if (statTotal) statTotal.innerText = `${totalSec}s`;
-      if (statCaptcha) statCaptcha.innerText = `${this.captchaDurationSeconds || '2.14'}s`;
-      if (statSeat && this.selectedSeats[0]) {
-        statSeat.innerText = `${this.selectedSeats[0].section} - Row ${String(this.selectedSeats[0].row).padStart(2, '0')}, Seat ${this.selectedSeats[0].col}`;
-      }
-      if (statCount) statCount.innerText = `Try Again: ${this.tryAgainIncidents.length}`;
-
-      if (listContainer) {
-        listContainer.innerHTML = "";
-        if (this.tryAgainIncidents.length === 0) {
-          listContainer.innerHTML = `<div class="p-2 bg-emerald-50 text-emerald-800 rounded border border-emerald-200 text-[11px] font-semibold">★ Perfect Rhythm! No unnecessary freezes or errors triggered.</div>`;
-        } else {
-          this.tryAgainIncidents.forEach(item => {
-            const div = document.createElement('div');
-            div.className = "p-2 bg-amber-50 text-amber-900 rounded border border-amber-200 text-[11px]";
-            div.innerHTML = `<strong>at ${item.elapsed}s [${item.reason}]:</strong> ${item.details}`;
-            listContainer.appendChild(div);
-          });
-        }
-      }
-
-      if (modal) modal.classList.remove('hidden');
-    },
-
-    showAlert(msg) {
-      const modal = document.getElementById('modal-alert');
-      const msgElem = document.getElementById('alert-modal-msg');
-      if (msgElem) msgElem.innerText = msg;
-      if (modal) modal.classList.remove('hidden');
-    },
-
-    closeAlertModal() {
-      const modal = document.getElementById('modal-alert');
-      if (modal) modal.classList.add('hidden');
-    },
-
-    zoomMiniMap(delta) {
-      this.miniMapScale = Math.min(1.8, Math.max(0.7, this.miniMapScale + delta));
-      const wrap = document.getElementById('mini-map-transform-wrap');
-      if (wrap) wrap.style.transform = `scale(${this.miniMapScale})`;
-    },
-
-    resetMiniMapZoom() {
-      this.miniMapScale = 1.0;
-      const wrap = document.getElementById('mini-map-transform-wrap');
-      if (wrap) wrap.style.transform = `scale(1)`;
-    },
-
-    resetSession() {
-      clearInterval(this.countdownTimer);
-      clearInterval(this.queueTimer);
-      
-      document.getElementById('modal-waiting-queue')?.classList.add('hidden');
-      document.getElementById('modal-captcha')?.classList.add('hidden');
-      document.getElementById('modal-seatmap-workspace')?.classList.add('hidden');
-      document.getElementById('modal-alert')?.classList.add('hidden');
-      document.getElementById('modal-success')?.classList.add('hidden');
-
-      this.selectedSeats = [];
-      this.tryAgainIncidents = [];
-      this.backToVenue();
-      this.startCountdown();
-    }
-  };
-
-  // Launch on Window Load
-  window.addEventListener('DOMContentLoaded', () => {
-    app.init();
-  });
-  </script>
+<body class="min-h-screen flex flex-col items-center justify-start p-0 sm:py-6 sm:px-4">
+
+  <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center">
+      <div class="inline-block px-3 py-1 bg-blue-50 text-[#2563EB] border border-blue-200 text-xs font-bold rounded-full mb-3" data-i18n="prepBadge">
+        Global Ticket Simulator
+      </div>
+      <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">搶票實戰練習模式</h2>
+      <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-1.5">
+        <p data-i18n="prepStep1">• 點擊 <b>「準備完成，進入練習」</b> 進入搶票主頁面。</p>
+        <p data-i18n="prepStep2">• 手機版底部按鈕將直接顯示真實倒數，歸零變藍時點擊即可喚出選擇日期抽屜！</p>
+      </div>
+      <button type="button" onclick="app.startPracticeFromPrep()" class="w-full py-3.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg shadow transition-all active:scale-[0.99]" data-i18n="prepStartBtn">
+        準備完成，進入練習
+      </button>
+    </div>
+  </div>
+
+  <!-- STREAMING_CHUNK:Rendering desktop view container for viewports >= 768px -->
+  <div class="hidden md:flex w-full max-w-[1024px] bg-white border border-[#dce0e6] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex-col relative min-h-[720px]">
+    
+    <!-- Top Desktop Header -->
+    <header class="border-b border-gray-100 px-6 py-3.5 flex items-center justify-between bg-white">
+      <div class="flex items-center space-x-2">
+        <span class="text-xl font-black tracking-tight text-[#2563EB]">GLOBAL PASS</span>
+        <span class="text-sm font-bold text-gray-800 tracking-tight" data-i18n="headerTitle">搶票練習模擬器</span>
+      </div>
+      <div class="flex items-center space-x-3 text-xs text-gray-500">
+        <!-- Language Switcher Buttons -->
+        <div class="flex items-center space-x-1 font-medium bg-gray-100 px-2 py-1 rounded">
+          <button type="button" onclick="app.setLanguage('en')" class="lang-btn-en text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors">EN</button>
+          <span class="text-gray-300">|</span>
+          <button type="button" onclick="app.setLanguage('zh')" class="lang-btn-zh text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors">繁體中文</button>
+        </div>
+        <span class="text-gray-300">|</span>
+        <button type="button" onclick="location.reload()" class="hover:text-gray-800 underline" data-i18n="resetBtn">重設</button>
+      </div>
+    </header>
+
+    <!-- DESKTOP CONTENT -->
+    <main class="flex-1 flex flex-col p-6 sm:p-8 relative">
+      <!-- Concert Info Header -->
+      <div class="flex flex-col md:flex-row md:items-start gap-6 border-b border-gray-100 pb-6">
+        <div class="w-32 h-44 bg-gray-50 border border-gray-200 rounded flex flex-col items-center justify-center text-gray-400 shrink-0 shadow-sm">
+          <svg class="w-12 h-12 mb-2 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path>
+          </svg>
+          <span class="text-[11px] font-medium tracking-tight text-gray-500">CONCERT LIVE</span>
+        </div>
+
+        <div class="flex-1">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+            <h1 class="text-2xl font-bold text-gray-900 tracking-tight">WORLD TOUR LIVE IN SEOUL</h1>
+            <span class="px-3.5 py-1 rounded-full border border-[#2563EB] text-[#2563EB] text-xs font-semibold inline-flex items-center bg-blue-50/50" data-i18n="verifiedBadge">
+              認證會員專屬專區 &gt;
+            </span>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-y-3 text-xs text-gray-600 mt-4 pt-4 border-t border-gray-100">
+            <div><span class="text-gray-400 block mb-0.5" data-i18n="infoDate">演出日期</span><p class="font-medium text-gray-800">2026.10.31 - 11.01</p></div>
+            <div><span class="text-gray-400 block mb-0.5" data-i18n="infoVenue">演出場館</span><p class="font-medium text-gray-800">KSPO DOME</p></div>
+            <div><span class="text-gray-400 block mb-0.5" data-i18n="infoRuntime">演出時長</span><p class="font-medium text-gray-800">150min</p></div>
+            <div><span class="text-gray-400 block mb-0.5" data-i18n="infoRating">觀賞年齡</span><p class="font-medium text-gray-800" data-i18n="ratingAge">7歲以上均可觀賞</p></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Desktop Countdown Line -->
+      <div class="py-5 border-b border-gray-100 flex items-center justify-center">
+        <div id="desktop-countdown-line" class="text-sm sm:text-base text-[#2563EB] font-normal tracking-wide text-center">
+          優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 剩餘時間: <span class="font-bold ml-1 font-mono text-[#2563EB]">00:03</span> )
+        </div>
+      </div>
+
+      <!-- Desktop Date / Time / Ticket Price Matrix -->
+      <div class="flex-1 grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-gray-200 border-b border-gray-200 min-h-[220px]">
+        <!-- Column 1: Select Date -->
+        <div class="p-5 flex flex-col justify-start">
+          <div class="flex items-center space-x-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span data-i18n="selectDateTitle">選擇日期</span>
+          </div>
+
+          <div class="flex-1 flex flex-col justify-start text-gray-400 text-xs">
+            <span id="desktop-date-locked-msg" class="my-auto text-center text-gray-400" data-i18n="dateLockedMsg">開賣倒數歸零 00:00 時將開放選取</span>
+            <div id="desktop-date-active-list" class="w-full space-y-2 hidden">
+              <button type="button" id="d-date-btn-1" onclick="app.selectDate(0)" class="w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors">
+                <span class="d-date-label-1">2026.10.31(星期六) 18:00</span>
+                <span class="d-date-badge-1 text-xs bg-[#2563EB] text-white px-2 py-0.5 rounded" data-i18n="selectedBadge">已選擇</span>
+              </button>
+              <button type="button" id="d-date-btn-2" onclick="app.selectDate(1)" class="w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors">
+                <span class="d-date-label-2">2026.11.01(星期日) 17:00</span>
+                <span class="d-date-badge-2 text-xs bg-[#2563EB] text-white px-2 py-0.5 rounded hidden" data-i18n="selectedBadge">已選擇</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 2: Select Time -->
+        <div class="p-5 flex flex-col justify-start">
+          <div class="flex items-center space-x-2 text-xs font-bold text-gray-500 uppercase tracking-wider mb-4">
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span data-i18n="selectTimeTitle">選擇場次時間</span>
+          </div>
+          <div class="flex-1 flex flex-col justify-start text-gray-400 text-xs">
+            <span id="desktop-time-locked-msg" class="my-auto text-center text-gray-300">-</span>
+            <div id="desktop-time-active-box" class="w-full hidden">
+              <div class="py-2.5 px-4 border border-[#2563EB] bg-blue-50/50 rounded text-sm font-semibold text-[#2563EB] flex items-center justify-between">
+                <span id="desktop-time-value-display">06:00 PM</span>
+                <span class="text-xs text-[#2563EB]" data-i18n="selectedBadge">已選擇</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Column 3: Available Seats -->
+        <div class="p-5 flex flex-col justify-start">
+          <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" data-i18n="availSeatsTitle">剩餘席位票價</div>
+          <ul class="text-xs space-y-3 text-gray-700">
+            <li class="flex justify-between items-center">
+              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>R</span>
+              <span class="font-mono font-medium">₩176,000</span>
+            </li>
+            <li class="flex justify-between items-center">
+              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>S</span>
+              <span class="font-mono font-medium">₩165,000</span>
+            </li>
+            <li class="flex justify-between items-center">
+              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>A</span>
+              <span class="font-mono font-medium">₩154,000</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Desktop Get Tickets Footer Button -->
+      <div class="pt-6 flex justify-end items-center">
+        <button id="desktop-btn-get-tickets" disabled class="px-12 py-3.5 rounded text-white font-bold text-base bg-gray-300 cursor-not-allowed transition-all" data-i18n="getTicketsBtn">
+          立即購票
+        </button>
+      </div>
+
+      <!-- Desktop Practice Guide -->
+      <div class="mt-8 pt-6 border-t border-gray-100">
+        <div class="flex space-x-6 border-b border-gray-200 text-xs font-bold text-gray-500 mb-4">
+          <button class="pb-2 border-b-2 border-[#2563EB] text-[#2563EB]" data-i18n="guideTab1">練習指南</button>
+          <button class="pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600" data-i18n="guideTab2">演唱會詳情</button>
+          <button class="pb-2 border-b-2 border-transparent text-gray-400 hover:text-gray-600" data-i18n="guideTab3">購票須知</button>
+        </div>
+        <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
+          <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• 練習說明：</p>
+          <p data-i18n="guideIntroText">即時倒數計時結束（00:00）後自動開賣。日期與時間將自動啟動，點擊「立即購票」記錄手速反應並進入排隊室。</p>
+          <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
+            ※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <div class="flex md:hidden w-full min-h-screen bg-white flex-col relative overflow-x-hidden">
+    
+    <!-- Top System Bar matching screenshot 00:00 -->
+    <div class="w-full bg-[#18122B] text-white px-4 py-2.5 flex items-center justify-between text-xs shrink-0 z-10">
+      <div class="flex items-center space-x-3">
+        <button type="button" class="text-white hover:text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button type="button" class="text-white hover:text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+      </div>
+      <div class="flex items-center space-x-2">
+        <!-- Language Switcher -->
+        <div class="bg-white/10 px-2 py-0.5 rounded text-[11px] font-bold flex space-x-1.5">
+          <button onclick="app.setLanguage('en')" class="lang-btn-en text-white/70 hover:text-white">EN</button>
+          <span class="text-white/40">|</span>
+          <button onclick="app.setLanguage('zh')" class="lang-btn-zh text-[#2563EB]">繁中</button>
+        </div>
+        <button type="button" class="text-white hover:text-gray-300 pl-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Concert Body matching screenshot 00:00 -->
+    <div class="flex-1 pb-24 overflow-y-auto">
+      <!-- Dark Hero Banner -->
+      <div class="bg-gradient-to-b from-[#18122B] via-[#241738] to-[#140F22] text-white p-4 flex gap-4 items-center">
+        <!-- Poster -->
+        <div class="w-24 h-32 bg-[#2d1b4e] rounded-sm border border-white/20 shrink-0 shadow-md flex flex-col items-center justify-center p-2 text-center relative overflow-hidden">
+          <span class="text-[9px] font-black text-pink-300 tracking-wider">WORLD TOUR</span>
+          <div class="w-12 h-12 my-1 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+            <span class="text-xs font-bold text-white">LIVE</span>
+          </div>
+          <span class="text-[10px] font-bold text-white/90 leading-tight">SEOUL 2026</span>
+        </div>
+
+        <!-- Metadata -->
+        <div class="flex-1">
+          <h1 class="text-base font-bold text-white tracking-tight leading-snug">WORLD TOUR LIVE IN SEOUL</h1>
+          <p class="text-xs text-white/70 mt-1">• 演唱會</p>
+          <p class="text-xs text-white/70">• 7歲以上觀賞</p>
+          <div class="mt-2.5">
+            <span class="px-2.5 py-1 rounded-full border border-[#2563EB] text-[#2563EB] text-[11px] font-semibold inline-flex items-center bg-[#2563EB]/10" data-i18n="verifiedBadge">
+              認證會員專屬專區 &gt;
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info Meta Rows -->
+      <div class="px-4 py-3 bg-white border-b border-gray-100 text-xs space-y-2.5">
+        <div class="flex">
+          <span class="w-20 text-gray-400" data-i18n="infoDate">演出日期</span>
+          <span class="font-medium text-gray-800">2026.10.31 - 2026.11.01</span>
+        </div>
+        <div class="flex">
+          <span class="w-20 text-gray-400" data-i18n="infoVenue">演出場館</span>
+          <span class="font-medium text-gray-800">KSPO DOME</span>
+        </div>
+        <div class="flex">
+          <span class="w-20 text-gray-400" data-i18n="infoRuntime">演出時長</span>
+          <span class="font-medium text-gray-800">150min</span>
+        </div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex border-b border-gray-200 text-xs font-bold text-center bg-white">
+        <button class="flex-1 py-3 border-b-2 border-[#2563EB] text-[#2563EB]" data-i18n="tabMoreInfo">更多資訊</button>
+        <button class="flex-1 py-3 text-gray-400 hover:text-gray-600" data-i18n="tabCancelPolicy">退票政策</button>
+      </div>
+
+      <!-- Price Breakdown matching video -->
+      <div class="p-4 bg-white">
+        <h2 class="text-sm font-bold text-gray-900 mb-3" data-i18n="priceTitle">價格資訊</h2>
+        <div class="grid grid-cols-2 gap-y-2.5 text-xs text-gray-700">
+          <div class="flex items-center">
+            <span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>
+            <span class="font-medium">R</span>
+            <span class="ml-auto font-mono">₩ 176,000</span>
+          </div>
+          <div class="flex items-center pl-4">
+            <span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>
+            <span class="font-medium">S</span>
+            <span class="ml-auto font-mono">₩ 165,000</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>
+            <span class="font-medium">A</span>
+            <span class="ml-auto font-mono">₩ 154,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mobile Practice Notice -->
+      <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
+        <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• 練習說明：</p>
+        <p data-i18n="guideIntroText">底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可喚出選擇日期抽屜！</p>
+        <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。</p>
+      </div>
+    </div>
+
+    <!-- Mobile Sticky Bottom Bar matching screenshot 00:00~00:07 -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex items-center space-x-2 z-20 shadow-lg">
+      <button type="button" onclick="location.reload()" title="重設" class="w-12 h-12 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+      
+      <!-- Authentic countdown button from user video -->
+      <button id="mobile-btn-buy-now" disabled class="flex-1 h-12 bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm rounded transition-all flex flex-col items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]">
+        <span id="mobile-buy-btn-line1">優先預訂開啟 : 10.31(星期六) 20:00</span>
+        <span id="mobile-buy-btn-line2" class="font-mono text-[11px]">(Time left : 00:03)</span>
+      </button>
+    </div>
+
+  </div>
+
+  <div id="drawer-date-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex flex-col justify-end">
+    <div id="drawer-date-panel" class="w-full bg-white rounded-t-2xl p-4 drawer-enter flex flex-col max-h-[80vh] shadow-2xl">
+      <!-- Drawer Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-gray-100">
+        <span class="text-base font-bold text-gray-900" data-i18n="selectDateTitle">選擇日期</span>
+        <button type="button" onclick="app.closeMobileDateDrawer()" class="text-gray-400 hover:text-gray-700 text-xl font-light p-1">✕</button>
+      </div>
+
+      <!-- Date Options matching real concert dates -->
+      <div class="divide-y divide-gray-100 py-2 overflow-y-auto">
+        <button type="button" onclick="app.selectMobileDateSession(0)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
+          <span class="d-date-label-1">周六, 10月 31, 2026 06:00 下午</span>
+          <span class="text-xs text-[#2563EB] font-bold">&gt;</span>
+        </button>
+        <button type="button" onclick="app.selectMobileDateSession(1)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
+          <span class="d-date-label-2">周日, 11月 01, 2026 05:00 下午</span>
+          <span class="text-xs text-gray-300">&gt;</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="view-spinner" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center hidden">
+    <div class="absolute top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+      <span class="text-sm font-bold text-gray-800">Global Ticket</span>
+      <button type="button" onclick="app.cancelTransition()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
+    </div>
+    <div class="loader-spin mb-4"></div>
+    <span class="text-xs text-gray-400 font-medium">Loading session...</span>
+  </div>
+
+  <div id="modal-waiting-queue" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-sm border border-gray-200 p-6 relative flex flex-col items-center text-center shadow-2xl">
+      <button type="button" onclick="app.closeWaitingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
+        ✕
+      </button>
+      <div class="text-xs font-semibold text-gray-800 tracking-wide mb-3 truncate w-full px-4">
+        WORLD TOUR LIVE IN SEOUL
+      </div>
+      <p class="text-xs text-gray-400 font-medium mb-1" data-i18n="queueWaitPrompt">請稍候！</p>
+      <h2 class="text-xl font-bold text-[#2563EB] mb-2 tracking-tight" data-i18n="queueOrderTitle">您的排隊序號</h2>
+      <div id="queue-order-number" class="text-5xl font-black text-[#2563EB] my-3 font-mono tracking-tight">
+        352
+      </div>
+      <p class="text-xs text-gray-600 mb-6 font-medium">
+        <span data-i18n="queueEstPrefix">預估等待時間：</span><span id="queue-time-est" class="underline font-bold text-gray-900">2分 56秒</span>
+      </p>
+      <div class="w-full text-left bg-gray-50 rounded-lg p-3.5 border border-gray-100 text-[11px] text-gray-500 space-y-1.5 leading-relaxed">
+        <p data-i18n="queueNotice1">• 目前連線人數眾多，系統正在依照順序處理。</p>
+        <p class="pl-2" data-i18n="queueNotice2">請稍候片刻，系統將安全自動跳轉至選位畫面。</p>
+        <p data-i18n="queueNotice3">• 注意！若重新整理此頁面，排隊序號將會重新計算。</p>
+      </div>
+      <button type="button" onclick="app.closeWaitingModal()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100">
+        取消
+      </button>
+    </div>
+  </div>
+
+  <div id="modal-captcha" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl w-full max-w-md border border-gray-200 p-6 flex flex-col items-center text-center shadow-2xl relative">
+      <h2 class="text-2xl font-bold text-[#2563EB] mb-2" data-i18n="captchaHeading">安全預訂服務</h2>
+      <p class="text-xs text-gray-600 max-w-xs leading-relaxed mb-4" data-i18n="captchaDesc">
+        為防範外掛與自動化腳本，選位前請輸入圖形安全驗證碼
+      </p>
+      <div class="flex items-center space-x-2 mb-3">
+        <div class="border border-gray-300 rounded bg-white p-1">
+          <canvas id="captcha-canvas" width="220" height="60" class="block bg-gray-50 rounded"></canvas>
+        </div>
+        <div class="flex flex-col space-y-1">
+          <button type="button" onclick="app.regenerateCaptcha()" title="重新產生驗證碼" class="w-8 h-7 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 text-xs">
+            ⟳
+          </button>
+          <button type="button" onclick="app.speakCaptcha()" title="語音朗讀驗證碼" class="w-8 h-7 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 text-xs">
+            🔊
+          </button>
+        </div>
+      </div>
+      <div class="w-full max-w-xs mb-4">
+        <input 
+          type="text" 
+          id="captcha-input" 
+          maxlength="6"
+          autocomplete="off"
+          placeholder="請輸入字元"
+          class="w-full text-center tracking-widest text-sm font-bold uppercase py-2.5 border border-gray-300 rounded focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none"
+          oninput="this.value = this.value.toUpperCase();"
+          onkeydown="if(event.key === 'Enter') app.submitCaptcha();"
+        />
+        <p id="captcha-error-msg" class="text-xs text-red-500 font-medium mt-1 hidden" data-i18n="captchaError">
+          驗證碼輸入錯誤，請重新輸入。
+        </p>
+      </div>
+      <button type="button" onclick="app.submitCaptcha()" class="w-full max-w-xs py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg transition-colors shadow" data-i18n="captchaSubmitBtn">
+        確認送出
+      </button>
+      <div class="mt-4">
+        <a href="javascript:void(0)" onclick="app.dismissCaptchaToViewOnly()" class="text-xs text-gray-500 hover:underline" data-i18n="captchaDismissLink">
+          點此先預覽空位分佈
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="step-seatmap-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden flex items-center justify-center p-0 md:p-4">
+    
+    <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
+      
+      <!-- Seating Top Bar matching screenshot 00:29 -->
+      <div class="bg-[#1e293b] border-b border-gray-700 px-3 md:px-4 py-2.5 flex items-center justify-between text-xs text-white shrink-0">
+        <div class="flex items-center space-x-2 truncate">
+          <span class="font-bold text-sm tracking-wide text-blue-400" data-i18n="selectSeatsHeader">選擇座位</span>
+          <span class="text-gray-500">|</span>
+          <span class="text-gray-200 font-medium truncate max-w-[120px] sm:max-w-xs">WORLD TOUR LIVE</span>
+          <span class="text-gray-500 hidden sm:inline">|</span>
+          <select id="seatmap-session-select" onchange="app.onSessionSelectChange(this.value)" class="bg-[#0f172a] border border-gray-600 rounded px-1.5 py-0.5 text-xs text-gray-200 outline-none">
+            <option value="0">2026.10.31 18:00</option>
+            <option value="1">2026.11.01 17:00</option>
+          </select>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0">
+          <button id="btn-back-to-arena" onclick="app.backToVenue()" class="px-2 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-white text-xs hidden transition-colors" data-i18n="backToVenueBtn">
+            &lt; 全區
+          </button>
+          <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-300 hover:text-white text-xl font-bold px-1.5 leading-none">
+            ✕
+          </button>
+        </div>
+      </div>
+
+      <!-- Venue Overview & Granular Seat Matrix Layout -->
+      <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
+        <!-- Center Workspace (Full KSPO SVG & Seat Matrix) -->
+        <div class="flex-1 bg-white relative p-1 sm:p-4 flex flex-col items-center justify-start sm:justify-center overflow-y-auto overflow-x-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
+          
+          <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-400 text-center max-w-xl mb-1 sm:mb-2 leading-relaxed shrink-0" data-i18n="venueNoticeText">
+            舞台位置僅供購票參考，可能與實際舞台配置稍有不同。<br>各區域上方最靠近舞台，請依照橫向順序挑選座位。
+          </div>
+
+          <!-- KSPO DOME Full Layout Replica (Centered horizontally around X=380, trapezoids removed) -->
+          <div id="kspo-dome-svg-wrap" class="w-full max-w-[620px] flex flex-col items-center justify-center my-auto">
+            <div class="w-56 sm:w-72 py-1 bg-gray-100 border border-gray-300 text-gray-500 font-bold text-center tracking-widest text-sm sm:text-base -mb-1 rounded-sm z-10 shadow-sm">
+              STAGE
+            </div>
+
+            <!-- Main SVG Venue Map: Center X = 380, viewBox 0 0 760 410 -->
+            <svg viewBox="0 0 760 410" class="w-full h-auto drop-shadow-sm select-none">
+              <!-- Central connecting runway -->
+              <rect x="372" y="10" width="16" height="195" fill="#e9ecef" stroke="#d5d9e0" rx="1"/>
+
+              <!-- Symmetrical Floor Badges -->
+              <g transform="translate(180, 16)">
+                <rect width="46" height="20" rx="3" fill="#666"/>
+                <text x="23" y="14" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
+              </g>
+              <g transform="translate(534, 16)">
+                <rect width="46" height="20" rx="3" fill="#666"/>
+                <text x="23" y="14" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
+              </g>
+
+              <!-- Level Indicators: Perfectly Symmetrical about X=380 -->
+              <circle cx="120" cy="18" r="13" fill="#666"/>
+              <text x="120" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
+              <circle cx="640" cy="18" r="13" fill="#666"/>
+              <text x="640" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
+
+              <circle cx="60" cy="18" r="13" fill="#666"/>
+              <text x="60" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
+              <circle cx="700" cy="18" r="13" fill="#666"/>
+              <text x="700" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
+
+              <!-- Floor A, B, C, D (Directly adjacent to Stage, symmetrically balanced) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor A', 'gradeR')">
+                <path d="M 245,15 L 345,15 L 345,88 L 255,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="295" y="58" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
+              </g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor B', 'gradeR')">
+                <path d="M 415,15 L 515,15 L 505,88 L 415,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="465" y="58" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
+              </g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor C', 'gradeR')">
+                <path d="M 258,96 L 345,96 L 336,165 L 275,148 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="303" y="136" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
+              </g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor D', 'gradeR')">
+                <path d="M 415,96 L 502,96 L 485,148 L 424,165 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="457" y="136" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
+              </g>
+
+              <!-- 1F Tier Grade R: Right side (1 ~ 7) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeR')"><path d="M 618,30 A 260 260 0 0 1 635,68 L 590,68 A 220 220 0 0 0 578,32 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="53" fill="#fff" font-size="13" font-weight="bold">1</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeR')"><path d="M 635,73 A 260 260 0 0 1 640,111 L 595,107 A 220 220 0 0 0 590,73 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="95" fill="#fff" font-size="13" font-weight="bold">2</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeR')"><path d="M 640,116 A 260 260 0 0 1 633,153 L 590,143 A 220 220 0 0 0 595,112 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="137" fill="#fff" font-size="13" font-weight="bold">3</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeR')"><path d="M 632,158 A 260 260 0 0 1 610,198 L 570,183 A 220 220 0 0 0 588,148 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="177" fill="#fff" font-size="13" font-weight="bold">4</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeR')"><path d="M 607,203 A 260 260 0 0 1 575,241 L 540,219 A 220 220 0 0 0 568,187 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="217" fill="#fff" font-size="13" font-weight="bold">5</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeR')"><path d="M 570,245 A 260 260 0 0 1 530,273 L 500,245 A 220 220 0 0 0 535,222 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="250" fill="#fff" font-size="13" font-weight="bold">6</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeR')"><path d="M 524,276 A 260 260 0 0 1 475,293 L 458,261 A 220 220 0 0 0 495,248 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="273" fill="#fff" font-size="13" font-weight="bold">7</text></g>
+              
+              <!-- F.O.H: Centered exactly at X=380 (355 to 405) -->
+              <g transform="translate(355, 248)">
+                <rect width="50" height="32" fill="#f0f0f0" stroke="#ddd" rx="2"/>
+                <text x="25" y="20" fill="#bbb" font-size="10" font-weight="bold" text-anchor="middle">F.O.H</text>
+              </g>
+
+              <!-- 1F Tier Grade R: Left side (9 ~ 15, Symmetrical mirror to 7~1) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeR')"><path d="M 302,293 A 260 260 0 0 1 236,276 L 262,248 A 220 220 0 0 0 322,261 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="273" fill="#fff" font-size="13" font-weight="bold">9</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeR')"><path d="M 230,273 A 260 260 0 0 1 190,245 L 225,222 A 220 220 0 0 0 260,245 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="250" fill="#fff" font-size="13" font-weight="bold">10</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeR')"><path d="M 185,241 A 260 260 0 0 1 153,203 L 192,187 A 220 220 0 0 0 220,219 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="217" fill="#fff" font-size="13" font-weight="bold">11</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeR')"><path d="M 150,198 A 260 260 0 0 1 128,158 L 172,148 A 220 220 0 0 0 190,183 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="177" fill="#fff" font-size="13" font-weight="bold">12</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeR')"><path d="M 127,153 A 260 260 0 0 1 120,116 L 165,112 A 220 220 0 0 0 170,143 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="137" fill="#fff" font-size="13" font-weight="bold">13</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeR')"><path d="M 120,111 A 260 260 0 0 1 125,73 L 170,73 A 220 220 0 0 0 165,107 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="95" fill="#fff" font-size="13" font-weight="bold">14</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeR')"><path d="M 125,68 A 260 260 0 0 1 142,30 L 182,32 A 220 220 0 0 0 170,68 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="53" fill="#fff" font-size="13" font-weight="bold">15</text></g>
+
+              <!-- 2F Outer Tier: Right Side (24~27) -->
+              <g><path d="M 700,16 A 315 315 0 0 1 715,51 L 675,54 A 275 275 0 0 0 662,23 Z" fill="#d9d9d9" stroke="#fff"/><text x="686" y="39" fill="#fff" font-size="12" font-weight="bold">24</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 715,56 A 315 315 0 0 1 720,96 L 678,94 A 275 275 0 0 0 675,59 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="79" fill="#fff" font-size="12" font-weight="bold">25</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 720,101 A 315 315 0 0 1 714,141 L 672,134 A 275 275 0 0 0 678,99 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="124" fill="#fff" font-size="12" font-weight="bold">26</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 712,146 A 315 315 0 0 1 692,189 L 653,175 A 275 275 0 0 0 670,139 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="169" fill="#fff" font-size="12" font-weight="bold">27</text></g>
+
+              <!-- 2F Outer Tier: Grade S (28 ~ 39, Perfectly mirrored) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeS')"><path d="M 689,194 A 315 315 0 0 1 660,235 L 626,215 A 275 275 0 0 0 650,180 Z" fill="#7f6aff" stroke="#fff"/><text x="652" y="213" fill="#fff" font-size="12" font-weight="bold">28</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeS')"><path d="M 655,240 A 315 315 0 0 1 615,275 L 588,250 A 275 275 0 0 0 622,219 Z" fill="#7f6aff" stroke="#fff"/><text x="618" y="249" fill="#fff" font-size="12" font-weight="bold">29</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeS')"><path d="M 610,279 A 315 315 0 0 1 565,308 L 544,278 A 275 275 0 0 0 583,254 Z" fill="#7f6aff" stroke="#fff"/><text x="575" y="283" fill="#fff" font-size="12" font-weight="bold">30</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeS')"><path d="M 559,312 A 315 315 0 0 1 508,334 L 493,301 A 275 275 0 0 0 538,282 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="311" fill="#fff" font-size="12" font-weight="bold">31</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeS')"><path d="M 501,337 A 315 315 0 0 1 450,348 L 441,312 A 275 275 0 0 0 487,303 Z" fill="#7f6aff" stroke="#fff"/><text x="470" y="326" fill="#fff" font-size="12" font-weight="bold">32</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeS')"><path d="M 442,349 A 315 315 0 0 1 390,351 L 388,315 A 275 275 0 0 0 434,313 Z" fill="#7f6aff" stroke="#fff"/><text x="412" y="336" fill="#fff" font-size="12" font-weight="bold">33</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeS')"><path d="M 370,351 A 315 315 0 0 1 318,349 L 326,313 A 275 275 0 0 0 372,315 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="336" fill="#fff" font-size="12" font-weight="bold">34</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeS')"><path d="M 310,348 A 315 315 0 0 1 259,337 L 273,303 A 275 275 0 0 0 319,312 Z" fill="#7f6aff" stroke="#fff"/><text x="290" y="326" fill="#fff" font-size="12" font-weight="bold">35</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeS')"><path d="M 252,334 A 315 315 0 0 1 201,312 L 222,282 A 275 275 0 0 0 267,301 Z" fill="#7f6aff" stroke="#fff"/><text x="234" y="311" fill="#fff" font-size="12" font-weight="bold">36</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeS')"><path d="M 195,308 A 315 315 0 0 1 150,279 L 177,254 A 275 275 0 0 0 216,278 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="283" fill="#fff" font-size="12" font-weight="bold">37</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeS')"><path d="M 145,275 A 315 315 0 0 1 105,240 L 138,219 A 275 275 0 0 0 172,250 Z" fill="#7f6aff" stroke="#fff"/><text x="142" y="249" fill="#fff" font-size="12" font-weight="bold">38</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeS')"><path d="M 100,235 A 315 315 0 0 1 71,194 L 110,180 A 275 275 0 0 0 134,215 Z" fill="#7f6aff" stroke="#fff"/><text x="108" y="213" fill="#fff" font-size="12" font-weight="bold">39</text></g>
+
+              <!-- 2F Outer Tier Left: Grade A Pink (40~42) & Disabled Gray (43) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 68,189 A 315 315 0 0 1 48,146 L 90,139 A 275 275 0 0 0 107,175 Z" fill="#ff719e" stroke="#fff"/><text x="80" y="169" fill="#fff" font-size="12" font-weight="bold">40</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 46,141 A 315 315 0 0 1 40,101 L 82,99 A 275 275 0 0 0 88,134 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="124" fill="#fff" font-size="12" font-weight="bold">41</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 40,96 A 315 315 0 0 1 45,56 L 85,59 A 275 275 0 0 0 82,94 Z" fill="#ff719e" stroke="#fff"/><text x="64" y="79" fill="#fff" font-size="12" font-weight="bold">42</text></g>
+              <g><path d="M 45,51 A 315 315 0 0 1 60,16 L 98,23 A 275 275 0 0 0 85,54 Z" fill="#d9d9d9" stroke="#fff"/><text x="74" y="39" fill="#fff" font-size="12" font-weight="bold">43</text></g>
+            </svg>
+          </div>
+
+          <!-- View B: Granular Seat Matrix (Responsive without horizontal scroll on mobile) -->
+          <div id="grid-seat-matrix-wrap" class="w-full h-full flex flex-col items-center justify-start hidden py-1 sm:py-2 overflow-y-auto overflow-x-hidden bg-white">
+            <div class="w-full max-w-xl py-1 sm:py-1.5 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-xs sm:text-sm mb-1 select-none">
+              STAGE
+            </div>
+            <div id="matrix-section-title" class="text-xs sm:text-sm text-gray-500 font-medium mb-1.5 sm:mb-3 select-none">
+              區域座位分布
+            </div>
+
+            <!-- Seat grid container auto-fitting without horizontal scrolling on mobile -->
+            <div class="w-full flex justify-center items-center overflow-x-hidden">
+              <div id="seats-grid-table" class="inline-block bg-white p-1 sm:p-2 select-none max-w-full"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right / Bottom Workspace Controls -->
+        <div class="w-full md:w-64 bg-white p-3 sm:p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
+          <div>
+            <!-- Mini map for Desktop (Full KSPO Map Replica) -->
+            <div class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 hidden md:block">
+              <div class="flex justify-between items-center mb-1 text-[11px] text-gray-500">
+                <span class="font-medium" data-i18n="miniMapTitle">迷你全區圖</span>
+                <div class="flex space-x-1">
+                  <button type="button" onclick="app.zoomMiniMap(0.15)" class="px-1.5 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-bold" title="放大">+</button>
+                  <button type="button" onclick="app.zoomMiniMap(-0.15)" class="px-1.5 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-bold" title="縮小">-</button>
+                  <button type="button" onclick="app.resetMiniMapZoom()" class="px-1 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-medium text-gray-500" title="重設視圖">1:1</button>
+                </div>
+              </div>
+              <div class="w-full h-28 bg-white border border-gray-200 rounded flex items-center justify-center p-1 overflow-hidden relative">
+                <div id="mini-map-transform-wrap" class="w-full h-full flex items-center justify-center transition-transform duration-200">
+                  <!-- Complete Mirror of Main SVG Map in Mini Map -->
+                  <svg viewBox="0 0 760 410" class="w-full h-auto drop-shadow-sm select-none">
+                    <rect x="330" y="2" width="100" height="18" fill="#d0d0d0" rx="1"/>
+                    <text x="380" y="15" fill="#666" font-size="12" font-weight="bold" text-anchor="middle">STAGE</text>
+                    <rect x="372" y="10" width="16" height="195" fill="#e9ecef" stroke="#d5d9e0" rx="1"/>
+
+                    <!-- Mini Floor Sections -->
+                    <g class="mini-kspo-block" data-section="Floor A" onclick="app.selectSection('Floor A', 'gradeR')">
+                      <path d="M 245,15 L 345,15 L 345,88 L 255,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="295" y="58" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">A</text>
+                    </g>
+                    <g class="mini-kspo-block" data-section="Floor B" onclick="app.selectSection('Floor B', 'gradeR')">
+                      <path d="M 415,15 L 515,15 L 505,88 L 415,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="465" y="58" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">B</text>
+                    </g>
+                    <g class="mini-kspo-block" data-section="Floor C" onclick="app.selectSection('Floor C', 'gradeR')">
+                      <path d="M 258,96 L 345,96 L 336,165 L 275,148 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="303" y="136" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">C</text>
+                    </g>
+                    <g class="mini-kspo-block" data-section="Floor D" onclick="app.selectSection('Floor D', 'gradeR')">
+                      <path d="M 415,96 L 502,96 L 485,148 L 424,165 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="457" y="136" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">D</text>
+                    </g>
+
+                    <!-- Mini 1F Sections Right (1~7) -->
+                    <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.selectSection('1F Sec 1', 'gradeR')"><path d="M 618,30 A 260 260 0 0 1 635,68 L 590,68 A 220 220 0 0 0 578,32 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="53" fill="#fff" font-size="14" font-weight="bold">1</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 2" onclick="app.selectSection('1F Sec 2', 'gradeR')"><path d="M 635,73 A 260 260 0 0 1 640,111 L 595,107 A 220 220 0 0 0 590,73 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="95" fill="#fff" font-size="14" font-weight="bold">2</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 3" onclick="app.selectSection('1F Sec 3', 'gradeR')"><path d="M 640,116 A 260 260 0 0 1 633,153 L 590,143 A 220 220 0 0 0 595,112 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="137" fill="#fff" font-size="14" font-weight="bold">3</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 4" onclick="app.selectSection('1F Sec 4', 'gradeR')"><path d="M 632,158 A 260 260 0 0 1 610,198 L 570,183 A 220 220 0 0 0 588,148 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="177" fill="#fff" font-size="14" font-weight="bold">4</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 5" onclick="app.selectSection('1F Sec 5', 'gradeR')"><path d="M 607,203 A 260 260 0 0 1 575,241 L 540,219 A 220 220 0 0 0 568,187 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="217" fill="#fff" font-size="14" font-weight="bold">5</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 6" onclick="app.selectSection('1F Sec 6', 'gradeR')"><path d="M 570,245 A 260 260 0 0 1 530,273 L 500,245 A 220 220 0 0 0 535,222 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="250" fill="#fff" font-size="14" font-weight="bold">6</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 7" onclick="app.selectSection('1F Sec 7', 'gradeR')"><path d="M 524,276 A 260 260 0 0 1 475,293 L 458,261 A 220 220 0 0 0 495,248 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="273" fill="#fff" font-size="14" font-weight="bold">7</text></g>
+
+                    <rect x="355" y="248" width="50" height="32" fill="#f0f0f0" stroke="#ddd" rx="2"/>
+
+                    <!-- Mini 1F Sections Left (9~15) -->
+                    <g class="mini-kspo-block" data-section="1F Sec 9" onclick="app.selectSection('1F Sec 9', 'gradeR')"><path d="M 302,293 A 260 260 0 0 1 236,276 L 262,248 A 220 220 0 0 0 322,261 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="273" fill="#fff" font-size="14" font-weight="bold">9</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 10" onclick="app.selectSection('1F Sec 10', 'gradeR')"><path d="M 230,273 A 260 260 0 0 1 190,245 L 225,222 A 220 220 0 0 0 260,245 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="250" fill="#fff" font-size="14" font-weight="bold">10</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 11" onclick="app.selectSection('1F Sec 11', 'gradeR')"><path d="M 185,241 A 260 260 0 0 1 153,203 L 192,187 A 220 220 0 0 0 220,219 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="217" fill="#fff" font-size="14" font-weight="bold">11</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 12" onclick="app.selectSection('1F Sec 12', 'gradeR')"><path d="M 150,198 A 260 260 0 0 1 128,158 L 172,148 A 220 220 0 0 0 190,183 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="177" fill="#fff" font-size="14" font-weight="bold">12</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 13" onclick="app.selectSection('1F Sec 13', 'gradeR')"><path d="M 127,153 A 260 260 0 0 1 120,116 L 165,112 A 220 220 0 0 0 170,143 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="137" fill="#fff" font-size="14" font-weight="bold">13</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 14" onclick="app.selectSection('1F Sec 14', 'gradeR')"><path d="M 120,111 A 260 260 0 0 1 125,73 L 170,73 A 220 220 0 0 0 165,107 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="95" fill="#fff" font-size="14" font-weight="bold">14</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 15" onclick="app.selectSection('1F Sec 15', 'gradeR')"><path d="M 125,68 A 260 260 0 0 1 142,30 L 182,32 A 220 220 0 0 0 170,68 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="53" fill="#fff" font-size="14" font-weight="bold">15</text></g>
+
+                    <!-- Mini 2F Outer Tier Sections -->
+                    <g class="mini-kspo-block" data-section="2F Sec 25" onclick="app.selectSection('2F Sec 25', 'gradeA')"><path d="M 715,56 A 315 315 0 0 1 720,96 L 678,94 A 275 275 0 0 0 675,59 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="79" fill="#fff" font-size="13" font-weight="bold">25</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 26" onclick="app.selectSection('2F Sec 26', 'gradeA')"><path d="M 720,101 A 315 315 0 0 1 714,141 L 672,134 A 275 275 0 0 0 678,99 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="124" fill="#fff" font-size="13" font-weight="bold">26</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 27" onclick="app.selectSection('2F Sec 27', 'gradeA')"><path d="M 712,146 A 315 315 0 0 1 692,189 L 653,175 A 275 275 0 0 0 670,139 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="169" fill="#fff" font-size="13" font-weight="bold">27</text></g>
+
+                    <g class="mini-kspo-block" data-section="2F Sec 31" onclick="app.selectSection('2F Sec 31', 'gradeS')"><path d="M 559,312 A 315 315 0 0 1 508,334 L 493,301 A 275 275 0 0 0 538,282 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="311" fill="#fff" font-size="13" font-weight="bold">31</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 34" onclick="app.selectSection('2F Sec 34', 'gradeS')"><path d="M 370,351 A 315 315 0 0 1 318,349 L 326,313 A 275 275 0 0 0 372,315 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="336" fill="#fff" font-size="13" font-weight="bold">34</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 37" onclick="app.selectSection('2F Sec 37', 'gradeS')"><path d="M 195,308 A 315 315 0 0 1 150,279 L 177,254 A 275 275 0 0 0 216,278 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="283" fill="#fff" font-size="13" font-weight="bold">37</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 41" onclick="app.selectSection('2F Sec 41', 'gradeA')"><path d="M 46,141 A 315 315 0 0 1 40,101 L 82,99 A 275 275 0 0 0 88,134 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="124" fill="#fff" font-size="13" font-weight="bold">41</text></g>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Seat Selection Status Bar -->
+            <div class="flex items-center justify-between border-b border-gray-200 pb-2 mb-2 text-xs">
+              <span class="font-bold text-gray-800" id="selection-seats-title">已選取座位 (0/1)</span>
+              <span id="selected-seat-badge" class="hidden font-mono font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded text-[10px]">
+                已選 1 個座位
+              </span>
+            </div>
+
+            <!-- Pricing Breakdown (Desktop includes distinct Refresh button right aligned) -->
+            <div class="hidden md:flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
+              <span class="text-xs font-bold text-gray-600 uppercase" data-i18n="availSeatsSidebarTitle">剩餘席位</span>
+              <button type="button" onclick="app.onRefreshClicked()" class="text-xs px-2 py-0.5 border border-gray-300 rounded text-gray-600 hover:bg-gray-100 flex items-center space-x-1 transition-colors">
+                <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span data-i18n="refreshBtn">重新整理</span>
+              </button>
+            </div>
+
+            <div class="space-y-1.5 text-xs">
+              <div class="flex justify-between items-center text-gray-800">
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>R</span>
+                <span class="font-mono">₩176,000</span>
+              </div>
+              <div class="flex justify-between items-center text-gray-800">
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>S</span>
+                <span class="font-mono">₩165,000</span>
+              </div>
+              <div class="flex justify-between items-center text-gray-800">
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>A</span>
+                <span class="font-mono">₩154,000</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom Action Buttons: Mobile has separate square Refresh button on left, Desktop is unified -->
+          <div class="mt-3 pt-3 border-t border-gray-200 flex space-x-2">
+            <!-- Mobile-only Refresh Square Button matching screenshot 00:29 -->
+            <button type="button" onclick="app.onRefreshClicked()" title="重新整理" class="flex md:hidden w-12 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
+            <button id="btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 py-3 bg-gray-300 text-gray-500 font-bold text-xs sm:text-sm rounded transition-colors flex items-center justify-center space-x-1 cursor-not-allowed">
+              <span data-i18n="completeSelectionBtn">完成座位選取</span>
+              <span class="text-base leading-none">&gt;</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-mobile-section-prompt" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl w-full max-w-xs p-5 flex flex-col items-center text-center shadow-2xl">
+      <h3 class="text-base font-bold text-gray-900 mb-1" data-i18n="selectSectionPromptTitle">選擇區域</h3>
+      <p id="mobile-prompt-target-name" class="text-sm font-semibold text-[#2563EB] mb-5">Floor A</p>
+      <div class="flex w-full space-x-2">
+        <button type="button" onclick="app.closeMobileSectionPrompt()" class="flex-1 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50" data-i18n="cancelBtn">
+          取消
+        </button>
+        <button type="button" onclick="app.confirmMobileSectionEnter()" class="flex-1 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-lg text-xs font-bold shadow" data-i18n="nextBtn">
+          下一步
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-melon-dialog" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-lg w-full max-w-xs border border-gray-200 p-5 flex flex-col items-center text-center shadow-xl">
+      <div id="melon-dialog-text" class="text-sm text-gray-800 font-medium mb-5 text-center leading-relaxed">
+        Please try again.
+      </div>
+      <button type="button" id="btn-dialog-ok" onclick="app.closeMelonDialog()" class="w-24 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-medium text-xs rounded transition-colors">
+        OK
+      </button>
+    </div>
+  </div>
+
+  <div id="step-success" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-2xl w-full max-w-lg p-6 text-center border border-gray-100 flex flex-col items-center shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-[#2563EB] mb-3 text-2xl font-bold shrink-0">
+        ✓
+      </div>
+      <h2 class="text-xl font-bold text-gray-900 mb-1" data-i18n="successHeading">成功鎖定付款席位！</h2>
+      <p class="text-xs text-gray-500 mb-4" data-i18n="successSubheading">恭喜您在激烈競爭中成功搶下門票！</p>
+
+      <div class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs space-y-2 mb-4 text-left">
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statSelectedSeats">選定座位：</span>
+          <span class="font-bold text-gray-800" id="res-seat-label">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statTotalTime">本次練習總耗時：</span>
+          <span class="font-mono font-bold text-[#2563EB]" id="res-total-time">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statCaptchaTime">驗證碼輸入耗時：</span>
+          <span class="font-mono font-bold text-emerald-600" id="res-captcha-time">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statTryAgainCount">克服「Please Try Again」次數：</span>
+          <span class="font-bold text-amber-600" id="res-tryagain-count">0 次</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statConflictCount">遭遇座位被搶付款衝突次數：</span>
+          <span class="font-bold text-red-500" id="res-conflict-count">0 次</span>
+        </div>
+      </div>
+
+      <!-- Diagnostics Report Section -->
+      <div class="w-full text-left mb-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-gray-700 flex items-center">
+            <span class="w-2 h-2 rounded-full bg-blue-600 mr-1.5 inline-block"></span>
+            <span data-i18n="reportTitle">操作速度與失誤診斷報告</span>
+          </span>
+          <span class="text-[10px] text-gray-400" data-i18n="reportSubtitle">事後覆盤檢討</span>
+        </div>
+
+        <div id="diagnostics-log-container" class="space-y-1.5 max-h-36 overflow-y-auto pr-1 text-[11px]">
+        </div>
+
+        <div id="coaching-advice-box" class="mt-3 p-2.5 bg-blue-50/70 border border-blue-200 rounded text-[11px] text-[#1D4ED8] leading-relaxed">
+        </div>
+      </div>
+
+      <button type="button" onclick="location.reload()" class="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg transition-colors shrink-0" data-i18n="practiceAgainBtn">
+        再次練習
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const colorThemeMap = {
+      gradeR: { bg: '#b79b71', tailwindClass: 'bg-[#b79b71]' },
+      gradeS: { bg: '#7f6aff', tailwindClass: 'bg-[#7f6aff]' },
+      gradeA: { bg: '#ff719e', tailwindClass: 'bg-[#ff719e]' }
+    };
+
+    const i18nData = {
+      en: {
+        headerTitle: "Ticket Simulator",
+        resetBtn: "Reset",
+        verifiedBadge: "Verified Members Only >",
+        infoDate: "Date",
+        infoVenue: "Venue",
+        infoRuntime: "Runtime",
+        infoRating: "Rating",
+        ratingAge: "7 years and over",
+        selectDateTitle: "Select Date",
+        dateLockedMsg: "Sales will open when the countdown reaches 00:00",
+        selectedBadge: "Selected",
+        selectTimeTitle: "Select Time",
+        availSeatsTitle: "Available Seats",
+        getTicketsBtn: "Get Tickets",
+        buyNowBtn: "Buy Now",
+        priceTitle: "Price",
+        tabMoreInfo: "More Info",
+        tabCancelPolicy: "Cancellation Policy",
+        guideTab1: "PRACTICE GUIDE",
+        guideTab2: "CONCERT DETAILS",
+        guideTab3: "TICKETING NOTICE",
+        guideIntroTitle: "• Practice Method:",
+        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date drawer and proceed.",
+        guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
+        selectSeatsHeader: "Select Seats",
+        backToVenueBtn: "< Venue",
+        venueNoticeText: "The stage layout is for booking guidance and may differ slightly from the actual venue.<br>The top of each section is closest to the stage. Please select your seats in horizontal order.",
+        miniMapTitle: "Mini Map",
+        completeSelectionBtn: "Seat Selection completed",
+        queueWaitPrompt: "Please, Wait!",
+        queueOrderTitle: "Your waiting order",
+        queueEstPrefix: "Estimated time to wait : ",
+        queueNotice1: "• Many people are currently connected.",
+        queueNotice2: "Please wait a moment to move the next step safely.",
+        queueNotice3: "• Notice! If you refresh this page, the waiting order will start again.",
+        captchaHeading: "Secure booking service",
+        captchaDesc: "To avoid automated bookings, the secure booking service requires you to enter a security code when selecting a seat",
+        captchaError: "Incorrect security code. Please try again.",
+        captchaSubmitBtn: "Submit",
+        captchaDismissLink: "To See the seats first, Click here",
+        selectSectionPromptTitle: "Select Section",
+        cancelBtn: "Cancel",
+        nextBtn: "Next",
+        successHeading: "Payment Session Secured!",
+        successSubheading: "You successfully locked the ticket before competitors!",
+        statSelectedSeats: "Selected Seats:",
+        statTotalTime: "Total Practice Elapsed:",
+        statCaptchaTime: "Captcha Entry Time:",
+        statTryAgainCount: "\"Please Try Again\" Overcome:",
+        statConflictCount: "Seat Conflicts (Another Customer):",
+        reportTitle: "Action & Speed Diagnostics Report",
+        reportSubtitle: "Post-Mortem Analysis",
+        practiceAgainBtn: "Practice Again",
+        prepBadge: "Global Ticket Simulator",
+        prepHeading: "Ticketing Practice Session",
+        prepStep1: "• Click <b>\"Ready, Start Countdown\"</b> to prepare the session.",
+        prepStep2: "• On mobile, the button counts down. When it reaches 00:00, it turns blue! Click it to select date.",
+        prepStartBtn: "Ready, Start Practice",
+        countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
+        countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On Sale Now )",
+        unitTimes: "times",
+        noIssuesReport: "Flawless execution! No rate-limits or rapid-click penalties encountered.",
+        diagRapidSubmitTitle: "Rapid Double-Clicking Submit",
+        diagRapidSubmitDetail: "Clicked submit within {ms}ms of previous attempt.",
+        diagRapidSubmitTip: "Avoid frantic spamming. Allow a 0.5s pause after dismissing alerts.",
+        diagBotTitle: "Bot-like Ultra-fast Submission",
+        diagBotDetail: "Clicked submit only {ms}ms after selecting seat.",
+        diagBotTip: "The system flagged an inhumanly fast click pattern. Aim for a 300–500ms pacing.",
+        diagServerTitle: "Simulated Server Peak Traffic Jam",
+        diagServerDetail: "Server traffic jam due to too many people rushing at the exact same second.",
+        diagServerTip: "This is not your fault! Dismiss with OK and immediately click submit again.",
+        diagMobileCapTitle: "Mobile Seat Hunting Limit (>5 seats)",
+        diagMobileCapDetail: "Tapped more than 5 different seats in a rush. Evicted to venue map.",
+        diagMobileCapTip: "On mobile, switching seats rapidly triggers bot heuristics. Lock in your choice decisively.",
+        adviceMobileCap: "💡 Key Takeaway: You were penalized for switching over 5 seats on mobile. Choose your seat with fewer taps to avoid eviction!",
+        adviceRapidSubmit: "💡 Key Takeaway: Double-clicking submit caused rate-limiting. Dismiss alerts calmly with a 400ms rhythm.",
+        adviceBot: "💡 Key Takeaway: Transitioning from seat to submit under 250ms mimics automation bots.",
+        adviceSlowCaptcha: "💡 Key Takeaway: Captcha verification took over 4.0s. Practice typing 6 uppercase letters blindly!",
+        adviceGood: "💡 Key Takeaway: Clean rhythm! You handled server concurrency hurdles efficiently."
+      },
+      zh: {
+        headerTitle: "搶票練習模擬器",
+        resetBtn: "重設",
+        verifiedBadge: "認證會員專屬專區 >",
+        infoDate: "演出日期",
+        infoVenue: "演出場館",
+        infoRuntime: "演出時長",
+        infoRating: "觀賞年齡",
+        ratingAge: "7歲以上均可觀賞",
+        selectDateTitle: "選擇日期",
+        dateLockedMsg: "開賣倒數歸零 00:00 時將開放選取",
+        selectedBadge: "已選擇",
+        selectTimeTitle: "選擇場次時間",
+        availSeatsTitle: "剩餘席位票價",
+        getTicketsBtn: "立即購票",
+        buyNowBtn: "立即購買",
+        priceTitle: "價格資訊",
+        tabMoreInfo: "更多資訊",
+        tabCancelPolicy: "退票政策",
+        guideTab1: "練習指南",
+        guideTab2: "演唱會詳情",
+        guideTab3: "購票須知",
+        guideIntroTitle: "• 練習說明：",
+        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可喚出選擇日期抽屜！",
+        guideDisclaimer: "※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。",
+        selectSeatsHeader: "選擇座位",
+        backToVenueBtn: "< 全區",
+        venueNoticeText: "舞台位置僅供購票參考，可能與實際舞台配置稍有不同。<br>各區域上方最靠近舞台，請依照橫向順序挑選座位。",
+        miniMapTitle: "迷你全區圖",
+        completeSelectionBtn: "完成座位選取",
+        queueWaitPrompt: "請稍候！",
+        queueOrderTitle: "您的排隊序號",
+        queueEstPrefix: "預估等待時間：",
+        queueNotice1: "• 目前連線人數眾多，系統正在依照順序處理。",
+        queueNotice2: "請稍候片刻，系統將安全自動跳轉至選位畫面。",
+        queueNotice3: "• 注意！若重新整理此頁面，排隊序號將會重新計算。",
+        captchaHeading: "安全預訂服務",
+        captchaDesc: "為防範外掛與自動化腳本，選位前請輸入圖形安全驗證碼",
+        captchaError: "驗證碼輸入錯誤，請重新輸入。",
+        captchaSubmitBtn: "確認送出",
+        captchaDismissLink: "點此先預覽空位分佈",
+        selectSectionPromptTitle: "選擇區域",
+        cancelBtn: "取消",
+        nextBtn: "下一步",
+        successHeading: "成功鎖定付款席位！",
+        successSubheading: "恭喜您在激烈競爭中成功搶下門票！",
+        statSelectedSeats: "選定座位：",
+        statTotalTime: "本次練習總耗時：",
+        statCaptchaTime: "驗證碼輸入耗時：",
+        statTryAgainCount: "克服「Please Try Again」次數：",
+        statConflictCount: "遭遇座位被搶付款衝突次數：",
+        reportTitle: "操作速度與失誤診斷報告",
+        reportSubtitle: "事後覆盤檢討",
+        practiceAgainBtn: "再次練習",
+        prepBadge: "Global 搶票手速模擬器",
+        prepHeading: "搶票實戰練習模式",
+        prepStep1: "• 點擊 <b>「準備完成，進入練習」</b> 進入搶票主頁面。",
+        prepStep2: "• 手機版底部按鈕將直接顯示真實倒數，歸零變藍時點擊即可喚出選擇日期抽屜！",
+        prepStartBtn: "準備完成，進入練習",
+        countdownPrefix: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 剩餘時間: ",
+        countdownOpen: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 熱烈開賣中 )",
+        unitTimes: "次",
+        noIssuesReport: "操作行雲流水！完全未觸發任何狂刷、連擊或機器人防護懲罰。",
+        diagRapidSubmitTitle: "送出按鈕連點過急",
+        diagRapidSubmitDetail: "在上次送出後 {ms}ms 內再次狂按送出。",
+        diagRapidSubmitTip: "請避免緊張狂點送出鍵，彈窗關閉後請維持至少 0.5 秒的節奏。",
+        diagBotTitle: "選位至送出過快（疑似機器人特徵）",
+        diagBotDetail: "點選座位至點擊送出間隔僅 {ms}ms。",
+        diagBotTip: "觸發了超人手速的腳本風控防護。點完位置後建議保持 300~500ms 的自然敲擊間隔。",
+        diagServerTitle: "伺服器瞬間大塞車",
+        diagServerDetail: "同一秒瞬間湧入太多人搶票，售票系統直接塞車打結。",
+        diagServerTip: "這不是你的操作失誤，純粹是系統塞爆了！保持冷靜，點 OK 關閉後立刻重新按送出！",
+        diagMobileCapTitle: "手機版盲點切換座位超標（超過 5 個）",
+        diagMobileCapDetail: "在手機端急忙連續更換點擊超過 5 個座位，觸發風控被強制踢回全景圖。",
+        diagMobileCapTip: "手機版對換位極度敏感，切記看準 1 個座位果斷送出，避免亂戳被踢出！",
+        adviceMobileCap: "💡 實戰改進建議：在手機上因亂點換選超過 5 個座位被踢出。正式搶票時務必看準一個空位就堅決送出！",
+        adviceRapidSubmit: "💡 實戰改進建議：連續狂按確認引發了二次送出錯誤。遇到警告時請保持從容以約 400ms 間隔再按。",
+        adviceBot: "💡 實戰改進建議：點下座位到按送出小於 250ms 會被伺服器誤判為腳本，請保持 300～450ms 人手敲擊節奏。",
+        adviceSlowCaptcha: "💡 實戰改進建議：驗證碼耗時超過 4.0 秒。建議多練習盲打 6 碼大寫英文字母！",
+        adviceGood: "💡 實戰改進建議：節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
+      }
+    };
+
+    const app = {
+      state: 'PREP',
+      currentLang: 'zh',
+      practiceStartTime: null,
+      countdownRemaining: 3,
+      countdownTimer: null,
+
+      selectedDateIndex: 0,
+      dates: [
+        { labelEn: 'Sat, Oct 31, 2026', labelZh: '2026.10.31(星期六)', time: '06:00 PM', session: '2026.10.31 18:00' },
+        { labelEn: 'Sun, Nov 01, 2026', labelZh: '2026.11.01(星期日)', time: '05:00 PM', session: '2026.11.01 17:00' }
+      ],
+
+      isTimeLoaded: false,
+      tryAgainCount: 0,
+      conflictCount: 0,
+
+      // Mobile harsh anti-bot states
+      mobileTappedSeatCount: 0,
+      mobileEvictionLockoutUntil: 0,
+      pendingMobileSection: null,
+
+      // Captcha Timing
+      captchaStartTime: null,
+      captchaDurationSec: null,
+
+      // Diagnostics Tracking
+      lastSeatClickTime: 0,
+      lastSubmitTime: 0,
+      diagnosticsHistory: [],
+
+      currentCaptchaCode: '',
+      captchaDismissedToViewOnly: false,
+      captchaVerified: false,
+
+      selectedSection: null,
+      selectedSectionGrade: 'gradeR',
+      currentSeats: [],
+      selectedSeats: [],
+      maxSeatsAllowed: 1,
+      recentRefreshClicks: [],
+
+      miniMapZoomLevel: 1.0,
+      queueNumber: 352,
+      queueTimer: null,
+
+      init() {
+        this.renderCountdownText();
+        this.applyLanguage();
+      },
+
+      setLanguage(lang) {
+        this.currentLang = lang;
+        const enButtons = document.querySelectorAll('.lang-btn-en');
+        const zhButtons = document.querySelectorAll('.lang-btn-zh');
+
+        enButtons.forEach(b => {
+          b.className = lang === 'en' ? 'lang-btn-en text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors' : 'lang-btn-en text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
+        });
+        zhButtons.forEach(b => {
+          b.className = lang === 'zh' ? 'lang-btn-zh text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors' : 'lang-btn-zh text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
+        });
+
+        this.applyLanguage();
+      },
+
+      t(key) {
+        const dict = i18nData[this.currentLang] || i18nData.zh;
+        return dict[key] || i18nData.en[key] || key;
+      },
+
+      applyLanguage() {
+        const elements = document.querySelectorAll('[data-i18n]');
+        elements.forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          const translated = this.t(key);
+          if (translated) {
+            if (translated.includes('<') && translated.includes('>')) {
+              el.innerHTML = translated;
+            } else {
+              el.innerText = translated;
+            }
+          }
+        });
+
+        // Date labels
+        document.querySelectorAll('.d-date-label-1').forEach(el => {
+          el.innerText = this.currentLang === 'zh' ? `周六, 10月 31, 2026 06:00 下午` : `Sat, Oct 31, 2026 06:00 PM`;
+        });
+        document.querySelectorAll('.d-date-label-2').forEach(el => {
+          el.innerText = this.currentLang === 'zh' ? `周日, 11月 01, 2026 05:00 下午` : `Sun, Nov 01, 2026 05:00 PM`;
+        });
+
+        this.renderCountdownText();
+        this.updateCompletionButtonState();
+      },
+
+      renderCountdownText() {
+        const desktopLine = document.getElementById('desktop-countdown-line');
+        const mobileLine1 = document.getElementById('mobile-buy-btn-line1');
+        const mobileLine2 = document.getElementById('mobile-buy-btn-line2');
+
+        const timeSec = this.countdownRemaining < 10 ? `0${this.countdownRemaining}` : `${this.countdownRemaining}`;
+
+        if (this.state === 'OPEN') {
+          if (desktopLine) desktopLine.innerHTML = `<span class="font-bold text-[#2563EB]">${this.t('countdownOpen')}</span>`;
+          if (mobileLine1) mobileLine1.innerText = this.t('buyNowBtn');
+          if (mobileLine2) mobileLine2.innerText = '';
+        } else {
+          if (desktopLine) {
+            desktopLine.innerHTML = `${this.t('countdownPrefix')}<span class="font-bold ml-1 font-mono text-[#2563EB]">00:${timeSec}</span> )`;
+          }
+          if (mobileLine1) {
+            mobileLine1.innerText = this.currentLang === 'zh' ? '優先預訂開啟 : 10.31(星期六) 20:00' : 'Priority booking starts : 10.31(Sat) 20:00';
+          }
+          if (mobileLine2) {
+            mobileLine2.innerText = `(Time left : 00:${timeSec})`;
+          }
+        }
+      },
+
+      startPracticeFromPrep() {
+        const overlay = document.getElementById('ready-prep-overlay');
+        if (overlay) overlay.classList.add('hidden');
+        this.practiceStartTime = Date.now();
+        this.state = 'COUNTDOWN';
+        this.runCountdown();
+      },
+
+      runCountdown() {
+        this.countdownTimer = setInterval(() => {
+          this.countdownRemaining--;
+          if (this.countdownRemaining >= 0) {
+            this.renderCountdownText();
+          } else {
+            clearInterval(this.countdownTimer);
+            this.onSaleOpened();
+          }
+        }, 1000);
+      },
+
+      onSaleOpened() {
+        this.state = 'OPEN';
+        this.renderCountdownText();
+
+        // 1. Activate Desktop controls
+        const dDateLocked = document.getElementById('desktop-date-locked-msg');
+        const dDateActive = document.getElementById('desktop-date-active-list');
+        const dTimeLocked = document.getElementById('desktop-time-locked-msg');
+        const dTimeActive = document.getElementById('desktop-time-active-box');
+        const dBtnGet = document.getElementById('desktop-btn-get-tickets');
+
+        if (dDateLocked) dDateLocked.classList.add('hidden');
+        if (dDateActive) dDateActive.classList.remove('hidden');
+
+        this.selectDate(0);
+
+        if (dBtnGet) {
+          dBtnGet.disabled = false;
+          dBtnGet.classList.remove('bg-gray-300', 'cursor-not-allowed');
+          dBtnGet.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
+          dBtnGet.onclick = () => this.handleDesktopGetTickets();
+        }
+
+        // 2. Activate Mobile Buy Now Button: Turns from Gray to vivid Blue
+        const mBuyBtn = document.getElementById('mobile-btn-buy-now');
+        if (mBuyBtn) {
+          mBuyBtn.disabled = false;
+          mBuyBtn.classList.remove('bg-gray-300', 'text-gray-700', 'cursor-not-allowed');
+          mBuyBtn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'shadow-md', 'cursor-pointer');
+          mBuyBtn.onclick = () => this.openMobileDateDrawer();
+        }
+
+        // Realistic late time delay
+        const delayMs = Math.random() < 0.5 ? 900 : 0;
+        if (delayMs === 0) {
+          this.isTimeLoaded = true;
+          if (dTimeLocked) dTimeLocked.classList.add('hidden');
+          if (dTimeActive) dTimeActive.classList.remove('hidden');
+        } else {
+          this.isTimeLoaded = false;
+          if (dTimeLocked) dTimeLocked.innerText = this.currentLang === 'zh' ? '載入時間中...' : 'Loading session...';
+          setTimeout(() => {
+            this.isTimeLoaded = true;
+            if (dTimeLocked) dTimeLocked.classList.add('hidden');
+            if (dTimeActive) dTimeActive.classList.remove('hidden');
+          }, delayMs);
+        }
+      },
+
+      // Mobile Drawer actions matching screenshot 00:08
+      openMobileDateDrawer() {
+        const backdrop = document.getElementById('drawer-date-backdrop');
+        const panel = document.getElementById('drawer-date-panel');
+        if (backdrop) backdrop.classList.remove('hidden');
+        setTimeout(() => {
+          if (panel) panel.classList.add('drawer-active');
+        }, 10);
+      },
+
+      closeMobileDateDrawer() {
+        const backdrop = document.getElementById('drawer-date-backdrop');
+        const panel = document.getElementById('drawer-date-panel');
+        if (panel) panel.classList.remove('drawer-active');
+        setTimeout(() => {
+          if (backdrop) backdrop.classList.add('hidden');
+        }, 250);
+      },
+
+      selectMobileDateSession(idx) {
+        this.selectDate(idx);
+        this.closeMobileDateDrawer();
+
+        // Show spinner transition exactly like authentic video 00:28
+        const spinner = document.getElementById('view-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+
+        setTimeout(() => {
+          if (spinner) spinner.classList.add('hidden');
+          this.startWaitingQueue();
+        }, 900);
+      },
+
+      cancelTransition() {
+        const spinner = document.getElementById('view-spinner');
+        if (spinner) spinner.classList.add('hidden');
+      },
+
+      handleDesktopGetTickets() {
+        if (!this.isTimeLoaded) {
+          this.showMelonAlert("Please select the time.");
+          return;
+        }
+        this.startWaitingQueue();
+      },
+
+      selectDate(index) {
+        this.selectedDateIndex = index;
+        const b1 = document.querySelector('.d-date-badge-1');
+        const b2 = document.querySelector('.d-date-badge-2');
+        const btn1 = document.getElementById('d-date-btn-1');
+        const btn2 = document.getElementById('d-date-btn-2');
+        const timeBox = document.getElementById('desktop-time-value-display');
+        const sessionSelect = document.getElementById('seatmap-session-select');
+
+        if (index === 0) {
+          if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
+          if (b1) b1.classList.remove('hidden');
+          if (btn2) btn2.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
+          if (b2) b2.classList.add('hidden');
+        } else {
+          if (btn2) btn2.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
+          if (b2) b2.classList.remove('hidden');
+          if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
+          if (b1) b1.classList.add('hidden');
+        }
+
+        if (timeBox) timeBox.innerText = this.dates[index].time;
+        if (sessionSelect) sessionSelect.value = String(index);
+      },
+
+      onSessionSelectChange(val) {
+        this.selectDate(parseInt(val, 10));
+      },
+
+      // Waiting Queue modal matching screenshot 00:09~00:26
+      startWaitingQueue() {
+        this.state = 'QUEUE';
+        const modal = document.getElementById('modal-waiting-queue');
+        if (modal) modal.classList.remove('hidden');
+
+        this.queueNumber = Math.floor(Math.random() * 120) + 180;
+        const orderElem = document.getElementById('queue-order-number');
+        const estElem = document.getElementById('queue-time-est');
+
+        if (orderElem) orderElem.innerText = this.queueNumber;
+
+        this.queueTimer = setInterval(() => {
+          const step = Math.floor(Math.random() * 45) + 35;
+          this.queueNumber -= step;
+
+          if (this.queueNumber > 0) {
+            if (orderElem) orderElem.innerText = this.queueNumber;
+            const sec = Math.max(3, Math.floor(this.queueNumber / 2.5));
+            if (estElem) {
+              estElem.innerText = this.currentLang === 'zh' ? `0分 ${sec}秒` : `0min ${sec}sec`;
+            }
+          } else {
+            clearInterval(this.queueTimer);
+            if (modal) modal.classList.add('hidden');
+            this.openSeatmapWorkspace();
+          }
+        }, 260);
+      },
+
+      closeWaitingModal() {
+        clearInterval(this.queueTimer);
+        const modal = document.getElementById('modal-waiting-queue');
+        if (modal) modal.classList.add('hidden');
+      },
+
+      openSeatmapWorkspace() {
+        const seatmapBackdrop = document.getElementById('step-seatmap-backdrop');
+        if (seatmapBackdrop) seatmapBackdrop.classList.remove('hidden');
+        this.promptCaptcha();
+      },
+
+      closeSeatmapModal() {
+        const seatmapBackdrop = document.getElementById('step-seatmap-backdrop');
+        if (seatmapBackdrop) seatmapBackdrop.classList.add('hidden');
+        const captchaModal = document.getElementById('modal-captcha');
+        if (captchaModal) captchaModal.classList.add('hidden');
+      },
+
+      promptCaptcha() {
+        if (this.captchaVerified) return;
+        const modal = document.getElementById('modal-captcha');
+        if (modal) modal.classList.remove('hidden');
+        const input = document.getElementById('captcha-input');
+        if (input) input.value = '';
+        const errMsg = document.getElementById('captcha-error-msg');
+        if (errMsg) errMsg.classList.add('hidden');
+        this.regenerateCaptcha();
+        
+        this.captchaStartTime = Date.now();
+        setTimeout(() => { if (input) input.focus(); }, 100);
+      },
+
+      regenerateCaptcha() {
+        const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+        let code = '';
+        for (let i = 0; i < 6; i++) {
+          code += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        this.currentCaptchaCode = code;
+
+        const canvas = document.getElementById('captcha-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (let i = 0; i < 5; i++) {
+          ctx.strokeStyle = '#e0e0e0';
+          ctx.beginPath();
+          ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+          ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+          ctx.stroke();
+        }
+
+        ctx.font = 'bold 30px monospace';
+        ctx.textBaseline = 'middle';
+        for (let i = 0; i < code.length; i++) {
+          ctx.save();
+          const char = code[i];
+          const x = 24 + i * 30;
+          const y = 30 + (Math.random() * 8 - 4);
+          const angle = (Math.random() * 24 - 12) * (Math.PI / 180);
+          ctx.translate(x, y);
+          ctx.rotate(angle);
+          ctx.fillStyle = '#1e293b';
+          ctx.fillText(char, 0, 0);
+          ctx.restore();
+        }
+
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.moveTo(10, Math.random() * 40 + 10);
+        ctx.bezierCurveTo(70, Math.random() * 50, 140, Math.random() * 50, 210, Math.random() * 40 + 10);
+        ctx.stroke();
+      },
+
+      speakCaptcha() {
+        if ('speechSynthesis' in window && this.currentCaptchaCode) {
+          const text = this.currentCaptchaCode.split('').join(' ');
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = 'en-US';
+          window.speechSynthesis.speak(utterance);
+        }
+      },
+
+      submitCaptcha() {
+        const inputElem = document.getElementById('captcha-input');
+        const input = inputElem ? inputElem.value.trim().toUpperCase() : '';
+        if (input === this.currentCaptchaCode) {
+          this.captchaVerified = true;
+          if (this.captchaStartTime) {
+            this.captchaDurationSec = ((Date.now() - this.captchaStartTime) / 1000).toFixed(2);
+          }
+          const modal = document.getElementById('modal-captcha');
+          if (modal) modal.classList.add('hidden');
+        } else {
+          const errMsg = document.getElementById('captcha-error-msg');
+          if (errMsg) errMsg.classList.remove('hidden');
+          this.regenerateCaptcha();
+        }
+      },
+
+      dismissCaptchaToViewOnly() {
+        this.captchaDismissedToViewOnly = true;
+        const modal = document.getElementById('modal-captcha');
+        if (modal) modal.classList.add('hidden');
+      },
+
+      // Section selection triggers
+      onSectionSelectedTrigger(sectionName, gradeKey) {
+        if (!this.captchaVerified) {
+          this.promptCaptcha();
+          return;
+        }
+
+        // Check if user is locked out on mobile
+        if (Date.now() < this.mobileEvictionLockoutUntil) {
+          this.showMelonAlert("Please try again.");
+          return;
+        }
+
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+          // Open "Select Section -> Cancel / Next" popup dialog
+          this.pendingMobileSection = { name: sectionName, grade: gradeKey };
+          const pName = document.getElementById('mobile-prompt-target-name');
+          if (pName) pName.innerText = sectionName;
+          const promptModal = document.getElementById('modal-mobile-section-prompt');
+          if (promptModal) promptModal.classList.remove('hidden');
+        } else {
+          this.selectSection(sectionName, gradeKey);
+        }
+      },
+
+      confirmMobileSectionEnter() {
+        const promptModal = document.getElementById('modal-mobile-section-prompt');
+        if (promptModal) promptModal.classList.add('hidden');
+        if (this.pendingMobileSection) {
+          this.selectSection(this.pendingMobileSection.name, this.pendingMobileSection.grade);
+        }
+      },
+
+      closeMobileSectionPrompt() {
+        const promptModal = document.getElementById('modal-mobile-section-prompt');
+        if (promptModal) promptModal.classList.add('hidden');
+        this.pendingMobileSection = null;
+      },
+
+      selectSection(sectionName, gradeKey) {
+        this.selectedSection = sectionName;
+        this.selectedSectionGrade = gradeKey || 'gradeR';
+        this.mobileTappedSeatCount = 0; // reset hunting count
+
+        const svgWrap = document.getElementById('kspo-dome-svg-wrap');
+        const notice = document.getElementById('venue-notice');
+        const gridWrap = document.getElementById('grid-seat-matrix-wrap');
+        const backBtn = document.getElementById('btn-back-to-arena');
+        const titleElem = document.getElementById('matrix-section-title');
+
+        if (svgWrap) svgWrap.classList.add('hidden');
+        if (notice) notice.classList.add('hidden');
+        if (gridWrap) gridWrap.classList.remove('hidden');
+        if (backBtn) backBtn.classList.remove('hidden');
+        if (titleElem) titleElem.innerText = `${sectionName}`;
+
+        this.updateMiniMapActiveSection(sectionName);
+        this.buildSeatGrid(sectionName, this.selectedSectionGrade);
+        this.updateCompletionButtonState();
+      },
+
+      backToVenue() {
+        const gridWrap = document.getElementById('grid-seat-matrix-wrap');
+        const svgWrap = document.getElementById('kspo-dome-svg-wrap');
+        const notice = document.getElementById('venue-notice');
+        const backBtn = document.getElementById('btn-back-to-arena');
+
+        if (gridWrap) gridWrap.classList.add('hidden');
+        if (svgWrap) svgWrap.classList.remove('hidden');
+        if (notice) notice.classList.remove('hidden');
+        if (backBtn) backBtn.classList.add('hidden');
+        
+        this.updateMiniMapActiveSection(null);
+        this.selectedSeats = [];
+        this.updateCompletionButtonState();
+      },
+
+      updateMiniMapActiveSection(sectionName) {
+        const miniBlocks = document.querySelectorAll('.mini-kspo-block');
+        miniBlocks.forEach(el => {
+          if (sectionName && el.getAttribute('data-section') === sectionName) {
+            el.classList.add('active-section');
+          } else {
+            el.classList.remove('active-section');
+          }
+        });
+      },
+
+      zoomMiniMap(delta) {
+        this.miniMapZoomLevel = Math.max(0.7, Math.min(2.5, this.miniMapZoomLevel + delta));
+        const wrap = document.getElementById('mini-map-transform-wrap');
+        if (wrap) wrap.style.transform = `scale(${this.miniMapZoomLevel})`;
+      },
+
+      resetMiniMapZoom() {
+        this.miniMapZoomLevel = 1.0;
+        const wrap = document.getElementById('mini-map-transform-wrap');
+        if (wrap) wrap.style.transform = 'scale(1)';
+      },
+
+      buildSeatGrid(sectionName, gradeKey) {
+        const container = document.getElementById('seats-grid-table');
+        if (!container) return;
+        container.innerHTML = '';
+        this.currentSeats = [];
+        this.selectedSeats = [];
+        this.updateCompletionButtonState();
+
+        const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeR;
+
+        // Authentic stepped layout configuration matching video
+        const sectionConfig = [
+          { row: 1,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 2,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 3,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { row: 4,  leftEmpty: 2, leftCols: 4, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { row: 5,  leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { row: 6,  leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { isConcourse: true },
+          { row: 7,  leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 8,  leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 9,  leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 10, leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { row: 11, leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { row: 12, leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 6, rightEmpty: 0 },
+          { row: 13, leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 14, leftEmpty: 0, leftCols: 6, midCols: 6, rightCols: 5, rightEmpty: 1 },
+          { row: 15, leftEmpty: 1, leftCols: 5, midCols: 5, rightCols: 4, rightEmpty: 2 },
+          { row: 16, leftEmpty: 2, leftCols: 4, midCols: 4, rightCols: 3, rightEmpty: 3 },
+          { row: 17, leftEmpty: 4, leftCols: 2, midCols: 3, rightCols: 2, rightEmpty: 4 }
+        ];
+
+        sectionConfig.forEach((cfg) => {
+          if (cfg.isConcourse) {
+            const walkway = document.createElement('div');
+            walkway.className = 'h-4 w-full';
+            container.appendChild(walkway);
+            return;
+          }
+
+          const rowDiv = document.createElement('div');
+          rowDiv.className = 'flex items-center';
+
+          const rowLabel = document.createElement('div');
+          rowLabel.className = 'seat-row-number';
+          rowLabel.innerText = cfg.row;
+          rowDiv.appendChild(rowLabel);
+
+          // Left Block
+          const leftBlock = document.createElement('div');
+          leftBlock.className = 'flex items-center';
+          for (let i = 0; i < cfg.leftEmpty; i++) {
+            const emptySpace = document.createElement('div');
+            emptySpace.className = 'w-[16px] sm:w-[17px] h-[16px] sm:h-[17px] m-[1.5px] sm:m-[2px]';
+            leftBlock.appendChild(emptySpace);
+          }
+          for (let i = 0; i < cfg.leftCols; i++) {
+            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme);
+            leftBlock.appendChild(seat.element);
+          }
+          rowDiv.appendChild(leftBlock);
+
+          // Concourse Gap
+          const aisle1 = document.createElement('div');
+          aisle1.className = 'w-1.5 sm:w-3 md:w-4';
+          rowDiv.appendChild(aisle1);
+
+          // Mid Block
+          const midBlock = document.createElement('div');
+          midBlock.className = 'flex items-center';
+          for (let i = 0; i < cfg.midCols; i++) {
+            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme);
+            midBlock.appendChild(seat.element);
+          }
+          rowDiv.appendChild(midBlock);
+
+          // Concourse Gap
+          const aisle2 = document.createElement('div');
+          aisle2.className = 'w-1.5 sm:w-3 md:w-4';
+          rowDiv.appendChild(aisle2);
+
+          // Right Block
+          const rightBlock = document.createElement('div');
+          rightBlock.className = 'flex items-center';
+          for (let i = 0; i < cfg.rightCols; i++) {
+            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme);
+            rightBlock.appendChild(seat.element);
+          }
+          for (let i = 0; i < cfg.rightEmpty; i++) {
+            const emptySpace = document.createElement('div');
+            emptySpace.className = 'w-[16px] sm:w-[17px] h-[16px] sm:h-[17px] m-[1.5px] sm:m-[2px]';
+            rightBlock.appendChild(emptySpace);
+          }
+          rowDiv.appendChild(rightBlock);
+
+          container.appendChild(rowDiv);
+        });
+      },
+
+      createSeatCube(sectionName, row, colIdentifier, theme) {
+        const isAvail = Math.random() > (row <= 6 ? 0.88 : 0.76);
+        const seatId = `${sectionName}-R${row}-${colIdentifier}`;
+
+        const seatObj = {
+          id: seatId,
+          row: row,
+          colIdentifier: colIdentifier,
+          status: isAvail ? 'available' : 'sold'
+        };
+        this.currentSeats.push(seatObj);
+
+        const cube = document.createElement('div');
+        cube.id = `seat-cube-${seatId}`;
+        cube.className = `seat-cube ${isAvail ? 'available ' + theme.tailwindClass : 'sold'}`;
+
+        if (isAvail) {
+          cube.onclick = () => this.onSeatClicked(seatObj);
+        }
+
+        return { element: cube, isAvail: isAvail };
+      },
+
+      onSeatClicked(seatObj) {
+        if (!this.captchaVerified) {
+          this.promptCaptcha();
+          return;
+        }
+
+        if (seatObj.status === 'sold') return;
+
+        const now = Date.now();
+        const tapInterval = now - this.lastSeatClickTime;
+        this.lastSeatClickTime = now;
+
+        // Mobile-specific harsh anti-bot rule: Eviction if tapping > 5 different seats or fast spam
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+          this.mobileTappedSeatCount++;
+          if (this.mobileTappedSeatCount > 5 || tapInterval < 220) {
+            this.tryAgainCount++;
+            this.mobileEvictionLockoutUntil = Date.now() + 20000; // 20s cooldown
+            this.logDiagnosticEvent(
+              'Mobile Anti-Bot',
+              this.t('diagMobileCapTitle'),
+              this.t('diagMobileCapDetail'),
+              this.t('diagMobileCapTip')
+            );
+            // Evict back to arena map
+            this.backToVenue();
+            this.showMelonAlert("Please try again.");
+            return;
+          }
+        }
+
+        const existingIndex = this.selectedSeats.findIndex(s => s.id === seatObj.id);
+
+        if (existingIndex !== -1) {
+          this.selectedSeats.splice(existingIndex, 1);
+          const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
+          if (currentCube) currentCube.classList.remove('selected');
+          this.updateCompletionButtonState();
+          return;
+        }
+
+        if (this.selectedSeats.length >= this.maxSeatsAllowed) {
+          this.showMelonAlert("You can select up to 1 seat.");
+          return;
+        }
+
+        this.selectedSeats.push(seatObj);
+        const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
+        if (currentCube) currentCube.classList.add('selected');
+
+        this.updateCompletionButtonState();
+      },
+
+      updateCompletionButtonState() {
+        const btn = document.getElementById('btn-complete-selection');
+        const badge = document.getElementById('selected-seat-badge');
+        const titleElem = document.getElementById('selection-seats-title');
+
+        const count = this.selectedSeats.length;
+        if (titleElem) {
+          titleElem.innerText = `已選取座位 (${count}/${this.maxSeatsAllowed})`;
+        }
+
+        if (count > 0) {
+          if (btn) {
+            btn.disabled = false;
+            btn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+            btn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'shadow', 'cursor-pointer');
+          }
+          if (badge) {
+            badge.classList.remove('hidden');
+            badge.innerText = this.currentLang === 'zh' ? `已選 1 個座位` : `1 SELECTED`;
+          }
+        } else {
+          if (btn) {
+            btn.disabled = true;
+            btn.classList.remove('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'shadow', 'cursor-pointer');
+            btn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+          }
+          if (badge) badge.classList.add('hidden');
+        }
+      },
+
+      depleteSeats(count, originSeat) {
+        let available = this.currentSeats.filter(s => s.status === 'available' && !this.selectedSeats.some(sel => sel.id === s.id));
+        if (available.length === 0) return;
+
+        if (originSeat) {
+          available.sort((a, b) => Math.abs(a.row - originSeat.row) - Math.abs(b.row - originSeat.row));
+        } else {
+          available.sort(() => 0.5 - Math.random());
+        }
+
+        const toDeplete = Math.min(available.length, count);
+        const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeR;
+
+        for (let i = 0; i < toDeplete; i++) {
+          const s = available[i];
+          if (!s) break;
+          s.status = 'sold';
+          const cube = document.getElementById(`seat-cube-${s.id}`);
+          if (cube) {
+            cube.className = 'seat-cube sold';
+            cube.classList.remove(theme.tailwindClass, 'selected', 'available');
+            cube.onclick = null;
+          }
+        }
+      },
+
+      submitSeatSelection() {
+        if (this.selectedSeats.length === 0) return;
+
+        const now = Date.now();
+        const intervalFromSeatClick = this.lastSeatClickTime ? (now - this.lastSeatClickTime) : 9999;
+        const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
+        this.lastSubmitTime = now;
+
+        const rand = Math.random();
+
+        // 1. High probability "Please try again." (Selection remains active)
+        if (rand < 0.48) {
+          this.tryAgainCount++;
+          this.depleteSeats(Math.floor(Math.random() * 4) + 3);
+
+          if (intervalFromLastSubmit < 420) {
+            this.logDiagnosticEvent(
+              'Rapid Submit',
+              this.t('diagRapidSubmitTitle'),
+              this.t('diagRapidSubmitDetail').replace('{ms}', intervalFromLastSubmit),
+              this.t('diagRapidSubmitTip')
+            );
+          } else if (intervalFromSeatClick < 260) {
+            this.logDiagnosticEvent(
+              'Bot Detection',
+              this.t('diagBotTitle'),
+              this.t('diagBotDetail').replace('{ms}', intervalFromSeatClick),
+              this.t('diagBotTip')
+            );
+          } else {
+            this.logDiagnosticEvent(
+              'Server Load',
+              this.t('diagServerTitle'),
+              this.t('diagServerDetail'),
+              this.t('diagServerTip')
+            );
+          }
+
+          this.showMelonAlert("Please try again.");
+          return;
+        }
+
+        // 2. High probability "Another customer is in payments for the seat."
+        if (rand < 0.88) {
+          this.conflictCount++;
+          this.handleSeatRaceConflict();
+          return;
+        }
+
+        // 3. Success
+        this.handleBookingSuccess();
+      },
+
+      handleSeatRaceConflict() {
+        const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeR;
+        const targets = [...this.selectedSeats];
+
+        targets.forEach(target => {
+          target.status = 'sold';
+          const cube = document.getElementById(`seat-cube-${target.id}`);
+          if (cube) {
+            cube.className = 'seat-cube sold';
+            cube.classList.remove('selected', 'available', theme.tailwindClass);
+            cube.onclick = null;
+          }
+        });
+
+        this.selectedSeats = [];
+        this.updateCompletionButtonState();
+
+        const batchDepleteCount = Math.floor(Math.random() * 7) + 12;
+        this.depleteSeats(batchDepleteCount, targets[0]);
+
+        this.showMelonAlert("Another customer is in payments for the seat.");
+      },
+
+      onRefreshClicked() {
+        const now = Date.now();
+        this.recentRefreshClicks.push(now);
+        this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1200);
+
+        if (this.recentRefreshClicks.length >= 3) {
+          this.tryAgainCount++;
+          this.depleteSeats(Math.floor(Math.random() * 5) + 3);
+          this.showMelonAlert("Please try again.");
+          return;
+        }
+
+        if (this.selectedSection) {
+          this.selectedSeats = [];
+          this.buildSeatGrid(this.selectedSection, this.selectedSectionGrade);
+        }
+      },
+
+      showMelonAlert(message, onOkCallback) {
+        const modal = document.getElementById('modal-melon-dialog');
+        const textElem = document.getElementById('melon-dialog-text');
+        if (textElem) textElem.innerText = message;
+        if (modal) modal.classList.remove('hidden');
+
+        const okBtn = document.getElementById('btn-dialog-ok');
+        if (okBtn) {
+          okBtn.onclick = () => {
+            modal.classList.add('hidden');
+            if (onOkCallback) onOkCallback();
+          };
+        }
+      },
+
+      closeMelonDialog() {
+        const modal = document.getElementById('modal-melon-dialog');
+        if (modal) modal.classList.add('hidden');
+      },
+
+      logDiagnosticEvent(category, reason, detail, tip) {
+        const elapsed = this.practiceStartTime ? ((Date.now() - this.practiceStartTime) / 1000).toFixed(1) : '0.0';
+        this.diagnosticsHistory.push({ timeSec: elapsed, category, reason, detail, tip });
+      },
+
+      handleBookingSuccess() {
+        const elapsedSec = ((Date.now() - this.practiceStartTime) / 1000).toFixed(2);
+        const captchaSec = this.captchaDurationSec ? `${this.captchaDurationSec}s` : (this.currentLang === 'zh' ? '已預覽跳過' : 'Previewed');
+
+        const seatLabel = document.getElementById('res-seat-label');
+        const timeLabel = document.getElementById('res-total-time');
+        const captchaLabel = document.getElementById('res-captcha-time');
+        const tryAgainLabel = document.getElementById('res-tryagain-count');
+        const conflictLabel = document.getElementById('res-conflict-count');
+        const successModal = document.getElementById('step-success');
+
+        if (seatLabel) {
+          const seatNames = this.selectedSeats.map(s => s.id).join(' & ');
+          seatLabel.innerText = seatNames || (this.currentLang === 'zh' ? '已成功鎖定' : 'Secured');
+        }
+        if (timeLabel) timeLabel.innerText = `${elapsedSec}s`;
+        if (captchaLabel) captchaLabel.innerText = captchaSec;
+        if (tryAgainLabel) tryAgainLabel.innerText = `${this.tryAgainCount} ${this.t('unitTimes')}`;
+        if (conflictLabel) conflictLabel.innerText = `${this.conflictCount} ${this.t('unitTimes')}`;
+
+        const logContainer = document.getElementById('diagnostics-log-container');
+        const adviceBox = document.getElementById('coaching-advice-box');
+
+        if (logContainer) {
+          if (this.diagnosticsHistory.length === 0) {
+            logContainer.innerHTML = `
+              <div class="p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-700 flex items-center justify-between">
+                <span>${this.t('noIssuesReport')}</span>
+                <span class="font-bold text-xs">A+</span>
+              </div>
+            `;
+          } else {
+            logContainer.innerHTML = this.diagnosticsHistory.map((item, idx) => `
+              <div class="p-2 bg-gray-50 border border-gray-200 rounded flex flex-col space-y-0.5">
+                <div class="flex items-center justify-between font-semibold text-gray-800">
+                  <span class="text-amber-700 font-medium">#${idx + 1} at ${item.timeSec}s: ${item.reason}</span>
+                  <span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded font-mono">${item.category}</span>
+                </div>
+                <div class="text-gray-500 text-[10px]">${item.detail}</div>
+              </div>
+            `).join('');
+          }
+        }
+
+        if (adviceBox) {
+          if (this.diagnosticsHistory.some(d => d.category === 'Mobile Anti-Bot')) {
+            adviceBox.innerText = this.t('adviceMobileCap');
+          } else if (this.diagnosticsHistory.some(d => d.category === 'Rapid Submit')) {
+            adviceBox.innerText = this.t('adviceRapidSubmit');
+          } else if (this.diagnosticsHistory.some(d => d.category === 'Bot Detection')) {
+            adviceBox.innerText = this.t('adviceBot');
+          } else if (this.captchaDurationSec && parseFloat(this.captchaDurationSec) > 4.0) {
+            adviceBox.innerText = this.t('adviceSlowCaptcha');
+          } else {
+            adviceBox.innerText = this.t('adviceGood');
+          }
+        }
+
+        if (successModal) successModal.classList.remove('hidden');
+      }
+    };
+
+    window.app = app;
+    window.addEventListener('DOMContentLoaded', () => {
+      app.init();
+    });
+  </script>
 </body>
 </html>
