@@ -138,7 +138,7 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-0 sm:py-6 sm:px-4">
 
-  <!-- ================= PREPARATION OVERLAY (Default Language: English) ================= -->
+  <!-- ================= PREPARATION OVERLAY (Default Language: English with Switcher) ================= -->
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center">
       
@@ -945,9 +945,9 @@
 
       const totalSpan1F = 160;
       const step1F = totalSpan1F / 15;
-      const gap1F = 1.3;
-      const rIn1F = 180;
-      const rOut1F = 224;
+      const gap1F = 0.7;
+      const rIn1F = 220;
+      const rOut1F = 265;
 
       let sec1FPaths = "";
       for (let i = 0; i < 15; i++) {
@@ -956,16 +956,16 @@
         const endA = 170 - (i * step1F);
         const rad = Math.PI / 180;
         const a1 = startA * rad, a2 = endA * rad;
-        const x1 = 380 + rOut1F * Math.cos(a1), y1 = 65 + rOut1F * Math.sin(a1);
-        const x2 = 380 + rOut1F * Math.cos(a2), y2 = 65 + rOut1F * Math.sin(a2);
-        const x3 = 380 + rIn1F * Math.cos(a2), y3 = 65 + rIn1F * Math.sin(a2);
-        const x4 = 380 + rIn1F * Math.cos(a1), y4 = 65 + rIn1F * Math.sin(a1);
+        const x1 = 380 + rOut1F * Math.cos(a1), y1 = 70 + rOut1F * Math.sin(a1);
+        const x2 = 380 + rOut1F * Math.cos(a2), y2 = 70 + rOut1F * Math.sin(a2);
+        const x3 = 380 + rIn1F * Math.cos(a2), y3 = 70 + rIn1F * Math.sin(a2);
+        const x4 = 380 + rIn1F * Math.cos(a1), y4 = 70 + rIn1F * Math.sin(a1);
         const largeArc = Math.abs(endA - startA) > 180 ? 1 : 0;
         const d = `M ${x1.toFixed(1)},${y1.toFixed(1)} A ${rOut1F} ${rOut1F} 0 ${largeArc} 1 ${x2.toFixed(1)},${y2.toFixed(1)} L ${x3.toFixed(1)},${y3.toFixed(1)} A ${rIn1F} ${rIn1F} 0 ${largeArc} 0 ${x4.toFixed(1)},${y4.toFixed(1)} Z`;
         const midA = ((startA + endA) / 2) * rad;
         const midR = (rIn1F + rOut1F) / 2;
         const tx = (380 + midR * Math.cos(midA)).toFixed(1);
-        const ty = (65 + midR * Math.sin(midA) + 4).toFixed(1);
+        const ty = (70 + midR * Math.sin(midA) + 4).toFixed(1);
         const secName = `1F Sec ${secNum}`;
 
         sec1FPaths += `
@@ -978,9 +978,9 @@
 
       const totalSpan2F = 164;
       const step2F = totalSpan2F / 20;
-      const gap2F = 1.1;
-      const rIn2F = 232;
-      const rOut2F = 278;
+      const gap2F = 0.6;
+      const rIn2F = 275;
+      const rOut2F = 325;
 
       let sec2FPaths = "";
       for (let i = 0; i < 20; i++) {
@@ -989,16 +989,16 @@
         const endA = 172 - (i * step2F);
         const rad = Math.PI / 180;
         const a1 = startA * rad, a2 = endA * rad;
-        const x1 = 380 + rOut2F * Math.cos(a1), y1 = 65 + rOut2F * Math.sin(a1);
-        const x2 = 380 + rOut2F * Math.cos(a2), y2 = 65 + rOut2F * Math.sin(a2);
-        const x3 = 380 + rIn2F * Math.cos(a2), y3 = 65 + rIn2F * Math.sin(a2);
-        const x4 = 380 + rIn2F * Math.cos(a1), y4 = 65 + rIn2F * Math.sin(a1);
+        const x1 = 380 + rOut2F * Math.cos(a1), y1 = 70 + rOut2F * Math.sin(a1);
+        const x2 = 380 + rOut2F * Math.cos(a2), y2 = 70 + rOut2F * Math.sin(a2);
+        const x3 = 380 + rIn2F * Math.cos(a2), y3 = 70 + rIn2F * Math.sin(a2);
+        const x4 = 380 + rIn2F * Math.cos(a1), y4 = 70 + rIn2F * Math.sin(a1);
         const largeArc = Math.abs(endA - startA) > 180 ? 1 : 0;
         const d = `M ${x1.toFixed(1)},${y1.toFixed(1)} A ${rOut2F} ${rOut2F} 0 ${largeArc} 1 ${x2.toFixed(1)},${y2.toFixed(1)} L ${x3.toFixed(1)},${y3.toFixed(1)} A ${rIn2F} ${rIn2F} 0 ${largeArc} 0 ${x4.toFixed(1)},${y4.toFixed(1)} Z`;
         const midA = ((startA + endA) / 2) * rad;
         const midR = (rIn2F + rOut2F) / 2;
         const tx = (380 + midR * Math.cos(midA)).toFixed(1);
-        const ty = (65 + midR * Math.sin(midA) + 4).toFixed(1);
+        const ty = (70 + midR * Math.sin(midA) + 4).toFixed(1);
         const secName = `2F Sec ${secNum}`;
 
         sec2FPaths += `
@@ -1011,44 +1011,44 @@
 
       return `
         <!-- Main Stage -->
-        <rect x="235" y="10" width="290" height="34" fill="#f1f3f5" stroke="#e9ecef" stroke-width="1.5" rx="3"/>
+        <rect x="230" y="10" width="300" height="34" fill="#f1f3f5" stroke="#e9ecef" stroke-width="1.5" rx="3"/>
         <text x="380" y="32" fill="#868e96" font-size="14" font-weight="bold" letter-spacing="4" text-anchor="middle">STAGE</text>
 
         <!-- Runway -->
-        <rect x="374" y="44" width="12" height="150" fill="#f1f3f5" stroke="#e9ecef" stroke-width="1" rx="1"/>
+        <rect x="374" y="44" width="12" height="130" fill="#f1f3f5" stroke="#e9ecef" stroke-width="1" rx="1"/>
 
         <!-- Center Stage -->
-        <rect x="330" y="96" width="100" height="28" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" rx="2"/>
-        <text x="380" y="115" fill="#475569" font-size="11" font-weight="bold" text-anchor="middle">STAGE</text>
+        <rect x="310" y="172" width="140" height="52" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1.5" rx="2"/>
+        <text x="380" y="205" fill="#475569" font-size="15" font-weight="bold" letter-spacing="2" text-anchor="middle">STAGE</text>
 
-        <!-- Floor Badge -->
-        <g transform="translate(355, 178)">
-          <rect width="50" height="20" rx="3" fill="#666"/>
-          <text x="25" y="14" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">Floor</text>
+        <!-- Floor Capsule Badge -->
+        <g transform="translate(348, 304)">
+          <rect width="64" height="22" rx="4" fill="#666"/>
+          <text x="32" y="15" fill="#ffffff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
         </g>
 
-        <!-- 1F & 2F Level Badges -->
-        <circle cx="86" cy="118" r="11" fill="#666"/><text x="86" y="122" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">1F</text>
-        <circle cx="674" cy="118" r="11" fill="#666"/><text x="674" y="122" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">1F</text>
-        <circle cx="28" cy="112" r="11" fill="#666"/><text x="28" y="116" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">2F</text>
-        <circle cx="732" cy="112" r="11" fill="#666"/><text x="732" y="116" fill="#fff" font-size="9" font-weight="bold" text-anchor="middle">2F</text>
+        <!-- 1F & 2F Level Badges Restored to Exact Coordinates -->
+        <circle cx="28" cy="112" r="13" fill="#666"/><text x="28" y="116" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">2F</text>
+        <circle cx="732" cy="112" r="13" fill="#666"/><text x="732" y="116" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">2F</text>
+        <circle cx="86" cy="118" r="12" fill="#666"/><text x="86" y="122" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
+        <circle cx="674" cy="118" r="12" fill="#666"/><text x="674" y="122" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
 
         <!-- Floor F1 ~ F4 (#b79b71) -->
         <g class="${blockClass}" data-section="Floor F1" onclick="app.onSectionSelectedTrigger('Floor F1', 'gradeR')">
-          <path d="M 235,50 L 366,50 L 366,100 L 324,100 L 324,116 L 235,116 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="296" y="85" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F1</text>
+          <rect x="206" y="85" width="168" height="110" fill="#b79b71" stroke="#ffffff" stroke-width="2"/>
+          <text x="290" y="152" fill="#ffffff" font-size="24" font-weight="bold" text-anchor="middle">F1</text>
         </g>
         <g class="${blockClass}" data-section="Floor F2" onclick="app.onSectionSelectedTrigger('Floor F2', 'gradeR')">
-          <path d="M 394,50 L 525,50 L 525,116 L 436,116 L 436,100 L 394,100 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="464" y="85" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F2</text>
+          <rect x="386" y="85" width="168" height="110" fill="#b79b71" stroke="#ffffff" stroke-width="2"/>
+          <text x="470" y="152" fill="#ffffff" font-size="24" font-weight="bold" text-anchor="middle">F2</text>
         </g>
         <g class="${blockClass}" data-section="Floor F3" onclick="app.onSectionSelectedTrigger('Floor F3', 'gradeR')">
-          <path d="M 235,124 L 324,124 L 324,140 L 366,140 L 366,206 L 275,206 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="296" y="172" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F3</text>
+          <polygon points="206,203 374,203 374,295 252,295 206,249" fill="#b79b71" stroke="#ffffff" stroke-width="2"/>
+          <text x="290" y="260" fill="#ffffff" font-size="24" font-weight="bold" text-anchor="middle">F3</text>
         </g>
         <g class="${blockClass}" data-section="Floor F4" onclick="app.onSectionSelectedTrigger('Floor F4', 'gradeR')">
-          <path d="M 436,124 L 525,124 L 485,206 L 394,206 L 394,140 L 436,140 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
-          <text x="464" y="172" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F4</text>
+          <polygon points="386,203 554,203 554,249 508,295 386,295" fill="#b79b71" stroke="#ffffff" stroke-width="2"/>
+          <text x="470" y="260" fill="#ffffff" font-size="24" font-weight="bold" text-anchor="middle">F4</text>
         </g>
 
         <!-- 1F & 2F Annular Sectors -->
@@ -1377,7 +1377,7 @@
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        const totalDurationSec = 3.5 + Math.random() * 2.5; // 3.5 ~ 6 seconds
+        const totalDurationSec = 3.5 + Math.random() * 2.0; // 3.5 ~ 5.5 seconds
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
         const averageStep = Math.max(1, Math.ceil(this.queueInitialTotal / totalTicks));
@@ -1864,6 +1864,12 @@
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         this.lastSubmitTime = now;
 
+        if (this.submitAttemptsCount <= 2) {
+          this.conflictCount++;
+          this.handleSeatRaceConflict();
+          return;
+        }
+
         if (intervalFromLastSubmit < 450) {
           this.tryAgainCount++;
           this.depleteSeats(Math.floor(Math.random() * 4) + 3);
@@ -1887,12 +1893,6 @@
             this.t('diagBotTip')
           );
           this.showMelonAlert("Please try again.");
-          return;
-        }
-
-        if (this.submitAttemptsCount <= 2) {
-          this.conflictCount++;
-          this.handleSeatRaceConflict();
           return;
         }
 
