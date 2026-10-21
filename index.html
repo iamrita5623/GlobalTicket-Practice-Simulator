@@ -33,6 +33,15 @@
       color: #333;
       user-select: none;
     }
+    .shake-anim {
+      animation: shake 0.35s cubic-bezier(.36,.07,.19,.97) both;
+    }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-1.5px, 0, 0); }
+      20%, 80% { transform: translate3d(2.5px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+      40%, 60% { transform: translate3d(3px, 0, 0); }
+    }
     .seat-cube {
       width: 17px;
       height: 17px;
@@ -890,6 +899,8 @@
       state: 'PREP', // Starts in PREP mode
       currentLang: 'en',
       practiceStartTime: null,
+      saleExactOpenTime: null,
+      reactionLatencyMs: 0,
       countdownRemaining: 3,
       countdownTimer: null,
 
@@ -925,6 +936,7 @@
 
       miniMapZoomLevel: 1.0,
       queueNumber: 352,
+      queueInitialTotal: 352,
       queueTimer: null,
 
       init() {
@@ -1021,6 +1033,7 @@
             this.renderCountdownText();
           } else {
             clearInterval(this.countdownTimer);
+            this.saleExactOpenTime = Date.now();
             this.onSaleOpened();
           }
         }, 1000);
@@ -1072,6 +1085,14 @@
           this.showMelonAlert("Please select the time.");
           return;
         }
+
+        const now = Date.now();
+        if (this.saleExactOpenTime) {
+          this.reactionLatencyMs = Math.max(50, now - this.saleExactOpenTime);
+        } else {
+          this.reactionLatencyMs = 650;
+        }
+
         this.startWaitingQueue();
       },
 
@@ -1111,28 +1132,72 @@
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.remove('hidden');
 
-        this.queueNumber = Math.floor(Math.random() * 150) + 260;
+        // Dynamically compute queue starting number based on latency
+        // < 350ms: ultra-fast reaction (Queue ~120 - 380)
+        // 350ms - 900ms: good reaction (Queue ~450 - 1,200)
+        // 900ms - 1800ms: modest reaction (Queue ~1,400 - 3,200)
+        // > 1800ms: slower reaction (Queue ~3,500 - 7,800)
+        const ms = this.reactionLatencyMs;
+        let baseQueue = 120;
+        if (ms < 350) {
+          baseQueue = Math.floor(100 + (ms / 350) * 220 + Math.random() * 50);
+        } else if (ms < 900) {
+          baseQueue = Math.floor(350 + ((ms - 350) / 550) * 800 + Math.random() * 100);
+        } else if (ms < 1800) {
+          baseQueue = Math.floor(1200 + ((ms - 900) / 900) * 1800 + Math.random() * 200);
+        } else {
+          baseQueue = Math.floor(3000 + Math.min(ms - 1800, 3000) * 1.5 + Math.random() * 400);
+        }
+
+        this.queueNumber = baseQueue;
+        this.queueInitialTotal = baseQueue;
+
         const orderElem = document.getElementById('queue-order-number');
         const estElem = document.getElementById('queue-time-est');
 
-        if (orderElem) orderElem.innerText = this.queueNumber;
+        if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
+        this.updateQueueEstimatedTime(estElem, this.queueNumber);
+
+        // Realistic, suspenseful pace: steps every 450ms, draining smoothly over 9 ~ 16 seconds
+        clearInterval(this.queueTimer);
+        const totalEstimatedSteps = Math.floor(Math.random() * 8) + 20; // 20-28 ticks (~10-14 seconds)
+        const stepBase = Math.max(1, Math.ceil(this.queueInitialTotal / totalEstimatedSteps));
 
         this.queueTimer = setInterval(() => {
-          const step = Math.floor(Math.random() * 45) + 35;
-          this.queueNumber -= step;
+          // Dynamic drain jitter
+          const jitterPercent = 0.7 + Math.random() * 0.6;
+          const drain = Math.max(1, Math.floor(stepBase * jitterPercent));
+          this.queueNumber -= drain;
 
           if (this.queueNumber > 0) {
-            if (orderElem) orderElem.innerText = this.queueNumber;
-            const sec = Math.max(4, Math.floor(this.queueNumber / 2.5));
-            if (estElem) {
-              estElem.innerText = this.currentLang === 'zh' ? `0分 ${sec}秒` : `0min ${sec}sec`;
-            }
+            if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
+            this.updateQueueEstimatedTime(estElem, this.queueNumber);
           } else {
             clearInterval(this.queueTimer);
-            if (modal) modal.classList.add('hidden');
-            this.openSeatmapWorkspace();
+            this.queueNumber = 0;
+            if (orderElem) orderElem.innerText = '0';
+            if (estElem) {
+              estElem.innerText = this.currentLang === 'zh' ? '正在轉入選位系統...' : 'Entering seat map...';
+            }
+            setTimeout(() => {
+              if (modal) modal.classList.add('hidden');
+              this.openSeatmapWorkspace();
+            }, 600);
           }
-        }, 280);
+        }, 460);
+      },
+
+      updateQueueEstimatedTime(elem, remaining) {
+        if (!elem) return;
+        // Remaining time approximation
+        const approxSeconds = Math.max(2, Math.ceil((remaining / this.queueInitialTotal) * 14));
+        const mins = Math.floor(approxSeconds / 60);
+        const secs = approxSeconds % 60;
+        if (this.currentLang === 'zh') {
+          elem.innerText = `${mins}分 ${secs < 10 ? '0' + secs : secs}秒`;
+        } else {
+          elem.innerText = `${mins}min ${secs < 10 ? '0' + secs : secs}sec`;
+        }
       },
 
       closeWaitingModal() {
@@ -1229,17 +1294,25 @@
       submitCaptcha() {
         const inputElem = document.getElementById('captcha-input');
         const input = inputElem ? inputElem.value.trim().toUpperCase() : '';
+        const errMsg = document.getElementById('captcha-error-msg');
+
         if (input === this.currentCaptchaCode) {
           this.captchaVerified = true;
           if (this.captchaStartTime) {
             this.captchaDurationSec = ((Date.now() - this.captchaStartTime) / 1000).toFixed(2);
           }
+          if (errMsg) errMsg.classList.add('hidden');
           const modal = document.getElementById('modal-captcha');
           if (modal) modal.classList.add('hidden');
         } else {
-          const errMsg = document.getElementById('captcha-error-msg');
+          // DO NOT regenerate captcha on typo so user can fix characters
           if (errMsg) errMsg.classList.remove('hidden');
-          this.regenerateCaptcha();
+          if (inputElem) {
+            inputElem.classList.remove('shake-anim');
+            void inputElem.offsetWidth; // Trigger reflow to restart animation
+            inputElem.classList.add('shake-anim');
+            inputElem.select(); // Highlight user text for swift correction
+          }
         }
       },
 
