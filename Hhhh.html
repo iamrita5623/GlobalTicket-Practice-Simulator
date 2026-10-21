@@ -1,7 +1,7 @@
+<!-- VERSION: v5.7 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v5.8 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -142,8 +142,10 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-0 sm:py-6 sm:px-4">
 
+  <!-- PREPARATION OVERLAY -->
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center">
+      
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
           English
@@ -159,9 +161,9 @@
       <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
       <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-2">
         <p data-i18n="prepStep1">• Click <b>"Ready, Start Practice"</b> to enter the ticketing session.</p>
-        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the date selection menu!</p>
+        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!</p>
         <p class="text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200/70 font-medium leading-normal" data-i18n="prepStep3">
-          • Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!
+          • Queue order will be assigned based on your reaction time right after countdown ends, requiring a waiting period. Stay sharp and click the instant it opens!
         </p>
       </div>
       <button type="button" onclick="app.startPracticeFromPrep()" class="w-full py-3.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg shadow transition-all active:scale-[0.99] cursor-pointer" data-i18n="prepStartBtn">
@@ -170,7 +172,9 @@
     </div>
   </div>
 
+  <!-- Desktop Container -->
   <div class="hidden md:flex w-full max-w-[1024px] bg-white border border-[#dce0e6] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex-col relative min-h-[720px]">
+    
     <header class="border-b border-gray-100 px-6 py-3.5 flex items-center justify-between bg-white">
       <div class="flex items-center space-x-2">
         <span class="text-xl font-black tracking-tight text-[#2563EB]">GLOBAL PASS</span>
@@ -231,11 +235,11 @@
             <div id="desktop-date-active-list" class="w-full space-y-2 hidden">
               <button type="button" id="d-date-btn-1" onclick="app.selectDate(0)" class="w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors">
                 <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
-                <span class="text-xs text-gray-400 font-light">&gt;</span>
+                <span class="text-xs text-gray-300">&gt;</span>
               </button>
               <button type="button" id="d-date-btn-2" onclick="app.selectDate(1)" class="w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors">
                 <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
-                <span class="text-xs text-gray-400 font-light">&gt;</span>
+                <span class="text-xs text-gray-300">&gt;</span>
               </button>
             </div>
           </div>
@@ -251,7 +255,7 @@
             <div id="desktop-time-active-box" class="w-full hidden">
               <div class="py-2.5 px-4 border border-[#2563EB] bg-blue-50/50 rounded text-sm font-semibold text-[#2563EB] flex items-center justify-between">
                 <span id="desktop-time-value-display">06:00 PM</span>
-                <span class="text-xs text-gray-400 font-light">&gt;</span>
+                <span class="text-xs text-gray-300">&gt;</span>
               </div>
             </div>
           </div>
@@ -290,7 +294,7 @@
         </div>
         <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
           <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• Practice Method:</p>
-          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
+          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
           <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
             ※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.
           </p>
@@ -299,11 +303,17 @@
     </main>
   </div>
 
+  <!-- Mobile Container -->
   <div class="flex md:hidden w-full min-h-screen bg-white flex-col relative overflow-x-hidden">
+    
     <div class="w-full bg-[#18122B] text-white px-4 py-2.5 flex items-center justify-between text-xs shrink-0 z-10">
       <div class="flex items-center space-x-3">
-        <button type="button" class="text-white hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
-        <button type="button" class="text-white hover:text-gray-300"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+        <button type="button" class="text-white hover:text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button type="button" class="text-white hover:text-gray-300">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
       </div>
       <div class="flex items-center space-x-2">
         <div class="bg-white/10 px-2 py-0.5 rounded text-[11px] font-bold flex space-x-1.5">
@@ -311,7 +321,9 @@
           <span class="text-white/40">|</span>
           <button onclick="app.setLanguage('zh')" class="lang-btn-zh text-white/70 hover:text-white">繁中</button>
         </div>
-        <button type="button" class="text-white hover:text-gray-300 pl-1"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg></button>
+        <button type="button" class="text-white hover:text-gray-300 pl-1">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        </button>
       </div>
     </div>
 
@@ -338,9 +350,18 @@
       </div>
 
       <div class="px-4 py-3 bg-white border-b border-gray-100 text-xs space-y-2.5">
-        <div class="flex"><span class="w-20 text-gray-400" data-i18n="infoDate">Date</span><span class="font-medium text-gray-800">2026.10.31 - 2026.11.01</span></div>
-        <div class="flex"><span class="w-20 text-gray-400" data-i18n="infoVenue">Venue</span><span class="font-medium text-gray-800">KSPO DOME</span></div>
-        <div class="flex"><span class="w-20 text-gray-400" data-i18n="infoRuntime">Runtime</span><span class="font-medium text-gray-800">150min</span></div>
+        <div class="flex">
+          <span class="w-20 text-gray-400" data-i18n="infoDate">Date</span>
+          <span class="font-medium text-gray-800">2026.10.31 - 2026.11.01</span>
+        </div>
+        <div class="flex">
+          <span class="w-20 text-gray-400" data-i18n="infoVenue">Venue</span>
+          <span class="font-medium text-gray-800">KSPO DOME</span>
+        </div>
+        <div class="flex">
+          <span class="w-20 text-gray-400" data-i18n="infoRuntime">Runtime</span>
+          <span class="font-medium text-gray-800">150min</span>
+        </div>
       </div>
 
       <div class="flex border-b border-gray-200 text-xs font-bold text-center bg-white">
@@ -351,26 +372,42 @@
       <div class="p-4 bg-white">
         <h2 class="text-sm font-bold text-gray-900 mb-3" data-i18n="priceTitle">Price</h2>
         <div class="grid grid-cols-1 gap-y-2 text-xs text-gray-700">
-          <div class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span><span class="font-medium">VIP standing</span><span class="ml-auto font-mono">₩ 176,000</span></div>
-          <div class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span><span class="font-medium">standing</span><span class="ml-auto font-mono">₩ 165,000</span></div>
-          <div class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span><span class="font-medium">General seats</span><span class="ml-auto font-mono">₩ 154,000</span></div>
+          <div class="flex items-center">
+            <span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>
+            <span class="font-medium">VIP standing</span>
+            <span class="ml-auto font-mono">₩ 176,000</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>
+            <span class="font-medium">standing</span>
+            <span class="ml-auto font-mono">₩ 165,000</span>
+          </div>
+          <div class="flex items-center">
+            <span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>
+            <span class="font-medium">General seats</span>
+            <span class="ml-auto font-mono">₩ 154,000</span>
+          </div>
         </div>
       </div>
 
       <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
         <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• Practice Method:</p>
-        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
+        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
         <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.</p>
       </div>
     </div>
 
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex items-center space-x-2 z-20 shadow-lg">
-      <button type="button" onclick="location.reload()" title="Reset" class="w-12 h-12 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></button>
+      <button type="button" onclick="location.reload()" title="Reset" class="w-12 h-12 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+      </button>
+      
       <button id="mobile-btn-buy-now" disabled class="flex-1 h-12 bg-gray-300 text-gray-700 font-bold text-xs sm:text-sm rounded transition-all flex flex-col items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]">
         <span id="mobile-buy-btn-line1">Priority booking starts : 10.31(Sat) 20:00</span>
         <span id="mobile-buy-btn-line2" class="font-mono text-[11px]">(Time left : 00:03)</span>
       </button>
     </div>
+
   </div>
 
   <div id="drawer-date-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex flex-col justify-end">
@@ -383,11 +420,11 @@
       <div class="divide-y divide-gray-100 py-2 overflow-y-auto">
         <button type="button" onclick="app.selectMobileDateSession(0)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
-          <span class="text-xs text-gray-400 font-light">&gt;</span>
+          <span class="text-xs text-gray-300">&gt;</span>
         </button>
         <button type="button" onclick="app.selectMobileDateSession(1)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
-          <span class="text-xs text-gray-400 font-light">&gt;</span>
+          <span class="text-xs text-gray-300">&gt;</span>
         </button>
       </div>
     </div>
@@ -402,13 +439,20 @@
     <span class="text-xs text-gray-400 font-medium">Loading session...</span>
   </div>
 
+  <!-- Waiting Queue Pop-up (5-7s background pacing, 35% 403 trigger on completion) -->
   <div id="modal-waiting-queue" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-sm border border-gray-200 p-6 relative flex flex-col items-center text-center shadow-2xl">
-      <button type="button" onclick="app.cancelWaitingQueue()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">✕</button>
-      <div class="text-xs font-semibold text-gray-800 tracking-wide mb-3 truncate w-full px-4">WORLD TOUR LIVE IN SEOUL</div>
+      <button type="button" onclick="app.cancelWaitingQueue()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
+        ✕
+      </button>
+      <div class="text-xs font-semibold text-gray-800 tracking-wide mb-3 truncate w-full px-4">
+        WORLD TOUR LIVE IN SEOUL
+      </div>
       <p class="text-xs text-gray-400 font-medium mb-1" data-i18n="queueWaitPrompt">Please, Wait!</p>
       <h2 class="text-xl font-bold text-[#2563EB] mb-2 tracking-tight" data-i18n="queueOrderTitle">Your waiting order</h2>
-      <div id="queue-order-number" class="text-5xl font-black text-[#2563EB] my-3 font-mono tracking-tight">5,382</div>
+      <div id="queue-order-number" class="text-5xl font-black text-[#2563EB] my-3 font-mono tracking-tight">
+        5,382
+      </div>
       <p class="text-xs text-gray-600 mb-6 font-medium">
         <span data-i18n="queueEstPrefix">Estimated time to wait : </span><span id="queue-time-est" class="underline font-bold text-gray-900">1min 45sec</span>
       </p>
@@ -417,35 +461,60 @@
         <p class="pl-2" data-i18n="queueNotice2">Please wait a moment to move the next step safely.</p>
         <p data-i18n="queueNotice3">• Notice! If you refresh this page, the waiting order will start again.</p>
       </div>
-      <button type="button" onclick="app.cancelWaitingQueue()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="cancelBtn">Cancel</button>
+      <button type="button" onclick="app.cancelWaitingQueue()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="cancelBtn">
+        Cancel
+      </button>
     </div>
   </div>
 
   <div id="modal-captcha" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl w-full max-w-md border border-gray-200 p-6 flex flex-col items-center text-center shadow-2xl relative">
       <h2 class="text-2xl font-bold text-[#2563EB] mb-2" data-i18n="captchaHeading">Secure booking service</h2>
-      <p class="text-xs text-gray-600 max-w-xs leading-relaxed mb-4" data-i18n="captchaDesc">To avoid automated bookings, the secure booking service requires you to enter a security code when selecting a seat</p>
+      <p class="text-xs text-gray-600 max-w-xs leading-relaxed mb-4" data-i18n="captchaDesc">
+        To avoid automated bookings, the secure booking service requires you to enter a security code when selecting a seat
+      </p>
       <div class="flex items-center space-x-2 mb-3">
         <div class="border border-gray-300 rounded bg-white p-1">
           <canvas id="captcha-canvas" width="220" height="60" class="block bg-gray-50 rounded"></canvas>
         </div>
         <div class="flex flex-col space-y-1">
-          <button type="button" onclick="app.regenerateCaptcha()" title="Refresh Captcha" class="w-8 h-7 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 text-xs">⟳</button>
-          <button type="button" onclick="app.speakCaptcha()" title="Audio verification" class="w-8 h-7 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 text-xs">🔊</button>
+          <button type="button" onclick="app.regenerateCaptcha()" title="Refresh Captcha" class="w-8 h-7 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 text-xs">
+            ⟳
+          </button>
+          <button type="button" onclick="app.speakCaptcha()" title="Audio verification" class="w-8 h-7 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 text-xs">
+            🔊
+          </button>
         </div>
       </div>
       <div class="w-full max-w-xs mb-4">
-        <input type="text" id="captcha-input" maxlength="6" autocomplete="off" placeholder="PLEASE ENTER THE CHARACTERS" class="w-full text-center tracking-widest text-sm font-bold uppercase py-2.5 border border-gray-300 rounded focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none" oninput="this.value = this.value.toUpperCase();" onkeydown="if(event.key === 'Enter') app.submitCaptcha();"/>
-        <p id="captcha-error-msg" class="text-xs text-red-500 font-medium mt-1 hidden" data-i18n="captchaError">Incorrect security code. Please try again.</p>
+        <input 
+          type="text" 
+          id="captcha-input" 
+          maxlength="6"
+          autocomplete="off"
+          placeholder="PLEASE ENTER THE CHARACTERS"
+          class="w-full text-center tracking-widest text-sm font-bold uppercase py-2.5 border border-gray-300 rounded focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none"
+          oninput="this.value = this.value.toUpperCase();"
+          onkeydown="if(event.key === 'Enter') app.submitCaptcha();"
+        />
+        <p id="captcha-error-msg" class="text-xs text-red-500 font-medium mt-1 hidden" data-i18n="captchaError">
+          Incorrect security code. Please try again.
+        </p>
       </div>
-      <button type="button" onclick="app.submitCaptcha()" class="w-full max-w-xs py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg transition-colors shadow" data-i18n="captchaSubmitBtn">Submit</button>
+      <button type="button" onclick="app.submitCaptcha()" class="w-full max-w-xs py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg transition-colors shadow" data-i18n="captchaSubmitBtn">
+        Submit
+      </button>
       <div class="mt-4">
-        <a href="javascript:void(0)" onclick="app.dismissCaptchaToViewOnly()" class="text-xs text-gray-500 hover:underline" data-i18n="captchaDismissLink">To See the seats first, Click here</a>
+        <a href="javascript:void(0)" onclick="app.dismissCaptchaToViewOnly()" class="text-xs text-gray-500 hover:underline" data-i18n="captchaDismissLink">
+          To See the seats first, Click here
+        </a>
       </div>
     </div>
   </div>
 
+  <!-- SEAT MAP WORKSPACE MODAL -->
   <div id="step-seatmap-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden flex items-center justify-center p-0 md:p-4">
+    
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
       <!-- Desktop Seating Top Bar -->
@@ -455,14 +524,18 @@
           <span class="text-gray-500">|</span>
           <span class="text-gray-200 font-medium truncate max-w-xs">WORLD TOUR LIVE IN SEOUL</span>
           <span class="text-gray-500">|</span>
-          <select id="seatmap-session-select" onchange="app.onSessionSelectChange(this.value)" class="bg-[#0f172a] border border-gray-600 rounded px-1.5 py-0.5 text-xs text-gray-200 outline-none cursor-pointer">
+          <select id="seatmap-session-select" onchange="app.onSessionSelectChange(this.value)" class="bg-[#0f172a] border border-gray-600 rounded px-1.5 py-0.5 text-xs text-gray-200 outline-none">
             <option value="0">2026.10.31 18:00</option>
             <option value="1">2026.11.01 17:00</option>
           </select>
         </div>
         <div class="flex items-center space-x-2 shrink-0">
-          <button id="btn-back-to-arena" onclick="app.backToVenue()" class="px-2 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-white text-xs hidden transition-colors cursor-pointer" data-i18n="backToVenueBtn">&lt; Venue</button>
-          <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-300 hover:text-white text-xl font-bold px-1.5 leading-none cursor-pointer">✕</button>
+          <button id="btn-back-to-arena" onclick="app.backToVenue()" class="px-2 py-1 bg-white/10 hover:bg-white/20 border border-white/20 rounded text-white text-xs hidden transition-colors" data-i18n="backToVenueBtn">
+            &lt; Venue
+          </button>
+          <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-300 hover:text-white text-xl font-bold px-1.5 leading-none">
+            ✕
+          </button>
         </div>
       </div>
 
@@ -473,31 +546,35 @@
           <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-400 hover:text-gray-700 text-lg font-light px-1 leading-none">✕</button>
         </div>
 
-        <div id="mobile-venue-header-row" class="flex items-center bg-gray-100/80 px-3 py-2 gap-3 hidden">
-          <!-- Clean Gray Mini Preview Icon -->
-          <div class="w-11 h-11 bg-white border border-gray-300 rounded shrink-0 flex items-center justify-center p-0.5 overflow-hidden relative shadow-sm">
-            <svg viewBox="0 0 760 520" class="w-full h-auto select-none opacity-40">
-              <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="#94a3b8"/>
-              <rect x="206" y="85" width="168" height="110" fill="#64748b"/>
-              <rect x="386" y="85" width="168" height="110" fill="#64748b"/>
+        <div class="flex items-center bg-gray-100/80 px-3 py-2 gap-3">
+          <!-- Mini Map Thumbnail Preview Box (Only visible when section is selected) -->
+          <div id="mobile-mini-map-box" class="w-11 h-11 bg-white border border-gray-300 rounded shrink-0 items-center justify-center p-0.5 overflow-hidden relative hidden">
+            <svg viewBox="0 0 760 520" class="w-full h-auto select-none">
+              <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="#e2e8f0"/>
+              <rect x="206" y="85" width="168" height="110" fill="#b79b71"/>
+              <rect x="386" y="85" width="168" height="110" fill="#b79b71"/>
             </svg>
           </div>
 
           <div class="flex-1 flex flex-col space-y-1">
             <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
-              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 text-[11px] truncate">Sat, Oct 31, 2026 06:00 PM</span>
-              <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2"><span>↻ Date</span></button>
+              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 text-[11px] truncate">Fri, Jan 22, 2027 08:00 PM</span>
+              <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+                <span>↻ Date</span>
+              </button>
             </div>
             <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
               <span id="mobile-sticky-zone-label" class="font-medium text-gray-800 text-[11px] truncate">Please select a grade first</span>
-              <button type="button" onclick="app.backToVenue()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2"><span>↻ Zone</span></button>
+              <button type="button" onclick="app.backToVenue()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+                <span>↻ Zone</span>
+              </button>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Workspace Body -->
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        
         <div class="flex-1 bg-white relative p-1 sm:p-3 flex flex-col items-center justify-start sm:justify-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
           
           <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-400 text-center max-w-xl mb-1 sm:mb-2 leading-relaxed shrink-0" data-i18n="venueNoticeText">
@@ -506,13 +583,16 @@
 
           <div id="kspo-dome-svg-wrap" class="w-full max-w-[680px] flex flex-col items-center justify-center my-auto">
             <svg id="main-kspo-svg" viewBox="0 0 760 520" class="w-full h-auto drop-shadow-sm select-none">
-              <!-- Dynamically rendered -->
             </svg>
           </div>
 
           <div id="grid-seat-matrix-wrap" class="w-full h-full flex flex-col items-center justify-between hidden py-1 sm:py-2 overflow-hidden bg-white">
-            <div class="w-full max-w-md py-1 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-[11px] sm:text-xs shrink-0 select-none">STAGE</div>
-            <div id="matrix-section-title" class="text-[11px] sm:text-xs text-gray-500 font-medium my-0.5 shrink-0 select-none">Section Seating Grid</div>
+            <div class="w-full max-w-md py-1 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-[11px] sm:text-xs shrink-0 select-none">
+              STAGE
+            </div>
+            <div id="matrix-section-title" class="text-[11px] sm:text-xs text-gray-500 font-medium my-0.5 shrink-0 select-none">
+              Section Seating Grid
+            </div>
 
             <div id="seats-viewport-scaler" class="w-full flex-1 flex justify-center items-center overflow-hidden p-0 relative">
               <div id="seats-grid-table" class="inline-block bg-white p-0.5 select-none origin-top transition-transform duration-100"></div>
@@ -522,19 +602,18 @@
 
         <div class="w-full md:w-64 bg-white p-3 sm:p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
           <div>
-            <div id="desktop-minimap-box" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 hidden md:block">
+            <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 hidden">
               <div class="flex justify-between items-center mb-1 text-[11px] text-gray-500">
                 <span class="font-medium" data-i18n="miniMapTitle">Mini Map</span>
                 <div class="flex space-x-1">
                   <button type="button" onclick="app.zoomMiniMap(0.15)" class="px-1.5 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-bold cursor-pointer" title="Zoom in">+</button>
                   <button type="button" onclick="app.zoomMiniMap(-0.15)" class="px-1.5 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-bold cursor-pointer" title="Zoom out">-</button>
-                  <button type="button" onclick="app.resetMiniMapZoom()" class="px-1 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-medium text-gray-500 cursor-pointer" title="Reset view">1:1</button>
+                  <button type="button" onclick="app.resetMiniMapZoom()" class="px-1.5 py-0.5 bg-white hover:bg-gray-100 border border-gray-200 rounded text-[10px] font-medium text-gray-500 cursor-pointer" title="Reset view">1:1</button>
                 </div>
               </div>
               <div class="w-full h-32 bg-white border border-gray-200 rounded flex items-center justify-center p-1 overflow-hidden relative">
                 <div id="mini-map-transform-wrap" class="w-full h-full flex items-center justify-center transition-transform duration-200">
                   <svg id="mini-kspo-svg" viewBox="0 0 760 520" class="w-full h-auto drop-shadow-sm select-none">
-                    <!-- Dynamically rendered -->
                   </svg>
                 </div>
               </div>
@@ -542,7 +621,9 @@
 
             <div class="flex items-center justify-between border-b border-gray-200 pb-2 mb-2 text-xs">
               <span class="font-bold text-gray-800" id="selection-seats-title">Selected Seats (0/1)</span>
-              <span id="selected-seat-badge" class="hidden font-mono font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded text-[10px]">1 SELECTED</span>
+              <span id="selected-seat-badge" class="hidden font-mono font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded text-[10px]">
+                1 SELECTED
+              </span>
             </div>
 
             <div class="hidden md:flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
@@ -554,9 +635,18 @@
             </div>
 
             <div class="space-y-1.5 text-xs">
-              <div class="flex justify-between items-center text-gray-800"><span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>VIP standing</span><span class="font-mono">₩176,000</span></div>
-              <div class="flex justify-between items-center text-gray-800"><span class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>standing</span><span class="font-mono">₩165,000</span></div>
-              <div class="flex justify-between items-center text-gray-800"><span class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>General seats</span><span class="font-mono">₩154,000</span></div>
+              <div class="flex justify-between items-center text-gray-800">
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>VIP standing</span>
+                <span class="font-mono">₩176,000</span>
+              </div>
+              <div class="flex justify-between items-center text-gray-800">
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>standing</span>
+                <span class="font-mono">₩165,000</span>
+              </div>
+              <div class="flex justify-between items-center text-gray-800">
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>General seats</span>
+                <span class="font-mono">₩154,000</span>
+              </div>
             </div>
           </div>
 
@@ -579,43 +669,81 @@
       <h3 class="text-base font-bold text-gray-900 mb-1" data-i18n="selectSectionPromptTitle">Select Section</h3>
       <p id="mobile-prompt-target-name" class="text-sm font-semibold text-[#2563EB] mb-5">Floor F1</p>
       <div class="flex w-full space-x-2">
-        <button type="button" onclick="app.closeMobileSectionPrompt()" class="flex-1 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50" data-i18n="cancelBtn">Cancel</button>
-        <button type="button" onclick="app.confirmMobileSectionEnter()" class="flex-1 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-lg text-xs font-bold shadow" data-i18n="nextBtn">Next</button>
+        <button type="button" onclick="app.closeMobileSectionPrompt()" class="flex-1 py-2.5 border border-gray-300 text-gray-600 rounded-lg text-xs font-bold hover:bg-gray-50" data-i18n="cancelBtn">
+          Cancel
+        </button>
+        <button type="button" onclick="app.confirmMobileSectionEnter()" class="flex-1 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-lg text-xs font-bold shadow" data-i18n="nextBtn">
+          Next
+        </button>
       </div>
     </div>
   </div>
 
   <div id="modal-melon-dialog" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-lg w-full max-w-xs border border-gray-200 p-5 flex flex-col items-center text-center shadow-xl">
-      <div id="melon-dialog-text" class="text-sm text-gray-800 font-medium mb-5 text-center leading-relaxed">Please try again.</div>
-      <button type="button" id="btn-dialog-ok" onclick="app.closeMelonDialog()" class="w-24 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-medium text-xs rounded transition-colors cursor-pointer">OK</button>
+      <div id="melon-dialog-text" class="text-sm text-gray-800 font-medium mb-5 text-center leading-relaxed">
+        Please try again.
+      </div>
+      <button type="button" id="btn-dialog-ok" onclick="app.closeMelonDialog()" class="w-24 py-1.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-medium text-xs rounded transition-colors">
+        OK
+      </button>
     </div>
   </div>
 
   <div id="step-success" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-lg p-6 text-center border border-gray-100 flex flex-col items-center shadow-2xl max-h-[90vh] overflow-y-auto">
-      <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-[#2563EB] mb-3 text-2xl font-bold shrink-0">✓</div>
+      <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-[#2563EB] mb-3 text-2xl font-bold shrink-0">
+        ✓
+      </div>
       <h2 class="text-xl font-bold text-gray-900 mb-1" data-i18n="successHeading">Payment Session Secured!</h2>
       <p class="text-xs text-gray-500 mb-4" data-i18n="successSubheading">You successfully locked the ticket before competitors!</p>
 
       <div class="w-full bg-gray-50 border border-gray-200 rounded-lg p-3 text-xs space-y-2 mb-4 text-left">
-        <div class="flex justify-between"><span class="text-gray-500" data-i18n="statSelectedSeats">Selected Seats:</span><span class="font-bold text-gray-800" id="res-seat-label">-</span></div>
-        <div class="flex justify-between"><span class="text-gray-500" data-i18n="statReactionSpeed">Opening Reaction Speed:</span><span class="font-mono font-bold text-indigo-600" id="res-reaction-time">-</span></div>
-        <div class="flex justify-between"><span class="text-gray-500" data-i18n="statTotalTime">Total Practice Elapsed:</span><span class="font-mono font-bold text-[#2563EB]" id="res-total-time">-</span></div>
-        <div class="flex justify-between"><span class="text-gray-500" data-i18n="statCaptchaTime">Captcha Entry Time:</span><span class="font-mono font-bold text-emerald-600" id="res-captcha-time">-</span></div>
-        <div class="flex justify-between"><span class="text-gray-500" data-i18n="statConflictCount">Seat Conflicts (Another Customer):</span><span class="font-bold text-red-500" id="res-conflict-count">0 times</span></div>
-        <div class="flex justify-between"><span class="text-gray-500" data-i18n="statTryAgainCount">"Please Try Again" Overcome:</span><span class="font-bold text-amber-600" id="res-tryagain-count">0 times</span></div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statSelectedSeats">Selected Seats:</span>
+          <span class="font-bold text-gray-800" id="res-seat-label">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statReactionSpeed">Opening Reaction Speed:</span>
+          <span class="font-mono font-bold text-indigo-600" id="res-reaction-time">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statTotalTime">Total Practice Elapsed:</span>
+          <span class="font-mono font-bold text-[#2563EB]" id="res-total-time">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statCaptchaTime">Captcha Entry Time:</span>
+          <span class="font-mono font-bold text-emerald-600" id="res-captcha-time">-</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statConflictCount">Seat Conflicts (Another Customer):</span>
+          <span class="font-bold text-red-500" id="res-conflict-count">0 times</span>
+        </div>
+        <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statTryAgainCount">"Please Try Again" Overcome:</span>
+          <span class="font-bold text-amber-600" id="res-tryagain-count">0 times</span>
+        </div>
       </div>
 
       <div class="w-full text-left mb-5">
         <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-bold text-gray-700 flex items-center"><span class="w-2 h-2 rounded-full bg-blue-600 mr-1.5 inline-block"></span><span data-i18n="reportTitle">Action & Speed Diagnostics Report</span></span>
+          <span class="text-xs font-bold text-gray-700 flex items-center">
+            <span class="w-2 h-2 rounded-full bg-blue-600 mr-1.5 inline-block"></span>
+            <span data-i18n="reportTitle">Action & Speed Diagnostics Report</span>
+          </span>
           <span class="text-[10px] text-gray-400" data-i18n="reportSubtitle">Post-Mortem Analysis</span>
         </div>
-        <div id="diagnostics-log-container" class="space-y-1.5 max-h-36 overflow-y-auto pr-1 text-[11px]"></div>
-        <div id="coaching-advice-box" class="mt-3 p-2.5 bg-blue-50/70 border border-blue-200 rounded text-[11px] text-[#1D4ED8] leading-relaxed"></div>
+
+        <div id="diagnostics-log-container" class="space-y-1.5 max-h-36 overflow-y-auto pr-1 text-[11px]">
+        </div>
+
+        <div id="coaching-advice-box" class="mt-3 p-2.5 bg-blue-50/70 border border-blue-200 rounded text-[11px] text-[#1D4ED8] leading-relaxed">
+        </div>
       </div>
-      <button type="button" onclick="location.reload()" class="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg transition-colors shrink-0 cursor-pointer" data-i18n="practiceAgainBtn">Practice Again</button>
+
+      <button type="button" onclick="location.reload()" class="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg transition-colors shrink-0" data-i18n="practiceAgainBtn">
+        Practice Again
+      </button>
     </div>
   </div>
 
@@ -652,7 +780,7 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice Method:",
-        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.",
+        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -687,8 +815,8 @@
         prepBadge: "Global Ticket Simulator",
         prepHeading: "Ticketing Practice Session",
         prepStep1: "• Click <b>\"Ready, Start Practice\"</b> to enter the ticketing session.",
-        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the date selection menu!",
-        prepStep3: "• Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!",
+        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!",
+        prepStep3: "• Queue order will be assigned based on your reaction time right after countdown ends, requiring a waiting period. Stay sharp and click the instant it opens!",
         prepStartBtn: "Ready, Start Practice",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
         countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On Sale Now )",
@@ -706,6 +834,7 @@
         diagMobileRapidTapTitle: "High-Frequency Rapid Seat Tapping",
         diagMobileRapidTapDetail: "Rapidly tapped multiple seats in a flurry ({ms}ms interval). Inhuman tapping speed triggered anti-bot heuristics, forcing an eviction back to the venue map.",
         diagMobileRapidTapTip: "Frantic screen tapping triggers bot-protection rate limits. Aim for calm, deliberate single-seat clicks.",
+        diagOpeningSpeedTitle: "Opening Click Timing",
         adviceFastReaction: "⚡ Lightning reaction ({ms}ms)! Secured top-tier queue wave (Queue #{queue}) with pro-level reflex.",
         adviceMidReaction: "🎯 Solid timing ({ms}ms). Comfortably slotted into the leading queue wave (Queue #{queue}).",
         adviceSlowReaction: "⚠️ Noticeable delay ({sec}s) caused competitors to surge ahead (Queue #{queue}). Hover your finger tight over the button on the final second!",
@@ -794,6 +923,7 @@
         diagMobileRapidTapTitle: "高頻盲點連擊換位（點擊頻率過急）",
         diagMobileRapidTapDetail: "在極短時間內急促更換點擊多個座位（平均點擊間隔僅 {ms}ms），因點擊頻率過高被系統風控判定為腳本異常，強制踢回全景圖。",
         diagMobileRapidTapTip: "手機端狂戳螢幕會被判定為外掛狂刷。請保持冷靜，看準單一空位果斷點選。",
+        diagOpeningSpeedTitle: "開賣點擊反應",
         adviceFastReaction: "⚡ 開賣點擊反應極快（{ms} 毫秒）！搶下前排黃金排隊序號（第 {queue} 號），手速與專注力達到職業選手級別。",
         adviceMidReaction: "🎯 點擊時機精準穩定（{ms} 毫秒），順利卡進前段班排隊隊伍（第 {queue} 號）。",
         adviceSlowReaction: "⚠️ 開賣點擊稍有延遲（{sec} 秒），導致排隊序號被千名對手超前（第 {queue} 號），建議倒數最後 1 秒將手指緊貼滑鼠左鍵預備。",
@@ -836,48 +966,48 @@
 
       let html = `
         <g>
-          <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="${isMini ? '#e2e8f0' : '#f1f3f5'}" stroke="#e9ecef" stroke-width="1.5"/>
-          <text x="380" y="56" fill="${isMini ? '#94a3b8' : '#868e96'}" font-size="${isMini ? '15' : '20'}" font-weight="bold" letter-spacing="4" text-anchor="middle">STAGE</text>
+          <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="#f1f3f5" stroke="#e9ecef" stroke-width="1.5"/>
+          <text x="380" y="56" fill="#868e96" font-size="${isMini ? '15' : '20'}" font-weight="bold" letter-spacing="4" text-anchor="middle">STAGE</text>
         </g>
 
-        <circle cx="28" cy="112" r="${isMini ? '10' : '13'}" fill="${isMini ? '#cbd5e1' : '#666'}"/>
+        <circle cx="28" cy="112" r="${isMini ? '10' : '13'}" fill="#666"/>
         <text x="28" y="${isMini ? '115' : '116'}" fill="#fff" font-size="${isMini ? '9' : '11'}" font-weight="bold" text-anchor="middle">2F</text>
-        <circle cx="732" cy="112" r="${isMini ? '10' : '13'}" fill="${isMini ? '#cbd5e1' : '#666'}"/>
+        <circle cx="732" cy="112" r="${isMini ? '10' : '13'}" fill="#666"/>
         <text x="732" y="${isMini ? '115' : '116'}" fill="#fff" font-size="${isMini ? '9' : '11'}" font-weight="bold" text-anchor="middle">2F</text>
 
-        <circle cx="86" cy="118" r="${isMini ? '9' : '12'}" fill="${isMini ? '#cbd5e1' : '#666'}"/>
+        <circle cx="86" cy="118" r="${isMini ? '9' : '12'}" fill="#666"/>
         <text x="86" y="${isMini ? '121' : '122'}" fill="#fff" font-size="${isMini ? '8' : '10'}" font-weight="bold" text-anchor="middle">1F</text>
-        <circle cx="674" cy="118" r="${isMini ? '9' : '12'}" fill="${isMini ? '#cbd5e1' : '#666'}"/>
+        <circle cx="674" cy="118" r="${isMini ? '9' : '12'}" fill="#666"/>
         <text x="674" y="${isMini ? '121' : '122'}" fill="#fff" font-size="${isMini ? '8' : '10'}" font-weight="bold" text-anchor="middle">1F</text>
 
         <g transform="translate(348, 304)">
-          <rect width="64" height="22" rx="4" fill="${isMini ? '#cbd5e1' : '#666'}"/>
+          <rect width="64" height="22" rx="4" fill="#666"/>
           <text x="32" y="15" fill="#fff" font-size="${isMini ? '9' : '11'}" font-weight="bold" text-anchor="middle">Floor</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F1" onclick="app.onSectionSelectedTrigger('Floor F1', 'gradeR')">
-          <rect x="206" y="85" width="168" height="110" fill="${isMini ? '#cbd5e1' : '#b79b71'}" stroke="#ffffff" stroke-width="${strokeW}"/>
+          <rect x="206" y="85" width="168" height="110" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
           <text x="290" y="152" fill="#ffffff" font-size="${isMini ? '18' : '24'}" font-weight="bold" text-anchor="middle">F1</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F2" onclick="app.onSectionSelectedTrigger('Floor F2', 'gradeR')">
-          <rect x="386" y="85" width="168" height="110" fill="${isMini ? '#cbd5e1' : '#b79b71'}" stroke="#ffffff" stroke-width="${strokeW}"/>
+          <rect x="386" y="85" width="168" height="110" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
           <text x="470" y="152" fill="#ffffff" font-size="${isMini ? '18' : '24'}" font-weight="bold" text-anchor="middle">F2</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F3" onclick="app.onSectionSelectedTrigger('Floor F3', 'gradeR')">
-          <polygon points="206,203 374,203 374,295 252,295 206,249" fill="${isMini ? '#cbd5e1' : '#b79b71'}" stroke="#ffffff" stroke-width="${strokeW}"/>
+          <polygon points="206,203 374,203 374,295 252,295 206,249" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
           <text x="290" y="260" fill="#ffffff" font-size="${isMini ? '18' : '24'}" font-weight="bold" text-anchor="middle">F3</text>
         </g>
 
         <g class="${blockClass}" data-section="Floor F4" onclick="app.onSectionSelectedTrigger('Floor F4', 'gradeR')">
-          <polygon points="386,203 554,203 554,249 508,295 386,295" fill="${isMini ? '#cbd5e1' : '#b79b71'}" stroke="#ffffff" stroke-width="${strokeW}"/>
+          <polygon points="386,203 554,203 554,249 508,295 386,295" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
           <text x="470" y="260" fill="#ffffff" font-size="${isMini ? '18' : '24'}" font-weight="bold" text-anchor="middle">F4</text>
         </g>
 
         <g>
-          <rect x="310" y="172" width="140" height="52" rx="2" fill="${isMini ? '#e2e8f0' : '#e2e8f0'}" stroke="#cbd5e1" stroke-width="${strokeW}"/>
-          <text x="380" y="205" fill="${isMini ? '#94a3b8' : '#475569'}" font-size="${isMini ? '13' : '17'}" font-weight="bold" letter-spacing="2" text-anchor="middle">STAGE</text>
+          <rect x="310" y="172" width="140" height="52" rx="2" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="${strokeW}"/>
+          <text x="380" y="205" fill="#475569" font-size="${isMini ? '13' : '17'}" font-weight="bold" letter-spacing="2" text-anchor="middle">STAGE</text>
         </g>
       `;
 
@@ -904,7 +1034,7 @@
 
         html += `
           <g class="${blockClass}" data-section="${secName}" onclick="app.onSectionSelectedTrigger('${secName}', 'gradeS')">
-            <path d="${d}" fill="${isMini ? '#cbd5e1' : '#7f6aff'}" stroke="#ffffff" stroke-width="${strokeW}"/>
+            <path d="${d}" fill="#7f6aff" stroke="#ffffff" stroke-width="${strokeW}"/>
             <text x="${tx}" y="${ty}" fill="#ffffff" font-size="${isMini ? '10' : '13'}" font-weight="bold" text-anchor="middle">${secNum}</text>
           </g>
         `;
@@ -912,8 +1042,8 @@
 
       html += `
         <g>
-          <path d="${createAnnularSector(cx, cy, 321, 328, startDeg1F + gap1F/2, startDeg1F + step1F - gap1F/2)}" fill="${isMini ? '#cbd5e1' : '#ff719e'}" stroke="#fff" stroke-width="1"/>
-          <path d="${createAnnularSector(cx, cy, 321, 328, startDeg1F + 14 * step1F + gap1F/2, startDeg1F + 15 * step1F - gap1F/2)}" fill="${isMini ? '#cbd5e1' : '#ff719e'}" stroke="#fff" stroke-width="1"/>
+          <path d="${createAnnularSector(cx, cy, 321, 328, startDeg1F + gap1F/2, startDeg1F + step1F - gap1F/2)}" fill="#ff719e" stroke="#fff" stroke-width="1"/>
+          <path d="${createAnnularSector(cx, cy, 321, 328, startDeg1F + 14 * step1F + gap1F/2, startDeg1F + 15 * step1F - gap1F/2)}" fill="#ff719e" stroke="#fff" stroke-width="1"/>
         </g>
       `;
 
@@ -940,7 +1070,7 @@
 
         html += `
           <g class="${blockClass}" data-section="${secName}" onclick="app.onSectionSelectedTrigger('${secName}', 'gradeA')">
-            <path d="${d}" fill="${isMini ? '#cbd5e1' : '#ff719e'}" stroke="#ffffff" stroke-width="${strokeW}"/>
+            <path d="${d}" fill="#ff719e" stroke="#ffffff" stroke-width="${strokeW}"/>
             <text x="${tx}" y="${ty}" fill="#ffffff" font-size="${isMini ? '9' : '12'}" font-weight="bold" text-anchor="middle">${secNum}</text>
           </g>
         `;
@@ -969,7 +1099,8 @@
       tryAgainCount: 0,
       conflictCount: 0,
 
-      mobileTappedSeatCount: 0,
+      recentSeatClicksHistory: [],
+      recentRefreshHistory: [],
       mobileEvictionLockoutUntil: 0,
       pendingMobileSection: null,
 
@@ -989,13 +1120,11 @@
       currentSeats: [],
       selectedSeats: [],
       maxSeatsAllowed: 1,
-      recentRefreshClicks: [],
 
       miniMapZoomLevel: 1.0,
       queueNumber: 5382,
       queueInitialTotal: 5382,
       queueTimer: null,
-      pending403ErrorTrigger: false,
 
       init() {
         this.renderVenueSvg();
@@ -1076,6 +1205,7 @@
         const desktopLine = document.getElementById('desktop-countdown-line');
         const mobileLine1 = document.getElementById('mobile-buy-btn-line1');
         const mobileLine2 = document.getElementById('mobile-buy-btn-line2');
+
         const timeSec = this.countdownRemaining < 10 ? `0${this.countdownRemaining}` : `${this.countdownRemaining}`;
 
         if (this.state === 'OPEN') {
@@ -1149,9 +1279,20 @@
           };
         }
 
-        this.isTimeLoaded = true;
-        if (dTimeLocked) dTimeLocked.classList.add('hidden');
-        if (dTimeActive) dTimeActive.classList.remove('hidden');
+        const delayMs = Math.random() < 0.5 ? 900 : 0;
+        if (delayMs === 0) {
+          this.isTimeLoaded = true;
+          if (dTimeLocked) dTimeLocked.classList.add('hidden');
+          if (dTimeActive) dTimeActive.classList.remove('hidden');
+        } else {
+          this.isTimeLoaded = false;
+          if (dTimeLocked) dTimeLocked.innerText = this.currentLang === 'zh' ? '載入時間中...' : 'Loading session...';
+          setTimeout(() => {
+            this.isTimeLoaded = true;
+            if (dTimeLocked) dTimeLocked.classList.add('hidden');
+            if (dTimeActive) dTimeActive.classList.remove('hidden');
+          }, delayMs);
+        }
       },
 
       recordReactionSpeed() {
@@ -1166,24 +1307,31 @@
         const backdrop = document.getElementById('drawer-date-backdrop');
         const panel = document.getElementById('drawer-date-panel');
         if (backdrop) backdrop.classList.remove('hidden');
-        setTimeout(() => { if (panel) panel.classList.add('drawer-active'); }, 10);
+        setTimeout(() => {
+          if (panel) panel.classList.add('drawer-active');
+        }, 10);
       },
 
       closeMobileDateDrawer() {
         const backdrop = document.getElementById('drawer-date-backdrop');
         const panel = document.getElementById('drawer-date-panel');
         if (panel) panel.classList.remove('drawer-active');
-        setTimeout(() => { if (backdrop) backdrop.classList.add('hidden'); }, 250);
+        setTimeout(() => {
+          if (backdrop) backdrop.classList.add('hidden');
+        }, 250);
       },
 
       selectMobileDateSession(idx) {
         this.selectDate(idx);
         this.closeMobileDateDrawer();
-        
-        // Changing date within session does NOT trigger queue again; goes directly to venue map or re-renders
-        if (this.selectedSection) {
-          this.buildSeatGrid(this.selectedSection, this.selectedSectionGrade);
-        }
+
+        const spinner = document.getElementById('view-spinner');
+        if (spinner) spinner.classList.remove('hidden');
+
+        setTimeout(() => {
+          if (spinner) spinner.classList.add('hidden');
+          this.startWaitingQueue();
+        }, 750);
       },
 
       cancelTransition() {
@@ -1218,7 +1366,7 @@
 
         if (timeBox) timeBox.innerText = this.dates[index].time;
         if (sessionSelect) sessionSelect.value = String(index);
-        if (mobileDateLabel) mobileDateLabel.innerText = this.dates[index].labelEn;
+        if (mobileDateLabel) mobileDateLabel.innerText = this.dates[index].labelEn + ' ' + this.dates[index].time;
       },
 
       onSessionSelectChange(val) {
@@ -1242,14 +1390,20 @@
 
         this.queueNumber = baseQueue;
         this.queueInitialTotal = baseQueue;
-        this.pending403ErrorTrigger = Math.random() < 0.35; // 35% 403 test chance
 
         const orderElem = document.getElementById('queue-order-number');
         const estElem = document.getElementById('queue-time-est');
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        // Exact 5 ~ 7 seconds background duration
+        const initialWaitSec = Math.floor(baseQueue / 45) + 35;
+        const initMin = Math.floor(initialWaitSec / 60);
+        const initSec = initialWaitSec % 60;
+        if (estElem) {
+          estElem.innerText = this.currentLang === 'zh' ? `${initMin}分 ${initSec < 10 ? '0' : ''}${initSec}秒` : `${initMin}min ${initSec < 10 ? '0' : ''}${initSec}sec`;
+        }
+
+        // Background total pacing: exactly 5.0 to 7.0 seconds
         const totalDurationSec = 5.0 + Math.random() * 2.0;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
@@ -1261,14 +1415,15 @@
           tickCount++;
           const jitter = 0.82 + Math.random() * 0.42;
           const drain = Math.max(1, Math.floor(averageStep * jitter));
-          this.queueNumber -= drain;
+          this.queueNumber = Math.max(0, this.queueNumber - drain);
 
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-            const estMin = Math.floor(this.queueNumber / 2800);
-            const estSec = Math.floor((this.queueNumber % 2800) / 45) + 10;
+            const currentSecLeft = Math.max(1, Math.ceil((this.queueNumber / baseQueue) * initialWaitSec));
+            const m = Math.floor(currentSecLeft / 60);
+            const s = currentSecLeft % 60;
             if (estElem) {
-              estElem.innerText = this.currentLang === 'zh' ? `${estMin}分 ${estSec}秒` : `${estMin}min ${estSec}sec`;
+              estElem.innerText = this.currentLang === 'zh' ? `${m}分 ${s < 10 ? '0' : ''}${s}sec` : `${m}min ${s < 10 ? '0' : ''}${s}sec`;
             }
           } else {
             clearInterval(this.queueTimer);
@@ -1280,11 +1435,12 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              if (this.pending403ErrorTrigger) {
-                const errText = this.currentLang === 'zh'
+              // 35% 403 Server Traffic Jam Check at the END of Waiting Queue
+              if (Math.random() < 0.35) {
+                const msg = this.currentLang === 'zh'
                   ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
                   : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
-                this.showMelonAlert(errText);
+                this.showMelonAlert(msg);
                 return;
               }
 
@@ -1313,7 +1469,8 @@
         if (seatmapBackdrop) seatmapBackdrop.classList.add('hidden');
         const captchaModal = document.getElementById('modal-captcha');
         if (captchaModal) captchaModal.classList.add('hidden');
-        this.backToVenue();
+        this.selectedSection = null;
+        this.selectedSeats = [];
       },
 
       promptCaptcha() {
@@ -1446,25 +1603,25 @@
       selectSection(sectionName, gradeKey) {
         this.selectedSection = sectionName;
         this.selectedSectionGrade = gradeKey || 'gradeR';
-        this.mobileTappedSeatCount = 0;
 
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
         const gridWrap = document.getElementById('grid-seat-matrix-wrap');
         const backBtn = document.getElementById('btn-back-to-arena');
         const titleElem = document.getElementById('matrix-section-title');
-        const mobileVenueHeader = document.getElementById('mobile-venue-header-row');
         const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
-        const desktopMiniMap = document.getElementById('desktop-minimap-box');
+        const mobileMiniMapBox = document.getElementById('mobile-mini-map-box');
+        const desktopMiniMapContainer = document.getElementById('desktop-minimap-container');
 
         if (svgWrap) svgWrap.classList.add('hidden');
         if (notice) notice.classList.add('hidden');
         if (gridWrap) gridWrap.classList.remove('hidden');
         if (backBtn) backBtn.classList.remove('hidden');
         if (titleElem) titleElem.innerText = `${sectionName}`;
-        if (mobileVenueHeader) mobileVenueHeader.classList.remove('hidden');
         if (mobileZoneLabel) mobileZoneLabel.innerText = sectionName;
-        if (desktopMiniMap) desktopMiniMap.classList.remove('hidden');
+        if (mobileMiniMapBox) mobileMiniMapBox.classList.remove('hidden');
+        if (desktopMiniMapContainer) desktopMiniMapContainer.classList.remove('hidden');
+        mobileMiniMapBox.style.display = 'flex';
 
         this.buildSeatGrid(sectionName, this.selectedSectionGrade);
         this.updateCompletionButtonState();
@@ -1480,6 +1637,7 @@
         if (!viewport || !table) return;
 
         table.style.transform = 'none';
+
         const availW = viewport.clientWidth - 16;
         const availH = viewport.clientHeight - 8;
         const tableW = table.scrollWidth || table.offsetWidth;
@@ -1498,15 +1656,20 @@
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
         const backBtn = document.getElementById('btn-back-to-arena');
-        const mobileVenueHeader = document.getElementById('mobile-venue-header-row');
-        const desktopMiniMap = document.getElementById('desktop-minimap-box');
+        const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
+        const mobileMiniMapBox = document.getElementById('mobile-mini-map-box');
+        const desktopMiniMapContainer = document.getElementById('desktop-minimap-container');
 
         if (gridWrap) gridWrap.classList.add('hidden');
         if (svgWrap) svgWrap.classList.remove('hidden');
         if (notice) notice.classList.remove('hidden');
         if (backBtn) backBtn.classList.add('hidden');
-        if (mobileVenueHeader) mobileVenueHeader.classList.add('hidden');
-        if (desktopMiniMap) desktopMiniMap.classList.add('hidden');
+        if (mobileZoneLabel) mobileZoneLabel.innerText = this.currentLang === 'zh' ? '請先選擇區域' : 'Please select a grade first';
+        if (mobileMiniMapBox) {
+          mobileMiniMapBox.classList.add('hidden');
+          mobileMiniMapBox.style.display = 'none';
+        }
+        if (desktopMiniMapContainer) desktopMiniMapContainer.classList.add('hidden');
         
         this.selectedSection = null;
         this.selectedSeats = [];
@@ -1536,7 +1699,6 @@
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeR;
         const isFloor = sectionName.startsWith('Floor');
 
-        // Floor: 16 rows, 20 seats per row
         const floorConfig = [];
         for (let r = 1; r <= 16; r++) {
           floorConfig.push({ row: r, leftEmpty: 0, leftCols: 10, midCols: 10, rightCols: 0, rightEmpty: 0 });
@@ -1628,8 +1790,8 @@
       },
 
       createSeatCube(sectionName, row, colIdentifier, theme, isFloor) {
-        // High scarcity and significantly faster depletion for Floor sections
-        let availThreshold = isFloor ? 0.72 : (row <= 6 ? 0.88 : 0.76);
+        // Floor sections have higher initial scarcity
+        let availThreshold = isFloor ? 0.65 : (row <= 6 ? 0.88 : 0.76);
         const isAvail = Math.random() > availThreshold;
         const seatId = `${sectionName}-R${row}-${colIdentifier}`;
 
@@ -1661,25 +1823,14 @@
         if (seatObj.status === 'sold') return;
 
         const now = Date.now();
-        const tapInterval = now - this.lastSeatClickTime;
-        this.lastSeatClickTime = now;
+        this.recentSeatClicksHistory.push(now);
+        this.recentSeatClicksHistory = this.recentSeatClicksHistory.filter(t => now - t < 1500);
 
-        const isMobile = window.innerWidth < 768;
-        if (isMobile) {
-          this.mobileTappedSeatCount++;
-          if (this.mobileTappedSeatCount > 6 || tapInterval < 180) {
-            this.tryAgainCount++;
-            this.mobileEvictionLockoutUntil = Date.now() + 20000;
-            this.logDiagnosticEvent(
-              'Mobile Anti-Bot',
-              this.t('diagMobileRapidTapTitle'),
-              this.t('diagMobileRapidTapDetail').replace('{ms}', tapInterval),
-              this.t('diagMobileRapidTapTip')
-            );
-            this.backToVenue();
-            this.showMelonAlert("Please try again.");
-            return;
-          }
+        // Rate limit: Tapping too many seats too fast triggers Try Again
+        if (this.recentSeatClicksHistory.length >= 6) {
+          this.tryAgainCount++;
+          this.showMelonAlert("Please try again.");
+          return;
         }
 
         const existingIndex = this.selectedSeats.findIndex(s => s.id === seatObj.id);
@@ -1693,11 +1844,7 @@
         }
 
         if (this.selectedSeats.length >= this.maxSeatsAllowed) {
-          this.selectedSeats = [seatObj];
-          document.querySelectorAll('.seat-cube.selected').forEach(c => c.classList.remove('selected'));
-          const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
-          if (currentCube) currentCube.classList.add('selected');
-          this.updateCompletionButtonState();
+          this.showMelonAlert("You can select up to 1 seat.");
           return;
         }
 
@@ -1740,14 +1887,15 @@
         }
       },
 
-      depleteSeats(count) {
+      depleteSeats(count, originSeat) {
         let available = this.currentSeats.filter(s => s.status === 'available' && !this.selectedSeats.some(sel => sel.id === s.id));
         if (available.length === 0) return;
 
-        // Completely random scatter depletion across seats (fast speed)
+        // Randomized scattering (not strict row-by-row)
         available.sort(() => 0.5 - Math.random());
+
         const isFloor = this.selectedSection && this.selectedSection.startsWith('Floor');
-        const multiplier = isFloor ? 3.5 : 1.8;
+        const multiplier = isFloor ? 2.5 : 1.0;
         const toDeplete = Math.min(available.length, Math.ceil(count * multiplier));
         const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeR;
 
@@ -1769,36 +1917,17 @@
 
         this.submitAttemptsCount++;
         const now = Date.now();
-        const intervalFromSeatClick = this.lastSeatClickTime ? (now - this.lastSeatClickTime) : 9999;
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         this.lastSubmitTime = now;
 
-        if (intervalFromLastSubmit < 400) {
+        if (intervalFromLastSubmit < 450) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 5) + 4);
-          this.logDiagnosticEvent(
-            'Rapid Submit',
-            this.t('diagRapidSubmitTitle'),
-            this.t('diagRapidSubmitDetail').replace('{ms}', intervalFromLastSubmit),
-            this.t('diagRapidSubmitTip')
-          );
+          this.depleteSeats(Math.floor(Math.random() * 4) + 3);
           this.showMelonAlert("Please try again.");
           return;
         }
 
-        if (intervalFromSeatClick < 220) {
-          this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 5) + 4);
-          this.logDiagnosticEvent(
-            'Bot Detection',
-            this.t('diagBotTitle'),
-            this.t('diagBotDetail').replace('{ms}', intervalFromSeatClick),
-            this.t('diagBotTip')
-          );
-          this.showMelonAlert("Please try again.");
-          return;
-        }
-
+        // First 2 submit attempts: Seat race conflict ("Another customer is in payments...")
         if (this.submitAttemptsCount <= 2) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
@@ -1806,19 +1935,13 @@
         }
 
         const rand = Math.random();
-        if (rand < 0.40) {
+        if (rand < 0.45) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
-        } else if (rand < 0.75) {
+        } else if (rand < 0.78) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 5) + 3);
-          this.logDiagnosticEvent(
-            'Server Load',
-            this.t('diagServerTitle'),
-            this.t('diagServerDetail'),
-            this.t('diagServerTip')
-          );
+          this.depleteSeats(Math.floor(Math.random() * 4) + 2);
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1843,27 +1966,30 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 8) + 15;
-        this.depleteSeats(batchDepleteCount);
+        const batchDepleteCount = Math.floor(Math.random() * 7) + 12;
+        this.depleteSeats(batchDepleteCount, targets[0]);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
       },
 
       onRefreshClicked() {
         const now = Date.now();
-        this.recentRefreshClicks.push(now);
-        this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1200);
+        this.recentRefreshHistory.push(now);
+        this.recentRefreshHistory = this.recentRefreshHistory.filter(t => now - t < 1500);
 
-        if (this.recentRefreshClicks.length >= 3) {
+        if (this.recentRefreshHistory.length >= 4) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 6) + 4);
+          this.depleteSeats(Math.floor(Math.random() * 5) + 3);
           this.showMelonAlert("Please try again.");
           return;
         }
 
         if (this.selectedSection) {
-          this.depleteSeats(Math.floor(Math.random() * 5) + 4);
-          this.adjustSeatGridScale();
+          this.selectedSeats = [];
+          this.buildSeatGrid(this.selectedSection, this.selectedSectionGrade);
+          requestAnimationFrame(() => {
+            this.adjustSeatGridScale();
+          });
         }
       },
 
@@ -1942,21 +2068,7 @@
         }
 
         if (adviceBox) {
-          if (this.diagnosticsHistory.some(d => d.category === 'Mobile Anti-Bot')) {
-            adviceBox.innerText = this.t('adviceMobileRapidTap');
-          } else if (this.diagnosticsHistory.some(d => d.category === 'Rapid Submit')) {
-            adviceBox.innerText = this.t('adviceRapidSubmit');
-          } else if (this.diagnosticsHistory.some(d => d.category === 'Bot Detection')) {
-            adviceBox.innerText = this.t('adviceBot');
-          } else if (this.reactionLatencyMs < 350) {
-            adviceBox.innerText = this.t('adviceFastReaction').replace('{ms}', this.reactionLatencyMs).replace('{queue}', this.queueInitialTotal.toLocaleString());
-          } else if (this.reactionLatencyMs <= 750) {
-            adviceBox.innerText = this.t('adviceMidReaction').replace('{ms}', this.reactionLatencyMs).replace('{queue}', this.queueInitialTotal.toLocaleString());
-          } else if (this.reactionLatencyMs > 750) {
-            adviceBox.innerText = this.t('adviceSlowReaction').replace('{sec}', (this.reactionLatencyMs / 1000).toFixed(2)).replace('{queue}', this.queueInitialTotal.toLocaleString());
-          } else {
-            adviceBox.innerText = this.t('adviceGood');
-          }
+          adviceBox.innerText = this.t('adviceGood');
         }
 
         if (successModal) successModal.classList.remove('hidden');
