@@ -1314,8 +1314,8 @@
       },
 
       handleBuyNowAction() {
-        // Low-probability 403 server traffic overload trigger (~12% chance)
-        if (Math.random() < 0.12) {
+        // Increased 403 server overload probability to ~35% for easy testing
+        if (Math.random() < 0.35) {
           const msg = this.currentLang === 'zh'
             ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
             : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
@@ -1368,8 +1368,8 @@
         }
         this.recordReactionSpeed();
 
-        // Low-probability 403 server traffic overload trigger on desktop (~12% chance)
-        if (Math.random() < 0.12) {
+        // Increased 403 server overload probability on desktop to ~35% for easy testing
+        if (Math.random() < 0.35) {
           const msg = this.currentLang === 'zh'
             ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
             : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
@@ -1432,11 +1432,11 @@
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        // Single static-to-progressing estimated time calculation (e.g., ~1m 30s based on queue scale)
-        const initialEstSec = Math.max(30, Math.floor((this.queueInitialTotal / 1200) * 20));
+        // Single static estimated time based on initial queue order (e.g., ~1m 35s)
+        const initialEstSec = Math.max(45, Math.floor((this.queueInitialTotal / 1200) * 22));
         this.updateSingleEstimatedTime(estElem, initialEstSec);
 
-        // Actual wait time randomized strictly between 5 to 7 seconds
+        // Actual wait duration strictly between 5.0 to 7.0 seconds
         const totalDurationSec = 5.0 + Math.random() * 2.0;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
@@ -1452,7 +1452,7 @@
 
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-            const currentEstSec = Math.max(3, Math.round(initialEstSec * (this.queueNumber / this.queueInitialTotal)));
+            const currentEstSec = Math.max(4, Math.round(initialEstSec * (this.queueNumber / this.queueInitialTotal)));
             if (estElem) {
               this.updateSingleEstimatedTime(estElem, currentEstSec);
             }
@@ -1487,7 +1487,7 @@
         clearInterval(this.queueTimer);
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.add('hidden');
-        // Reset state so user returns to the main venue map cleanly without stale section memory
+        // Fully reset selected section and seats so user returns to clean main venue map
         this.selectedSection = null;
         this.selectedSeats = [];
       },
