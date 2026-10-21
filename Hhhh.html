@@ -465,7 +465,7 @@
   <!-- Waiting Queue Pop-up -->
   <div id="modal-waiting-queue" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-sm border border-gray-200 p-6 relative flex flex-col items-center text-center shadow-2xl">
-      <button type="button" onclick="app.closeWaitingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
+      <button type="button" onclick="app.cancelWaitingQueue()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
         ✕
       </button>
       <div class="text-xs font-semibold text-gray-800 tracking-wide mb-3 truncate w-full px-4">
@@ -484,7 +484,7 @@
         <p class="pl-2" data-i18n="queueNotice2">Please wait a moment to move the next step safely.</p>
         <p data-i18n="queueNotice3">• Notice! If you refresh this page, the waiting order will start again.</p>
       </div>
-      <button type="button" onclick="app.closeWaitingModal()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="cancelBtn">
+      <button type="button" onclick="app.cancelWaitingQueue()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="cancelBtn">
         Cancel
       </button>
     </div>
@@ -625,7 +625,7 @@
               </span>
             </div>
 
-            <!-- Pricing Breakdown (VIP standing / standing / General seats) -->
+            <!-- Pricing Breakdown -->
             <div class="hidden md:flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
               <span class="text-xs font-bold text-gray-600 uppercase" data-i18n="availSeatsSidebarTitle">Available Seats</span>
               <button type="button" onclick="app.onRefreshClicked()" class="text-xs px-2 py-0.5 border border-gray-300 rounded text-gray-600 hover:bg-gray-100 flex items-center space-x-1 transition-colors cursor-pointer">
@@ -1409,9 +1409,13 @@
         const estElem = document.getElementById('queue-time-est');
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-        this.updateEstimatedTimeDisplay(estElem, this.queueNumber);
         
-        const totalDurationSec = 3.6 + Math.random() * 1.8;
+        // Initial Estimated Time calculation based on queue size (single static-updating value, not range)
+        const initialEstSec = Math.max(30, Math.floor((this.queueInitialTotal / 1000) * (20 + Math.random() * 10)));
+        this.updateSingleEstimatedTime(estElem, initialEstSec);
+
+        // Actual wait time randomized strictly between 5 to 7 seconds
+        const totalDurationSec = 5.0 + Math.random() * 2.0;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
         const averageStep = Math.max(1, Math.ceil(this.queueInitialTotal / totalTicks));
@@ -1426,7 +1430,10 @@
 
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-            this.updateEstimatedTimeDisplay(estElem, this.queueNumber);
+            const currentEstSec = Math.max(3, Math.round(initialEstSec * (this.queueNumber / this.queueInitialTotal)));
+            if (estElem) {
+              this.updateSingleEstimatedTime(estElem, currentEstSec);
+            }
           } else {
             clearInterval(this.queueTimer);
             this.queueNumber = 0;
@@ -1442,39 +1449,29 @@
         }, tickIntervalMs);
       },
 
-      updateEstimatedTimeDisplay(elem, currentQueue) {
+      updateSingleEstimatedTime(elem, totalSecs) {
         if (!elem) return;
-        // Calculate realistic waiting time range based on queue order (approx 20-30 seconds per 1000 people)
-        const totalSecs = Math.max(15, Math.floor((currentQueue / 1000) * (22 + Math.random() * 8)));
-        const lowSecs = Math.max(10, totalSecs - 15);
-        const highSecs = totalSecs + 20;
-
-        const lowMin = Math.floor(lowSecs / 60);
-        const lowSec = lowSecs % 60;
-        const highMin = Math.floor(highSecs / 60);
-        const highSec = highSecs % 60;
-
-        const formatTime = (m, s) => {
-          const sStr = s < 10 ? '0' + s : s;
-          return m > 0 ? `${m}min ${sStr}sec` : `${s}sec`;
-        };
-
-        const formatTimeZh = (m, s) => {
-          const sStr = s < 10 ? '0' + s : s;
-          return m > 0 ? `${m}分 ${sStr}秒` : `${s}秒`;
-        };
-
+        const m = Math.floor(totalSecs / 60);
+        const s = totalSecs % 60;
+        const sStr = s < 10 ? '0' + s : s;
         if (this.currentLang === 'zh') {
-          elem.innerText = `${formatTimeZh(lowMin, lowSec)} ~ ${formatTimeZh(highMin, highSec)}`;
+          elem.innerText = m > 0 ? `${m}分 ${sStr}秒` : `${s}秒`;
         } else {
-          elem.innerText = `${formatTime(lowMin, lowSec)} ~ ${formatTime(highMin, highSec)}`;
+          elem.innerText = m > 0 ? `${m}min ${sStr}sec` : `${s}sec`;
         }
       },
 
-      closeWaitingModal() {
+      cancelWaitingQueue() {
         clearInterval(this.queueTimer);
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.add('hidden');
+        // Reset state so that going back in returns to the main venue map cleanly
+        this.selectedSection = null;
+        this.selectedSeats = [];
+      },
+
+      closeWaitingModal() {
+        this.cancelWaitingQueue();
       },
 
       openSeatmapWorkspace() {
@@ -1488,6 +1485,9 @@
         if (seatmapBackdrop) seatmapBackdrop.classList.add('hidden');
         const captchaModal = document.getElementById('modal-captcha');
         if (captchaModal) captchaModal.classList.add('hidden');
+        // Reset section state on modal close
+        this.selectedSection = null;
+        this.selectedSeats = [];
       },
 
       promptCaptcha() {
@@ -1673,6 +1673,8 @@
         if (notice) notice.classList.remove('hidden');
         if (backBtn) backBtn.classList.add('hidden');
         
+        // Reset section state to return to main venue map
+        this.selectedSection = null;
         this.selectedSeats = [];
         this.updateCompletionButtonState();
       },
