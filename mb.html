@@ -1,0 +1,133 @@
+(() => {
+    let isLocked = false;
+
+    // 產生隨機延遲毫秒數（模擬人類神經反應極限）
+    function randomDelay(min = 180, max = 300) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    // 1. 攔截原生 alert，防止頁面卡住
+    window.alert = function(msg) {
+        console.log('[NOL Auto] 攔截到原生警報:', msg);
+        setTimeout(dismissModalAndResume, randomDelay(150, 250));
+        return true;
+    };
+
+    // 2. 播放搶中提示音
+    function playAlertSound() {
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, ctx.currentTime);
+            gain.gain.setValueAtTime(0.3, ctx.currentTime);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.35);
+        } catch (e) {}
+    }
+
+    // 3. 自動尋找並關閉網頁 DOM 錯誤彈窗
+    function dismissModalAndResume() {
+        const modalButtons = Array.from(document.querySelectorAll('button, a, div[role="button"]'));
+        const confirmBtn = modalButtons.find(btn => {
+            const text = (btn.innerText || '').trim();
+            return ['確認', '确定', '확인', 'OK', '닫기'].includes(text);
+        });
+
+        if (confirmBtn && confirmBtn.offsetParent !== null) {
+            console.log('[NOL Auto] 擬人延遲關閉錯誤彈窗');
+            confirmBtn.click();
+        }
+
+        // 短暫隨機冷卻後恢復監聽狀態
+        setTimeout(() => {
+            isLocked = false;
+        }, randomDelay(120, 200));
+    }
+
+    // 4. 座標微晃動點擊（擬人軌跡手勢）
+    function triggerSeatClick(seat) {
+        if (!seat || isLocked) return;
+        isLocked = true;
+
+        console.log('%c[NOL Auto] 發現空位！嘗試鎖定:', 'color: #ff9800; font-weight: bold;', seat.id);
+
+        const rect = seat.getBoundingClientRect();
+        // 加上 ±0.8px 擬人座標微偏移
+        const jitterX = (Math.random() - 0.5) * 1.6;
+        const jitterY = (Math.random() - 0.5) * 1.6;
+        const clientX = rect.left + rect.width / 2 + jitterX;
+        const clientY = rect.top + rect.height / 2 + jitterY;
+
+        const eventInit = {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            view: window,
+            clientX: clientX,
+            clientY: clientY,
+            screenX: clientX,
+            screenY: clientY,
+            pageX: clientX + window.scrollX,
+            pageY: clientY + window.scrollY,
+            button: 0,
+            buttons: 1
+        };
+
+        ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'].forEach(type => {
+            seat.dispatchEvent(new (type.startsWith('pointer') ? PointerEvent : MouseEvent)(type, eventInit));
+        });
+
+        // 隨機延遲判定是否鎖中
+        setTimeout(() => {
+            const isSuccess = document.body.innerText.includes('選擇座位 1') || 
+                              document.body.innerText.includes('선택좌석 1') || 
+                              document.querySelector('.SeatMap_selected___WJrH');
+
+            if (isSuccess) {
+                console.log('%c[NOL Auto] 🎉 恭喜鎖位成功！請盡速在限制時間內付款！', 'color: #00ff00; font-weight: bold; font-size: 14px;');
+                playAlertSound();
+                stopWatcher();
+            } else {
+                console.log('%c[NOL Auto] 被搶先一步，自動消彈窗重試中...', 'color: #f44336;');
+                setTimeout(dismissModalAndResume, randomDelay(150, 260));
+            }
+        }, randomDelay(320, 420));
+    }
+
+    // 5. 掃描可選座位
+    function checkState() {
+        if (isLocked) {
+            dismissModalAndResume();
+            return;
+        }
+
+        const seat = document.querySelector('circle.js-seat:not([class*="disabled"]):not([class*="selected"])');
+        if (seat) triggerSeatClick(seat);
+    }
+
+    // 啟動監聽器
+    const observer = new MutationObserver(checkState);
+    observer.observe(document.body, { 
+        childList: true, 
+        subtree: true, 
+        attributes: true, 
+        attributeFilter: ['class', 'style'] 
+    });
+
+    const pollingTimer = setInterval(checkState, 100);
+
+    function stopWatcher() {
+        observer.disconnect();
+        clearInterval(pollingTimer);
+        console.log('[NOL Auto] 監聽器已完全停止');
+    }
+
+    // 掛載手動停止指令
+    window.stopNolWatcher = stopWatcher;
+
+    console.log('%c[NOL Auto] 擬人防禦 + 自動消彈窗監聽器已全數啟動！', 'color: #2196f3; font-weight: bold;');
+})();
