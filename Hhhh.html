@@ -1,4 +1,4 @@
-<!-- VERSION: v5 -->
+<!-- VERSION: v5.3 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,7 +162,7 @@
       <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
       <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-2">
         <p data-i18n="prepStep1">• Click <b>"Ready, Start Practice"</b> to enter the ticketing session.</p>
-        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session drawer!</p>
+        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!</p>
         <p class="text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200/70 font-medium leading-normal" data-i18n="prepStep3">
           • Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!
         </p>
@@ -243,11 +243,11 @@
             <div id="desktop-date-active-list" class="w-full space-y-2 hidden">
               <button type="button" id="d-date-btn-1" onclick="app.selectDate(0)" class="w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors">
                 <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
-                <span class="d-date-badge-1 text-xs bg-[#2563EB] text-white px-2 py-0.5 rounded" data-i18n="selectedBadge">Selected</span>
+                <span class="d-date-badge-1 text-xs text-gray-300 font-light">&gt;</span>
               </button>
               <button type="button" id="d-date-btn-2" onclick="app.selectDate(1)" class="w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors">
                 <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
-                <span class="d-date-badge-2 text-xs bg-[#2563EB] text-white px-2 py-0.5 rounded hidden" data-i18n="selectedBadge">Selected</span>
+                <span class="d-date-badge-2 text-xs text-gray-300 font-light">&gt;</span>
               </button>
             </div>
           </div>
@@ -264,7 +264,7 @@
             <div id="desktop-time-active-box" class="w-full hidden">
               <div class="py-2.5 px-4 border border-[#2563EB] bg-blue-50/50 rounded text-sm font-semibold text-[#2563EB] flex items-center justify-between">
                 <span id="desktop-time-value-display">06:00 PM</span>
-                <span class="text-xs text-[#2563EB]" data-i18n="selectedBadge">Selected</span>
+                <span class="text-xs text-gray-300 font-light">&gt;</span>
               </div>
             </div>
           </div>
@@ -306,7 +306,7 @@
         </div>
         <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
           <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• Practice Method:</p>
-          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date drawer and proceed.</p>
+          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
           <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
             ※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.
           </p>
@@ -414,7 +414,7 @@
       <!-- Mobile Practice Notice -->
       <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
         <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• Practice Method:</p>
-        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date drawer and proceed.</p>
+        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
         <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.</p>
       </div>
     </div>
@@ -443,11 +443,11 @@
       <div class="divide-y divide-gray-100 py-2 overflow-y-auto">
         <button type="button" onclick="app.selectMobileDateSession(0)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
-          <span class="text-xs text-gray-300">&gt;</span>
+          <span class="text-xs text-gray-300 font-light">&gt;</span>
         </button>
         <button type="button" onclick="app.selectMobileDateSession(1)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
-          <span class="text-xs text-gray-300">&gt;</span>
+          <span class="text-xs text-gray-300 font-light">&gt;</span>
         </button>
       </div>
     </div>
@@ -536,7 +536,7 @@
   </div>
 
   <!-- SEAT MAP WORKSPACE MODAL -->
-  <div id="step-seatmap-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden items-center justify-center p-0 md:p-4">
+  <div id="step-seatmap-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden flex items-center justify-center p-0 md:p-4">
     
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
@@ -782,7 +782,7 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice Method:",
-        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date drawer and proceed.",
+        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -817,7 +817,7 @@
         prepBadge: "Global Ticket Simulator",
         prepHeading: "Ticketing Practice Session",
         prepStep1: "• Click <b>\"Ready, Start Practice\"</b> to enter the ticketing session.",
-        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session drawer!",
+        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!",
         prepStep3: "• Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!",
         prepStartBtn: "Ready, Start Practice",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
@@ -871,7 +871,7 @@
         guideTab2: "演唱會詳情",
         guideTab3: "購票須知",
         guideIntroTitle: "• 練習說明：",
-        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可喚出選擇日期抽屜！",
+        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可喚出選擇日期選單！",
         guideDisclaimer: "※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。",
         selectSeatsHeader: "選擇座位",
         backToVenueBtn: "< 全區",
@@ -906,7 +906,7 @@
         prepBadge: "Global 搶票手速模擬器",
         prepHeading: "搶票實戰練習模式準備",
         prepStep1: "• 點擊 <b>「準備完成，進入練習」</b> 進入搶票主頁面。",
-        prepStep2: "• 手機版底部按鈕將直接顯示真實倒數，歸零變藍時點擊即可喚出選擇日期抽屜！",
+        prepStep2: "• 手機版底部按鈕將直接顯示真實倒數，歸零變藍時點擊即可喚出選擇日期選單！",
         prepStep3: "• 倒數結束後，系統會根據你的點擊反應速度給予真實排隊序號，因此進入時需要稍微等待排隊推進。請集中注意力在按鈕變亮的那一刻！",
         prepStartBtn: "準備完成，進入練習",
         countdownPrefix: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 剩餘時間: ",
@@ -1314,7 +1314,7 @@
       },
 
       handleBuyNowAction() {
-        // Increased 403 server overload probability to ~35% for easy testing
+        // 35% 403 test probability on entering queue
         if (Math.random() < 0.35) {
           const msg = this.currentLang === 'zh'
             ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
@@ -1368,7 +1368,7 @@
         }
         this.recordReactionSpeed();
 
-        // Increased 403 server overload probability on desktop to ~35% for easy testing
+        // 35% 403 test probability on desktop as well
         if (Math.random() < 0.35) {
           const msg = this.currentLang === 'zh'
             ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
@@ -1382,8 +1382,6 @@
 
       selectDate(index) {
         this.selectedDateIndex = index;
-        const b1 = document.querySelector('.d-date-badge-1');
-        const b2 = document.querySelector('.d-date-badge-2');
         const btn1 = document.getElementById('d-date-btn-1');
         const btn2 = document.getElementById('d-date-btn-2');
         const timeBox = document.getElementById('desktop-time-value-display');
@@ -1391,14 +1389,10 @@
 
         if (index === 0) {
           if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
-          if (b1) b1.classList.remove('hidden');
           if (btn2) btn2.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
-          if (b2) b2.classList.add('hidden');
         } else {
           if (btn2) btn2.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
-          if (b2) b2.classList.remove('hidden');
           if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
-          if (b1) b1.classList.add('hidden');
         }
 
         if (timeBox) timeBox.innerText = this.dates[index].time;
@@ -1432,11 +1426,10 @@
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        // Single static estimated time based on initial queue order (e.g., ~1m 35s)
+        // Single static estimated time based on initial queue order (5-7 seconds actual queue duration)
         const initialEstSec = Math.max(45, Math.floor((this.queueInitialTotal / 1200) * 22));
         this.updateSingleEstimatedTime(estElem, initialEstSec);
 
-        // Actual wait duration strictly between 5.0 to 7.0 seconds
         const totalDurationSec = 5.0 + Math.random() * 2.0;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
@@ -1490,10 +1483,6 @@
         // Fully reset selected section and seats so user returns to clean main venue map
         this.selectedSection = null;
         this.selectedSeats = [];
-      },
-
-      closeWaitingModal() {
-        this.cancelWaitingQueue();
       },
 
       openSeatmapWorkspace() {
@@ -1720,8 +1709,25 @@
         this.updateCompletionButtonState();
 
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeR;
+        const isFloor = sectionName.startsWith('Floor');
 
-        const sectionConfig = [
+        // Distinct layouts: Floor sections are full dense rectangular grids without empty edge cutouts
+        const floorConfig = [
+          { row: 1, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 2, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 3, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 4, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 5, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 6, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 7, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 8, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 9, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 10, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 11, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 },
+          { row: 12, leftEmpty: 0, leftCols: 5, midCols: 6, rightCols: 5, rightEmpty: 0 }
+        ];
+
+        const grandstandConfig = [
           { row: 1,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 5, rightEmpty: 1 },
           { row: 2,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 5, rightEmpty: 1 },
           { row: 3,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 6, rightEmpty: 0 },
@@ -1741,6 +1747,8 @@
           { row: 16, leftEmpty: 2, leftCols: 4, midCols: 4, rightCols: 3, rightEmpty: 3 },
           { row: 17, leftEmpty: 4, leftCols: 2, midCols: 3, rightCols: 2, rightEmpty: 4 }
         ];
+
+        const sectionConfig = isFloor ? floorConfig : grandstandConfig;
 
         sectionConfig.forEach((cfg) => {
           if (cfg.isConcourse) {
@@ -1766,7 +1774,7 @@
             leftBlock.appendChild(emptySpace);
           }
           for (let i = 0; i < cfg.leftCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme);
+            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme, isFloor);
             leftBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(leftBlock);
@@ -1778,7 +1786,7 @@
           const midBlock = document.createElement('div');
           midBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.midCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme);
+            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme, isFloor);
             midBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(midBlock);
@@ -1790,7 +1798,7 @@
           const rightBlock = document.createElement('div');
           rightBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.rightCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme);
+            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme, isFloor);
             rightBlock.appendChild(seat.element);
           }
           for (let i = 0; i < cfg.rightEmpty; i++) {
@@ -1804,8 +1812,9 @@
         });
       },
 
-      createSeatCube(sectionName, row, colIdentifier, theme) {
-        const isAvail = Math.random() > (row <= 6 ? 0.88 : 0.76);
+      createSeatCube(sectionName, row, colIdentifier, theme, isFloor) {
+        const availThreshold = isFloor ? 0.12 : (row <= 6 ? 0.88 : 0.76);
+        const isAvail = Math.random() > availThreshold;
         const seatId = `${sectionName}-R${row}-${colIdentifier}`;
 
         const seatObj = {
