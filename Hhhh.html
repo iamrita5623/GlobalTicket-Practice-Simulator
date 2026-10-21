@@ -1,4 +1,4 @@
-<!-- VERSION: 2026.10.27-v4 -->
+<!-- VERSION: v5 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -270,7 +270,7 @@
           </div>
         </div>
 
-        <!-- Column 3: Available Seats (VIP standing / standing / General seats) -->
+        <!-- Column 3: Available Seats -->
         <div class="p-5 flex flex-col justify-start">
           <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" data-i18n="availSeatsTitle">Available Seats</div>
           <ul class="text-xs space-y-3 text-gray-700">
@@ -389,7 +389,7 @@
         <button class="flex-1 py-3 text-gray-400 hover:text-gray-600" data-i18n="tabCancelPolicy">Cancellation Policy</button>
       </div>
 
-      <!-- Price Breakdown (VIP standing / standing / General seats) -->
+      <!-- Price Breakdown -->
       <div class="p-4 bg-white">
         <h2 class="text-sm font-bold text-gray-900 mb-3" data-i18n="priceTitle">Price</h2>
         <div class="grid grid-cols-1 gap-y-2 text-xs text-gray-700">
@@ -443,7 +443,7 @@
       <div class="divide-y divide-gray-100 py-2 overflow-y-auto">
         <button type="button" onclick="app.selectMobileDateSession(0)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
-          <span class="text-xs text-[#2563EB] font-bold">&gt;</span>
+          <span class="text-xs text-gray-300">&gt;</span>
         </button>
         <button type="button" onclick="app.selectMobileDateSession(1)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
@@ -477,7 +477,7 @@
         5,382
       </div>
       <p class="text-xs text-gray-600 mb-6 font-medium">
-        <span data-i18n="queueEstPrefix">Estimated time to wait : </span><span id="queue-time-est" class="underline font-bold text-gray-900">0min 05sec</span>
+        <span data-i18n="queueEstPrefix">Estimated time to wait : </span><span id="queue-time-est" class="underline font-bold text-gray-900">1min 45sec</span>
       </p>
       <div class="w-full text-left bg-gray-50 rounded-lg p-3.5 border border-gray-100 text-[11px] text-gray-500 space-y-1.5 leading-relaxed">
         <p data-i18n="queueNotice1">• Many people are currently connected.</p>
@@ -1409,6 +1409,7 @@
         const estElem = document.getElementById('queue-time-est');
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
+        this.updateEstimatedTimeDisplay(estElem, this.queueNumber);
         
         const totalDurationSec = 3.6 + Math.random() * 1.8;
         const tickIntervalMs = 200;
@@ -1425,10 +1426,7 @@
 
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-            const secLeft = Math.max(1, Math.ceil((totalTicks - tickCount) * (tickIntervalMs / 1000)));
-            if (estElem) {
-              estElem.innerText = this.currentLang === 'zh' ? `0分 0${secLeft}秒` : `0min 0${secLeft}sec`;
-            }
+            this.updateEstimatedTimeDisplay(estElem, this.queueNumber);
           } else {
             clearInterval(this.queueTimer);
             this.queueNumber = 0;
@@ -1442,6 +1440,35 @@
             }, 300);
           }
         }, tickIntervalMs);
+      },
+
+      updateEstimatedTimeDisplay(elem, currentQueue) {
+        if (!elem) return;
+        // Calculate realistic waiting time range based on queue order (approx 20-30 seconds per 1000 people)
+        const totalSecs = Math.max(15, Math.floor((currentQueue / 1000) * (22 + Math.random() * 8)));
+        const lowSecs = Math.max(10, totalSecs - 15);
+        const highSecs = totalSecs + 20;
+
+        const lowMin = Math.floor(lowSecs / 60);
+        const lowSec = lowSecs % 60;
+        const highMin = Math.floor(highSecs / 60);
+        const highSec = highSecs % 60;
+
+        const formatTime = (m, s) => {
+          const sStr = s < 10 ? '0' + s : s;
+          return m > 0 ? `${m}min ${sStr}sec` : `${s}sec`;
+        };
+
+        const formatTimeZh = (m, s) => {
+          const sStr = s < 10 ? '0' + s : s;
+          return m > 0 ? `${m}分 ${sStr}秒` : `${s}秒`;
+        };
+
+        if (this.currentLang === 'zh') {
+          elem.innerText = `${formatTimeZh(lowMin, lowSec)} ~ ${formatTimeZh(highMin, highSec)}`;
+        } else {
+          elem.innerText = `${formatTime(lowMin, lowSec)} ~ ${formatTime(highMin, highSec)}`;
+        }
       },
 
       closeWaitingModal() {
