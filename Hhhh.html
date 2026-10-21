@@ -1,4 +1,4 @@
-<!-- VERSION: v5.3 -->
+<!-- VERSION: v5.4 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -162,7 +162,7 @@
       <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
       <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-2">
         <p data-i18n="prepStep1">• Click <b>"Ready, Start Practice"</b> to enter the ticketing session.</p>
-        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!</p>
+        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session selection menu!</p>
         <p class="text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200/70 font-medium leading-normal" data-i18n="prepStep3">
           • Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!
         </p>
@@ -306,7 +306,7 @@
         </div>
         <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
           <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• Practice Method:</p>
-          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
+          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
           <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
             ※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.
           </p>
@@ -414,7 +414,7 @@
       <!-- Mobile Practice Notice -->
       <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
         <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• Practice Method:</p>
-        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
+        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
         <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.</p>
       </div>
     </div>
@@ -540,13 +540,13 @@
     
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
-      <!-- Seating Top Bar -->
-      <div class="bg-[#1e293b] border-b border-gray-700 px-3 md:px-4 py-2.5 flex items-center justify-between text-xs text-white shrink-0">
+      <!-- Desktop Seating Top Bar -->
+      <div class="hidden md:flex bg-[#1e293b] border-b border-gray-700 px-4 py-2.5 items-center justify-between text-xs text-white shrink-0">
         <div class="flex items-center space-x-2 truncate">
           <span class="font-bold text-sm tracking-wide text-blue-400" data-i18n="selectSeatsHeader">Select Seats</span>
           <span class="text-gray-500">|</span>
-          <span class="text-gray-200 font-medium truncate max-w-[120px] sm:max-w-xs">WORLD TOUR LIVE</span>
-          <span class="text-gray-500 hidden sm:inline">|</span>
+          <span class="text-gray-200 font-medium truncate max-w-xs">WORLD TOUR LIVE</span>
+          <span class="text-gray-500">|</span>
           <select id="seatmap-session-select" onchange="app.onSessionSelectChange(this.value)" class="bg-[#0f172a] border border-gray-600 rounded px-1.5 py-0.5 text-xs text-gray-200 outline-none">
             <option value="0">2026.10.31 18:00</option>
             <option value="1">2026.11.01 17:00</option>
@@ -559,6 +559,43 @@
           <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-300 hover:text-white text-xl font-bold px-1.5 leading-none">
             ✕
           </button>
+        </div>
+      </div>
+
+      <!-- Mobile Authentic Global Pass Top Sticky Header (< 768px) -->
+      <div class="flex md:hidden bg-white border-b border-gray-200 flex-col shrink-0 text-xs">
+        <!-- Row 1: Title & Close -->
+        <div class="px-3 py-2.5 flex items-center justify-between border-b border-gray-100">
+          <span class="font-bold text-sm text-gray-900 tracking-tight">WORLD TOUR LIVE IN SEOUL</span>
+          <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-400 hover:text-gray-700 text-lg font-light px-1 leading-none">✕</button>
+        </div>
+
+        <!-- Row 2: Authentic Date & Zone Status Rows -->
+        <div class="flex items-center bg-gray-50 px-3 py-2 gap-3">
+          <!-- Mini Map Thumbnail Preview Box -->
+          <div class="w-10 h-10 bg-white border border-gray-300 rounded shrink-0 flex items-center justify-center p-0.5 overflow-hidden relative">
+            <svg viewBox="0 0 760 520" class="w-full h-auto select-none">
+              <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="#e2e8f0"/>
+              <rect x="206" y="85" width="168" height="110" fill="#b79b71"/>
+              <rect x="386" y="85" width="168" height="110" fill="#b79b71"/>
+            </svg>
+          </div>
+
+          <!-- Date & Zone Interactive Rows -->
+          <div class="flex-1 flex flex-col space-y-1">
+            <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
+              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 truncate">Sat, Oct 31, 2026 06:00 PM</span>
+              <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-[#2563EB] font-bold flex items-center space-x-0.5 shrink-0 pl-2">
+                <span>↺ Date</span>
+              </button>
+            </div>
+            <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
+              <span id="mobile-sticky-zone-label" class="font-medium text-gray-800 truncate">Select Section</span>
+              <button type="button" onclick="app.backToVenue()" class="text-[11px] text-[#2563EB] font-bold flex items-center space-x-0.5 shrink-0 pl-2">
+                <span>↺ Zone</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -782,7 +819,7 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice Method:",
-        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.",
+        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -817,7 +854,7 @@
         prepBadge: "Global Ticket Simulator",
         prepHeading: "Ticketing Practice Session",
         prepStep1: "• Click <b>\"Ready, Start Practice\"</b> to enter the ticketing session.",
-        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!",
+        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session selection menu!",
         prepStep3: "• Queue order will be assigned based on your reaction time right after countdown ends, requiring a brief waiting period. Stay sharp and click the instant it opens!",
         prepStartBtn: "Ready, Start Practice",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
@@ -1227,7 +1264,7 @@
             desktopLine.innerHTML = `${this.t('countdownPrefix')}<span class="font-bold ml-1 font-mono text-[#2563EB]">00:${timeSec}</span> )`;
           }
           if (mobileLine1) {
-            mobileLine1.innerText = this.currentLang === 'zh' ? '優先預訂開啟 : 10.31(星期六) 20:00' : 'Priority booking starts : 10.31(Sat) 20:00';
+            mobileLine1.innerText = this.currentLang === 'zh' ? '優先預訂開啟 : 10.31(Sat) 20:00' : 'Priority booking starts : 10.31(Sat) 20:00';
           }
           if (mobileLine2) {
             mobileLine2.innerText = `(Time left : 00:${timeSec})`;
@@ -1285,7 +1322,7 @@
           mBuyBtn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'shadow-md', 'cursor-pointer');
           mBuyBtn.onclick = () => {
             this.recordReactionSpeed();
-            this.handleBuyNowAction();
+            this.openMobileDateDrawer();
           };
         }
 
@@ -1311,18 +1348,6 @@
         } else {
           this.reactionLatencyMs = 380;
         }
-      },
-
-      handleBuyNowAction() {
-        // 35% 403 test probability on entering queue
-        if (Math.random() < 0.35) {
-          const msg = this.currentLang === 'zh'
-            ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
-            : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
-          this.showMelonAlert(msg);
-          return;
-        }
-        this.openMobileDateDrawer();
       },
 
       openMobileDateDrawer() {
@@ -1367,16 +1392,6 @@
           return;
         }
         this.recordReactionSpeed();
-
-        // 35% 403 test probability on desktop as well
-        if (Math.random() < 0.35) {
-          const msg = this.currentLang === 'zh'
-            ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
-            : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
-          this.showMelonAlert(msg);
-          return;
-        }
-
         this.startWaitingQueue();
       },
 
@@ -1386,6 +1401,7 @@
         const btn2 = document.getElementById('d-date-btn-2');
         const timeBox = document.getElementById('desktop-time-value-display');
         const sessionSelect = document.getElementById('seatmap-session-select');
+        const mobileDateLabel = document.getElementById('mobile-sticky-date-label');
 
         if (index === 0) {
           if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
@@ -1397,6 +1413,7 @@
 
         if (timeBox) timeBox.innerText = this.dates[index].time;
         if (sessionSelect) sessionSelect.value = String(index);
+        if (mobileDateLabel) mobileDateLabel.innerText = this.dates[index].labelEn + ' ' + this.dates[index].time;
       },
 
       onSessionSelectChange(val) {
@@ -1404,6 +1421,15 @@
       },
 
       startWaitingQueue() {
+        // 35% 403 test probability on entering queue/session
+        if (Math.random() < 0.35) {
+          const msg = this.currentLang === 'zh'
+            ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
+            : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
+          this.showMelonAlert(msg);
+          return;
+        }
+
         this.state = 'QUEUE';
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.remove('hidden');
@@ -1426,15 +1452,16 @@
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        // Single static estimated time based on initial queue order (5-7 seconds actual queue duration)
-        const initialEstSec = Math.max(45, Math.floor((this.queueInitialTotal / 1200) * 22));
-        this.updateSingleEstimatedTime(estElem, initialEstSec);
-
+        // Total duration set strictly between 5.0 to 7.0 seconds
         const totalDurationSec = 5.0 + Math.random() * 2.0;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
         const averageStep = Math.max(1, Math.ceil(this.queueInitialTotal / totalTicks));
         let tickCount = 0;
+
+        // Single realistic estimated wait time (not a range, calculated once from initial queue position)
+        const initialEstSec = Math.max(45, Math.floor((this.queueInitialTotal / 1200) * 22));
+        this.updateSingleEstimatedTime(estElem, initialEstSec);
 
         clearInterval(this.queueTimer);
         this.queueTimer = setInterval(() => {
@@ -1446,9 +1473,7 @@
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
             const currentEstSec = Math.max(4, Math.round(initialEstSec * (this.queueNumber / this.queueInitialTotal)));
-            if (estElem) {
-              this.updateSingleEstimatedTime(estElem, currentEstSec);
-            }
+            this.updateSingleEstimatedTime(estElem, currentEstSec);
           } else {
             clearInterval(this.queueTimer);
             this.queueNumber = 0;
@@ -1637,12 +1662,14 @@
         const gridWrap = document.getElementById('grid-seat-matrix-wrap');
         const backBtn = document.getElementById('btn-back-to-arena');
         const titleElem = document.getElementById('matrix-section-title');
+        const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
 
         if (svgWrap) svgWrap.classList.add('hidden');
         if (notice) notice.classList.add('hidden');
         if (gridWrap) gridWrap.classList.remove('hidden');
         if (backBtn) backBtn.classList.remove('hidden');
         if (titleElem) titleElem.innerText = `${sectionName}`;
+        if (mobileZoneLabel) mobileZoneLabel.innerText = sectionName;
 
         this.buildSeatGrid(sectionName, this.selectedSectionGrade);
         this.updateCompletionButtonState();
@@ -1677,11 +1704,13 @@
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
         const backBtn = document.getElementById('btn-back-to-arena');
+        const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
 
         if (gridWrap) gridWrap.classList.add('hidden');
         if (svgWrap) svgWrap.classList.remove('hidden');
         if (notice) notice.classList.remove('hidden');
         if (backBtn) backBtn.classList.add('hidden');
+        if (mobileZoneLabel) mobileZoneLabel.innerText = this.currentLang === 'zh' ? '選擇區域' : 'Select Section';
         
         this.selectedSection = null;
         this.selectedSeats = [];
