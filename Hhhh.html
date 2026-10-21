@@ -1328,7 +1328,8 @@
         this.selectDate(idx);
         this.closeMobileDateDrawer();
 
-        if (this.selectedSection) {
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
           this.backToVenue();
           return;
         }
@@ -1376,14 +1377,11 @@
         if (sessionSelect) sessionSelect.value = String(index);
         if (mobileDateLabel) mobileDateLabel.innerText = this.dates[index].labelEn + ' ' + this.dates[index].time;
 
-        if (this.selectedSection) {
-          this.backToVenue();
-        }
+        this.backToVenue();
       },
 
       onSessionSelectChange(val) {
         this.selectDate(parseInt(val, 10));
-        this.backToVenue();
       },
 
       startWaitingQueue() {
