@@ -34,10 +34,10 @@
       -webkit-tap-highlight-color: transparent;
     }
     .seat-cube {
-      width: 16px;
-      height: 16px;
-      border-radius: 2px;
-      margin: 1.5px;
+      width: 11px;
+      height: 11px;
+      border-radius: 1.5px;
+      margin: 1px;
       display: inline-block;
       transition: transform 0.04s ease, filter 0.04s ease;
       box-sizing: border-box;
@@ -45,9 +45,18 @@
     }
     @media (min-width: 640px) {
       .seat-cube {
+        width: 16px;
+        height: 16px;
+        margin: 1.5px;
+        border-radius: 2px;
+      }
+    }
+    @media (min-width: 768px) {
+      .seat-cube {
         width: 17px;
         height: 17px;
         margin: 2px;
+        border-radius: 2px;
       }
     }
     .seat-cube.sold {
@@ -70,14 +79,30 @@
       position: relative;
     }
     .seat-row-number {
-      width: 26px;
+      width: 18px;
       text-align: right;
-      padding-right: 10px;
-      font-size: 14px;
+      padding-right: 4px;
+      font-size: 11px;
       color: #a0a6b2;
       font-weight: 400;
-      line-height: 19px;
+      line-height: 13px;
       user-select: none;
+    }
+    @media (min-width: 640px) {
+      .seat-row-number {
+        width: 24px;
+        padding-right: 8px;
+        font-size: 13px;
+        line-height: 18px;
+      }
+    }
+    @media (min-width: 768px) {
+      .seat-row-number {
+        width: 28px;
+        padding-right: 10px;
+        font-size: 14px;
+        line-height: 20px;
+      }
     }
     .kspo-block:hover {
       filter: brightness(0.9);
@@ -529,120 +554,134 @@
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
         <!-- Center Workspace (Full KSPO SVG & Seat Matrix) -->
-        <div class="flex-1 bg-white relative p-2 sm:p-4 flex flex-col items-center justify-center overflow-auto border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
+        <div class="flex-1 bg-white relative p-1 sm:p-4 flex flex-col items-center justify-start sm:justify-center overflow-y-auto overflow-x-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
           
-          <div id="venue-notice" class="text-[11px] text-gray-400 text-center max-w-xl mb-1 sm:mb-2 leading-relaxed" data-i18n="venueNoticeText">
+          <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-400 text-center max-w-xl mb-1 sm:mb-2 leading-relaxed shrink-0" data-i18n="venueNoticeText">
             舞台位置僅供購票參考，可能與實際舞台配置稍有不同。<br>各區域上方最靠近舞台，請依照橫向順序挑選座位。
           </div>
 
-          <!-- KSPO DOME Full Layout Replica -->
+          <!-- KSPO DOME Full Layout Replica (Centered horizontally around X=380, trapezoids removed) -->
           <div id="kspo-dome-svg-wrap" class="w-full max-w-[620px] flex flex-col items-center justify-center my-auto">
-            <div class="w-56 sm:w-72 py-1 sm:py-2 bg-gray-100 border border-gray-300 text-gray-500 font-bold text-center tracking-widest text-sm sm:text-base mb-2 rounded-sm">
+            <div class="w-56 sm:w-72 py-1 bg-gray-100 border border-gray-300 text-gray-500 font-bold text-center tracking-widest text-sm sm:text-base -mb-1 rounded-sm z-10 shadow-sm">
               STAGE
             </div>
 
-            <!-- Main SVG Venue Map -->
-            <svg viewBox="0 0 760 480" class="w-full h-auto drop-shadow-sm select-none">
-              <path d="M 270 0 L 490 0 L 460 160 L 300 160 Z" fill="#f8f8f8" stroke="#ebebeb"/>
-              <path d="M 370 160 L 390 160 L 390 310 L 370 310 Z" fill="#f2f2f2" stroke="#e0e0e0"/>
-              
-              <g transform="translate(160, 110)">
-                <rect width="45" height="22" rx="4" fill="#666"/>
-                <text x="22.5" y="15" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
+            <!-- Main SVG Venue Map: Center X = 380, viewBox 0 0 760 410 -->
+            <svg viewBox="0 0 760 410" class="w-full h-auto drop-shadow-sm select-none">
+              <!-- Central connecting runway -->
+              <rect x="372" y="10" width="16" height="195" fill="#e9ecef" stroke="#d5d9e0" rx="1"/>
+
+              <!-- Symmetrical Floor Badges -->
+              <g transform="translate(180, 16)">
+                <rect width="46" height="20" rx="3" fill="#666"/>
+                <text x="23" y="14" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
               </g>
-              <g transform="translate(555, 110)">
-                <rect width="45" height="22" rx="4" fill="#666"/>
-                <text x="22.5" y="15" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
+              <g transform="translate(534, 16)">
+                <rect width="46" height="20" rx="3" fill="#666"/>
+                <text x="23" y="14" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
               </g>
 
-              <circle cx="95" cy="120" r="14" fill="#666"/><text x="95" y="124" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
-              <circle cx="42" cy="100" r="14" fill="#666"/><text x="42" y="104" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
-              <circle cx="665" cy="120" r="14" fill="#666"/><text x="665" y="124" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
-              <circle cx="718" cy="100" r="14" fill="#666"/><text x="718" y="104" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
+              <!-- Level Indicators: Perfectly Symmetrical about X=380 -->
+              <circle cx="120" cy="18" r="13" fill="#666"/>
+              <text x="120" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
+              <circle cx="640" cy="18" r="13" fill="#666"/>
+              <text x="640" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
 
-              <!-- Floor A, B, C, D -->
+              <circle cx="60" cy="18" r="13" fill="#666"/>
+              <text x="60" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
+              <circle cx="700" cy="18" r="13" fill="#666"/>
+              <text x="700" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
+
+              <!-- Floor A, B, C, D (Directly adjacent to Stage, symmetrically balanced) -->
               <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor A', 'gradeR')">
-                <path d="M 230,130 L 320,130 L 320,205 L 245,205 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="280" y="174" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
+                <path d="M 245,15 L 345,15 L 345,88 L 255,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="295" y="58" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
               </g>
               <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor B', 'gradeR')">
-                <path d="M 440,130 L 530,130 L 515,205 L 440,205 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="480" y="174" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
+                <path d="M 415,15 L 515,15 L 505,88 L 415,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="465" y="58" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
               </g>
               <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor C', 'gradeR')">
-                <path d="M 245,215 L 320,215 L 310,285 L 260,265 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="282" y="252" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
+                <path d="M 258,96 L 345,96 L 336,165 L 275,148 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="303" y="136" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
               </g>
               <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor D', 'gradeR')">
-                <path d="M 440,215 L 515,215 L 500,265 L 450,285 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="478" y="252" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
+                <path d="M 415,96 L 502,96 L 485,148 L 424,165 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="457" y="136" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
               </g>
 
-              <!-- 1F Tier Grade R -->
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeR')"><path d="M 620,140 A 260 260 0 0 1 635,175 L 590,175 A 220 220 0 0 0 580,140 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="162" fill="#fff" font-size="13" font-weight="bold">1</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeR')"><path d="M 635,180 A 260 260 0 0 1 640,218 L 595,214 A 220 220 0 0 0 590,180 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="202" fill="#fff" font-size="13" font-weight="bold">2</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeR')"><path d="M 640,223 A 260 260 0 0 1 633,260 L 590,250 A 220 220 0 0 0 595,219 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="244" fill="#fff" font-size="13" font-weight="bold">3</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeR')"><path d="M 632,265 A 260 260 0 0 1 610,305 L 570,290 A 220 220 0 0 0 588,255 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="284" fill="#fff" font-size="13" font-weight="bold">4</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeR')"><path d="M 607,310 A 260 260 0 0 1 575,348 L 540,326 A 220 220 0 0 0 568,294 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="324" fill="#fff" font-size="13" font-weight="bold">5</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeR')"><path d="M 570,352 A 260 260 0 0 1 530,380 L 500,352 A 220 220 0 0 0 535,329 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="357" fill="#fff" font-size="13" font-weight="bold">6</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeR')"><path d="M 524,383 A 260 260 0 0 1 475,400 L 458,368 A 220 220 0 0 0 495,355 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="380" fill="#fff" font-size="13" font-weight="bold">7</text></g>
+              <!-- 1F Tier Grade R: Right side (1 ~ 7) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeR')"><path d="M 618,30 A 260 260 0 0 1 635,68 L 590,68 A 220 220 0 0 0 578,32 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="53" fill="#fff" font-size="13" font-weight="bold">1</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeR')"><path d="M 635,73 A 260 260 0 0 1 640,111 L 595,107 A 220 220 0 0 0 590,73 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="95" fill="#fff" font-size="13" font-weight="bold">2</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeR')"><path d="M 640,116 A 260 260 0 0 1 633,153 L 590,143 A 220 220 0 0 0 595,112 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="137" fill="#fff" font-size="13" font-weight="bold">3</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeR')"><path d="M 632,158 A 260 260 0 0 1 610,198 L 570,183 A 220 220 0 0 0 588,148 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="177" fill="#fff" font-size="13" font-weight="bold">4</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeR')"><path d="M 607,203 A 260 260 0 0 1 575,241 L 540,219 A 220 220 0 0 0 568,187 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="217" fill="#fff" font-size="13" font-weight="bold">5</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeR')"><path d="M 570,245 A 260 260 0 0 1 530,273 L 500,245 A 220 220 0 0 0 535,222 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="250" fill="#fff" font-size="13" font-weight="bold">6</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeR')"><path d="M 524,276 A 260 260 0 0 1 475,293 L 458,261 A 220 220 0 0 0 495,248 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="273" fill="#fff" font-size="13" font-weight="bold">7</text></g>
               
-              <g transform="translate(365, 360)">
-                <rect width="50" height="34" fill="#f0f0f0" stroke="#ddd" rx="2"/>
-                <text x="25" y="21" fill="#bbb" font-size="10" font-weight="bold" text-anchor="middle">F.O.H</text>
+              <!-- F.O.H: Centered exactly at X=380 (355 to 405) -->
+              <g transform="translate(355, 248)">
+                <rect width="50" height="32" fill="#f0f0f0" stroke="#ddd" rx="2"/>
+                <text x="25" y="20" fill="#bbb" font-size="10" font-weight="bold" text-anchor="middle">F.O.H</text>
               </g>
 
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeR')"><path d="M 345,402 A 260 260 0 0 1 295,392 L 312,360 A 220 220 0 0 0 353,369 Z" fill="#b79b71" stroke="#fff"/><text x="325" y="385" fill="#fff" font-size="13" font-weight="bold">9</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeR')"><path d="M 290,390 A 260 260 0 0 1 245,365 L 270,336 A 220 220 0 0 0 307,357 Z" fill="#b79b71" stroke="#fff"/><text x="272" y="364" fill="#fff" font-size="13" font-weight="bold">10</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeR')"><path d="M 240,361 A 260 260 0 0 1 200,325 L 230,300 A 220 220 0 0 0 264,332 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="333" fill="#fff" font-size="13" font-weight="bold">11</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeR')"><path d="M 196,320 A 260 260 0 0 1 168,275 L 204,258 A 220 220 0 0 0 227,295 Z" fill="#b79b71" stroke="#fff"/><text x="195" y="292" fill="#fff" font-size="13" font-weight="bold">12</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeR')"><path d="M 165,270 A 260 260 0 0 1 150,225 L 190,219 A 220 220 0 0 0 201,254 Z" fill="#b79b71" stroke="#fff"/><text x="172" y="248" fill="#fff" font-size="13" font-weight="bold">13</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeR')"><path d="M 148,220 A 260 260 0 0 1 145,178 L 187,180 A 220 220 0 0 0 190,214 Z" fill="#b79b71" stroke="#fff"/><text x="163" y="202" fill="#fff" font-size="13" font-weight="bold">14</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeR')"><path d="M 146,173 A 260 260 0 0 1 155,138 L 195,148 A 220 220 0 0 0 188,175 Z" fill="#b79b71" stroke="#fff"/><text x="168" y="162" fill="#fff" font-size="13" font-weight="bold">15</text></g>
+              <!-- 1F Tier Grade R: Left side (9 ~ 15, Symmetrical mirror to 7~1) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeR')"><path d="M 302,293 A 260 260 0 0 1 236,276 L 262,248 A 220 220 0 0 0 322,261 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="273" fill="#fff" font-size="13" font-weight="bold">9</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeR')"><path d="M 230,273 A 260 260 0 0 1 190,245 L 225,222 A 220 220 0 0 0 260,245 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="250" fill="#fff" font-size="13" font-weight="bold">10</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeR')"><path d="M 185,241 A 260 260 0 0 1 153,203 L 192,187 A 220 220 0 0 0 220,219 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="217" fill="#fff" font-size="13" font-weight="bold">11</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeR')"><path d="M 150,198 A 260 260 0 0 1 128,158 L 172,148 A 220 220 0 0 0 190,183 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="177" fill="#fff" font-size="13" font-weight="bold">12</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeR')"><path d="M 127,153 A 260 260 0 0 1 120,116 L 165,112 A 220 220 0 0 0 170,143 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="137" fill="#fff" font-size="13" font-weight="bold">13</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeR')"><path d="M 120,111 A 260 260 0 0 1 125,73 L 170,73 A 220 220 0 0 0 165,107 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="95" fill="#fff" font-size="13" font-weight="bold">14</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeR')"><path d="M 125,68 A 260 260 0 0 1 142,30 L 182,32 A 220 220 0 0 0 170,68 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="53" fill="#fff" font-size="13" font-weight="bold">15</text></g>
 
-              <!-- 2F Grade A & Grade S -->
-              <g><path d="M 700,125 A 315 315 0 0 1 715,160 L 675,163 A 275 275 0 0 0 662,132 Z" fill="#d9d9d9" stroke="#fff"/><text x="686" y="148" fill="#fff" font-size="12" font-weight="bold">24</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 715,165 A 315 315 0 0 1 720,205 L 678,203 A 275 275 0 0 0 675,168 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="188" fill="#fff" font-size="12" font-weight="bold">25</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 720,210 A 315 315 0 0 1 714,250 L 672,243 A 275 275 0 0 0 678,208 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="233" fill="#fff" font-size="12" font-weight="bold">26</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 712,255 A 315 315 0 0 1 692,298 L 653,284 A 275 275 0 0 0 670,248 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="278" fill="#fff" font-size="12" font-weight="bold">27</text></g>
+              <!-- 2F Outer Tier: Right Side (24~27) -->
+              <g><path d="M 700,16 A 315 315 0 0 1 715,51 L 675,54 A 275 275 0 0 0 662,23 Z" fill="#d9d9d9" stroke="#fff"/><text x="686" y="39" fill="#fff" font-size="12" font-weight="bold">24</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 715,56 A 315 315 0 0 1 720,96 L 678,94 A 275 275 0 0 0 675,59 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="79" fill="#fff" font-size="12" font-weight="bold">25</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 720,101 A 315 315 0 0 1 714,141 L 672,134 A 275 275 0 0 0 678,99 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="124" fill="#fff" font-size="12" font-weight="bold">26</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 712,146 A 315 315 0 0 1 692,189 L 653,175 A 275 275 0 0 0 670,139 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="169" fill="#fff" font-size="12" font-weight="bold">27</text></g>
 
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeS')"><path d="M 689,303 A 315 315 0 0 1 660,344 L 626,324 A 275 275 0 0 0 650,289 Z" fill="#7f6aff" stroke="#fff"/><text x="652" y="322" fill="#fff" font-size="12" font-weight="bold">28</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeS')"><path d="M 655,349 A 315 315 0 0 1 615,384 L 588,359 A 275 275 0 0 0 622,328 Z" fill="#7f6aff" stroke="#fff"/><text x="618" y="358" fill="#fff" font-size="12" font-weight="bold">29</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeS')"><path d="M 610,388 A 315 315 0 0 1 565,417 L 544,387 A 275 275 0 0 0 583,363 Z" fill="#7f6aff" stroke="#fff"/><text x="575" y="392" fill="#fff" font-size="12" font-weight="bold">30</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeS')"><path d="M 559,421 A 315 315 0 0 1 508,443 L 493,410 A 275 275 0 0 0 538,391 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="420" fill="#fff" font-size="12" font-weight="bold">31</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeS')"><path d="M 501,446 A 315 315 0 0 1 450,457 L 441,421 A 275 275 0 0 0 487,412 Z" fill="#7f6aff" stroke="#fff"/><text x="470" y="435" fill="#fff" font-size="12" font-weight="bold">32</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeS')"><path d="M 442,458 A 315 315 0 0 1 390,460 L 388,424 A 275 275 0 0 0 434,422 Z" fill="#7f6aff" stroke="#fff"/><text x="412" y="445" fill="#fff" font-size="12" font-weight="bold">33</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeS')"><path d="M 382,460 A 315 315 0 0 1 330,454 L 336,419 A 275 275 0 0 0 380,424 Z" fill="#7f6aff" stroke="#fff"/><text x="355" y="442" fill="#fff" font-size="12" font-weight="bold">34</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeS')"><path d="M 322,452 A 315 315 0 0 1 270,436 L 284,403 A 275 275 0 0 0 329,417 Z" fill="#7f6aff" stroke="#fff"/><text x="300" y="428" fill="#fff" font-size="12" font-weight="bold">35</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeS')"><path d="M 263,433 A 315 315 0 0 1 216,406 L 237,377 A 275 275 0 0 0 277,400 Z" fill="#7f6aff" stroke="#fff"/><text x="248" y="407" fill="#fff" font-size="12" font-weight="bold">36</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeS')"><path d="M 210,402 A 315 315 0 0 1 170,369 L 197,344 A 275 275 0 0 0 231,373 Z" fill="#7f6aff" stroke="#fff"/><text x="200" y="377" fill="#fff" font-size="12" font-weight="bold">37</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeS')"><path d="M 165,364 A 315 315 0 0 1 133,324 L 166,303 A 275 275 0 0 0 192,339 Z" fill="#7f6aff" stroke="#fff"/><text x="160" y="338" fill="#fff" font-size="12" font-weight="bold">38</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeS')"><path d="M 130,319 A 315 315 0 0 1 107,276 L 144,262 A 275 275 0 0 0 162,299 Z" fill="#7f6aff" stroke="#fff"/><text x="130" y="295" fill="#fff" font-size="12" font-weight="bold">39</text></g>
+              <!-- 2F Outer Tier: Grade S (28 ~ 39, Perfectly mirrored) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeS')"><path d="M 689,194 A 315 315 0 0 1 660,235 L 626,215 A 275 275 0 0 0 650,180 Z" fill="#7f6aff" stroke="#fff"/><text x="652" y="213" fill="#fff" font-size="12" font-weight="bold">28</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeS')"><path d="M 655,240 A 315 315 0 0 1 615,275 L 588,250 A 275 275 0 0 0 622,219 Z" fill="#7f6aff" stroke="#fff"/><text x="618" y="249" fill="#fff" font-size="12" font-weight="bold">29</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeS')"><path d="M 610,279 A 315 315 0 0 1 565,308 L 544,278 A 275 275 0 0 0 583,254 Z" fill="#7f6aff" stroke="#fff"/><text x="575" y="283" fill="#fff" font-size="12" font-weight="bold">30</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeS')"><path d="M 559,312 A 315 315 0 0 1 508,334 L 493,301 A 275 275 0 0 0 538,282 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="311" fill="#fff" font-size="12" font-weight="bold">31</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeS')"><path d="M 501,337 A 315 315 0 0 1 450,348 L 441,312 A 275 275 0 0 0 487,303 Z" fill="#7f6aff" stroke="#fff"/><text x="470" y="326" fill="#fff" font-size="12" font-weight="bold">32</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeS')"><path d="M 442,349 A 315 315 0 0 1 390,351 L 388,315 A 275 275 0 0 0 434,313 Z" fill="#7f6aff" stroke="#fff"/><text x="412" y="336" fill="#fff" font-size="12" font-weight="bold">33</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeS')"><path d="M 370,351 A 315 315 0 0 1 318,349 L 326,313 A 275 275 0 0 0 372,315 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="336" fill="#fff" font-size="12" font-weight="bold">34</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeS')"><path d="M 310,348 A 315 315 0 0 1 259,337 L 273,303 A 275 275 0 0 0 319,312 Z" fill="#7f6aff" stroke="#fff"/><text x="290" y="326" fill="#fff" font-size="12" font-weight="bold">35</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeS')"><path d="M 252,334 A 315 315 0 0 1 201,312 L 222,282 A 275 275 0 0 0 267,301 Z" fill="#7f6aff" stroke="#fff"/><text x="234" y="311" fill="#fff" font-size="12" font-weight="bold">36</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeS')"><path d="M 195,308 A 315 315 0 0 1 150,279 L 177,254 A 275 275 0 0 0 216,278 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="283" fill="#fff" font-size="12" font-weight="bold">37</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeS')"><path d="M 145,275 A 315 315 0 0 1 105,240 L 138,219 A 275 275 0 0 0 172,250 Z" fill="#7f6aff" stroke="#fff"/><text x="142" y="249" fill="#fff" font-size="12" font-weight="bold">38</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeS')"><path d="M 100,235 A 315 315 0 0 1 71,194 L 110,180 A 275 275 0 0 0 134,215 Z" fill="#7f6aff" stroke="#fff"/><text x="108" y="213" fill="#fff" font-size="12" font-weight="bold">39</text></g>
 
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 104,270 A 315 315 0 0 1 92,228 L 131,221 A 275 275 0 0 0 141,257 Z" fill="#ff719e" stroke="#fff"/><text x="110" y="249" fill="#fff" font-size="12" font-weight="bold">40</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 91,222 A 315 315 0 0 1 88,180 L 129,181 A 275 275 0 0 0 131,215 Z" fill="#ff719e" stroke="#fff"/><text x="104" y="202" fill="#fff" font-size="12" font-weight="bold">41</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 88,175 A 315 315 0 0 1 95,135 L 133,144 A 275 275 0 0 0 128,175 Z" fill="#ff719e" stroke="#fff"/><text x="108" y="157" fill="#fff" font-size="12" font-weight="bold">42</text></g>
-              <g><path d="M 96,130 A 315 315 0 0 1 113,95 L 148,111 A 275 275 0 0 0 134,138 Z" fill="#d9d9d9" stroke="#fff"/><text x="120" y="118" fill="#fff" font-size="12" font-weight="bold">43</text></g>
+              <!-- 2F Outer Tier Left: Grade A Pink (40~42) & Disabled Gray (43) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 68,189 A 315 315 0 0 1 48,146 L 90,139 A 275 275 0 0 0 107,175 Z" fill="#ff719e" stroke="#fff"/><text x="80" y="169" fill="#fff" font-size="12" font-weight="bold">40</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 46,141 A 315 315 0 0 1 40,101 L 82,99 A 275 275 0 0 0 88,134 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="124" fill="#fff" font-size="12" font-weight="bold">41</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 40,96 A 315 315 0 0 1 45,56 L 85,59 A 275 275 0 0 0 82,94 Z" fill="#ff719e" stroke="#fff"/><text x="64" y="79" fill="#fff" font-size="12" font-weight="bold">42</text></g>
+              <g><path d="M 45,51 A 315 315 0 0 1 60,16 L 98,23 A 275 275 0 0 0 85,54 Z" fill="#d9d9d9" stroke="#fff"/><text x="74" y="39" fill="#fff" font-size="12" font-weight="bold">43</text></g>
             </svg>
           </div>
 
-          <!-- View B: Granular Seat Matrix -->
-          <div id="grid-seat-matrix-wrap" class="w-full h-full flex flex-col items-center justify-start hidden py-2 overflow-auto bg-white">
-            <div class="w-full max-w-xl py-1.5 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-xs sm:text-sm mb-1 select-none">
+          <!-- View B: Granular Seat Matrix (Responsive without horizontal scroll on mobile) -->
+          <div id="grid-seat-matrix-wrap" class="w-full h-full flex flex-col items-center justify-start hidden py-1 sm:py-2 overflow-y-auto overflow-x-hidden bg-white">
+            <div class="w-full max-w-xl py-1 sm:py-1.5 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-xs sm:text-sm mb-1 select-none">
               STAGE
             </div>
-            <div id="matrix-section-title" class="text-xs sm:text-sm text-gray-500 font-medium mb-3 select-none">
+            <div id="matrix-section-title" class="text-xs sm:text-sm text-gray-500 font-medium mb-1.5 sm:mb-3 select-none">
               區域座位分布
             </div>
 
-            <div id="seats-grid-table" class="inline-block bg-white p-2 select-none"></div>
+            <!-- Seat grid container auto-fitting without horizontal scrolling on mobile -->
+            <div class="w-full flex justify-center items-center overflow-x-hidden">
+              <div id="seats-grid-table" class="inline-block bg-white p-1 sm:p-2 select-none max-w-full"></div>
+            </div>
           </div>
         </div>
 
         <!-- Right / Bottom Workspace Controls -->
         <div class="w-full md:w-64 bg-white p-3 sm:p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
           <div>
-            <!-- Mini map for Desktop -->
+            <!-- Mini map for Desktop (Full KSPO Map Replica) -->
             <div class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 hidden md:block">
               <div class="flex justify-between items-center mb-1 text-[11px] text-gray-500">
                 <span class="font-medium" data-i18n="miniMapTitle">迷你全區圖</span>
@@ -654,27 +693,59 @@
               </div>
               <div class="w-full h-28 bg-white border border-gray-200 rounded flex items-center justify-center p-1 overflow-hidden relative">
                 <div id="mini-map-transform-wrap" class="w-full h-full flex items-center justify-center transition-transform duration-200">
-                  <svg viewBox="0 0 760 480" class="w-full h-auto drop-shadow-sm select-none">
-                    <rect x="330" y="25" width="100" height="30" fill="#d0d0d0" rx="2"/>
-                    <text x="380" y="44" fill="#666" font-size="16" font-weight="bold" text-anchor="middle">STAGE</text>
+                  <!-- Complete Mirror of Main SVG Map in Mini Map -->
+                  <svg viewBox="0 0 760 410" class="w-full h-auto drop-shadow-sm select-none">
+                    <rect x="330" y="2" width="100" height="18" fill="#d0d0d0" rx="1"/>
+                    <text x="380" y="15" fill="#666" font-size="12" font-weight="bold" text-anchor="middle">STAGE</text>
+                    <rect x="372" y="10" width="16" height="195" fill="#e9ecef" stroke="#d5d9e0" rx="1"/>
+
+                    <!-- Mini Floor Sections -->
                     <g class="mini-kspo-block" data-section="Floor A" onclick="app.selectSection('Floor A', 'gradeR')">
-                      <path d="M 230,130 L 320,130 L 320,205 L 245,205 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="280" y="174" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">A</text>
+                      <path d="M 245,15 L 345,15 L 345,88 L 255,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="295" y="58" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">A</text>
                     </g>
                     <g class="mini-kspo-block" data-section="Floor B" onclick="app.selectSection('Floor B', 'gradeR')">
-                      <path d="M 440,130 L 530,130 L 515,205 L 440,205 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="480" y="174" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">B</text>
+                      <path d="M 415,15 L 515,15 L 505,88 L 415,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="465" y="58" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">B</text>
                     </g>
                     <g class="mini-kspo-block" data-section="Floor C" onclick="app.selectSection('Floor C', 'gradeR')">
-                      <path d="M 245,215 L 320,215 L 310,285 L 260,265 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="282" y="252" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">C</text>
+                      <path d="M 258,96 L 345,96 L 336,165 L 275,148 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="303" y="136" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">C</text>
                     </g>
                     <g class="mini-kspo-block" data-section="Floor D" onclick="app.selectSection('Floor D', 'gradeR')">
-                      <path d="M 440,215 L 515,215 L 500,265 L 450,285 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="478" y="252" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">D</text>
+                      <path d="M 415,96 L 502,96 L 485,148 L 424,165 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="457" y="136" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">D</text>
                     </g>
-                    <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.selectSection('1F Sec 1', 'gradeR')"><path d="M 620,140 A 260 260 0 0 1 635,175 L 590,175 A 220 220 0 0 0 580,140 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="162" fill="#fff" font-size="14" font-weight="bold">1</text></g>
-                    <g class="mini-kspo-block" data-section="2F Sec 31" onclick="app.selectSection('2F Sec 31', 'gradeS')"><path d="M 559,421 A 315 315 0 0 1 508,443 L 493,410 A 275 275 0 0 0 538,391 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="420" fill="#fff" font-size="13" font-weight="bold">31</text></g>
+
+                    <!-- Mini 1F Sections Right (1~7) -->
+                    <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.selectSection('1F Sec 1', 'gradeR')"><path d="M 618,30 A 260 260 0 0 1 635,68 L 590,68 A 220 220 0 0 0 578,32 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="53" fill="#fff" font-size="14" font-weight="bold">1</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 2" onclick="app.selectSection('1F Sec 2', 'gradeR')"><path d="M 635,73 A 260 260 0 0 1 640,111 L 595,107 A 220 220 0 0 0 590,73 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="95" fill="#fff" font-size="14" font-weight="bold">2</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 3" onclick="app.selectSection('1F Sec 3', 'gradeR')"><path d="M 640,116 A 260 260 0 0 1 633,153 L 590,143 A 220 220 0 0 0 595,112 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="137" fill="#fff" font-size="14" font-weight="bold">3</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 4" onclick="app.selectSection('1F Sec 4', 'gradeR')"><path d="M 632,158 A 260 260 0 0 1 610,198 L 570,183 A 220 220 0 0 0 588,148 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="177" fill="#fff" font-size="14" font-weight="bold">4</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 5" onclick="app.selectSection('1F Sec 5', 'gradeR')"><path d="M 607,203 A 260 260 0 0 1 575,241 L 540,219 A 220 220 0 0 0 568,187 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="217" fill="#fff" font-size="14" font-weight="bold">5</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 6" onclick="app.selectSection('1F Sec 6', 'gradeR')"><path d="M 570,245 A 260 260 0 0 1 530,273 L 500,245 A 220 220 0 0 0 535,222 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="250" fill="#fff" font-size="14" font-weight="bold">6</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 7" onclick="app.selectSection('1F Sec 7', 'gradeR')"><path d="M 524,276 A 260 260 0 0 1 475,293 L 458,261 A 220 220 0 0 0 495,248 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="273" fill="#fff" font-size="14" font-weight="bold">7</text></g>
+
+                    <rect x="355" y="248" width="50" height="32" fill="#f0f0f0" stroke="#ddd" rx="2"/>
+
+                    <!-- Mini 1F Sections Left (9~15) -->
+                    <g class="mini-kspo-block" data-section="1F Sec 9" onclick="app.selectSection('1F Sec 9', 'gradeR')"><path d="M 302,293 A 260 260 0 0 1 236,276 L 262,248 A 220 220 0 0 0 322,261 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="273" fill="#fff" font-size="14" font-weight="bold">9</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 10" onclick="app.selectSection('1F Sec 10', 'gradeR')"><path d="M 230,273 A 260 260 0 0 1 190,245 L 225,222 A 220 220 0 0 0 260,245 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="250" fill="#fff" font-size="14" font-weight="bold">10</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 11" onclick="app.selectSection('1F Sec 11', 'gradeR')"><path d="M 185,241 A 260 260 0 0 1 153,203 L 192,187 A 220 220 0 0 0 220,219 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="217" fill="#fff" font-size="14" font-weight="bold">11</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 12" onclick="app.selectSection('1F Sec 12', 'gradeR')"><path d="M 150,198 A 260 260 0 0 1 128,158 L 172,148 A 220 220 0 0 0 190,183 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="177" fill="#fff" font-size="14" font-weight="bold">12</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 13" onclick="app.selectSection('1F Sec 13', 'gradeR')"><path d="M 127,153 A 260 260 0 0 1 120,116 L 165,112 A 220 220 0 0 0 170,143 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="137" fill="#fff" font-size="14" font-weight="bold">13</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 14" onclick="app.selectSection('1F Sec 14', 'gradeR')"><path d="M 120,111 A 260 260 0 0 1 125,73 L 170,73 A 220 220 0 0 0 165,107 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="95" fill="#fff" font-size="14" font-weight="bold">14</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 15" onclick="app.selectSection('1F Sec 15', 'gradeR')"><path d="M 125,68 A 260 260 0 0 1 142,30 L 182,32 A 220 220 0 0 0 170,68 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="53" fill="#fff" font-size="14" font-weight="bold">15</text></g>
+
+                    <!-- Mini 2F Outer Tier Sections -->
+                    <g class="mini-kspo-block" data-section="2F Sec 25" onclick="app.selectSection('2F Sec 25', 'gradeA')"><path d="M 715,56 A 315 315 0 0 1 720,96 L 678,94 A 275 275 0 0 0 675,59 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="79" fill="#fff" font-size="13" font-weight="bold">25</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 26" onclick="app.selectSection('2F Sec 26', 'gradeA')"><path d="M 720,101 A 315 315 0 0 1 714,141 L 672,134 A 275 275 0 0 0 678,99 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="124" fill="#fff" font-size="13" font-weight="bold">26</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 27" onclick="app.selectSection('2F Sec 27', 'gradeA')"><path d="M 712,146 A 315 315 0 0 1 692,189 L 653,175 A 275 275 0 0 0 670,139 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="169" fill="#fff" font-size="13" font-weight="bold">27</text></g>
+
+                    <g class="mini-kspo-block" data-section="2F Sec 31" onclick="app.selectSection('2F Sec 31', 'gradeS')"><path d="M 559,312 A 315 315 0 0 1 508,334 L 493,301 A 275 275 0 0 0 538,282 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="311" fill="#fff" font-size="13" font-weight="bold">31</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 34" onclick="app.selectSection('2F Sec 34', 'gradeS')"><path d="M 370,351 A 315 315 0 0 1 318,349 L 326,313 A 275 275 0 0 0 372,315 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="336" fill="#fff" font-size="13" font-weight="bold">34</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 37" onclick="app.selectSection('2F Sec 37', 'gradeS')"><path d="M 195,308 A 315 315 0 0 1 150,279 L 177,254 A 275 275 0 0 0 216,278 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="283" fill="#fff" font-size="13" font-weight="bold">37</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 41" onclick="app.selectSection('2F Sec 41', 'gradeA')"><path d="M 46,141 A 315 315 0 0 1 40,101 L 82,99 A 275 275 0 0 0 88,134 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="124" fill="#fff" font-size="13" font-weight="bold">41</text></g>
                   </svg>
                 </div>
               </div>
@@ -688,7 +759,15 @@
               </span>
             </div>
 
-            <!-- Pricing Breakdown -->
+            <!-- Pricing Breakdown (Desktop includes distinct Refresh button right aligned) -->
+            <div class="hidden md:flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
+              <span class="text-xs font-bold text-gray-600 uppercase" data-i18n="availSeatsSidebarTitle">剩餘席位</span>
+              <button type="button" onclick="app.onRefreshClicked()" class="text-xs px-2 py-0.5 border border-gray-300 rounded text-gray-600 hover:bg-gray-100 flex items-center space-x-1 transition-colors">
+                <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                <span data-i18n="refreshBtn">重新整理</span>
+              </button>
+            </div>
+
             <div class="space-y-1.5 text-xs">
               <div class="flex justify-between items-center text-gray-800">
                 <span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>R</span>
@@ -705,9 +784,10 @@
             </div>
           </div>
 
-          <!-- Bottom Action Buttons: Refresh + Seat Selection Completed -->
+          <!-- Bottom Action Buttons: Mobile has separate square Refresh button on left, Desktop is unified -->
           <div class="mt-3 pt-3 border-t border-gray-200 flex space-x-2">
-            <button type="button" onclick="app.onRefreshClicked()" title="重新整理" class="w-12 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0">
+            <!-- Mobile-only Refresh Square Button matching screenshot 00:29 -->
+            <button type="button" onclick="app.onRefreshClicked()" title="重新整理" class="flex md:hidden w-12 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
             </button>
             <button id="btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 py-3 bg-gray-300 text-gray-500 font-bold text-xs sm:text-sm rounded transition-colors flex items-center justify-center space-x-1 cursor-not-allowed">
@@ -1541,7 +1621,7 @@
 
           // Concourse Gap
           const aisle1 = document.createElement('div');
-          aisle1.className = 'w-3 sm:w-4';
+          aisle1.className = 'w-1.5 sm:w-3 md:w-4';
           rowDiv.appendChild(aisle1);
 
           // Mid Block
@@ -1555,7 +1635,7 @@
 
           // Concourse Gap
           const aisle2 = document.createElement('div');
-          aisle2.className = 'w-3 sm:w-4';
+          aisle2.className = 'w-1.5 sm:w-3 md:w-4';
           rowDiv.appendChild(aisle2);
 
           // Right Block
