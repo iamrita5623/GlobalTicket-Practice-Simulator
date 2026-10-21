@@ -1,3 +1,4 @@
+<!-- VERSION: v5 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -274,15 +275,15 @@
           <div class="text-xs font-bold text-gray-500 uppercase tracking-wider mb-4" data-i18n="availSeatsTitle">Available Seats</div>
           <ul class="text-xs space-y-3 text-gray-700">
             <li class="flex justify-between items-center">
-              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>R</span>
+              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>VIP standing</span>
               <span class="font-mono font-medium">₩176,000</span>
             </li>
             <li class="flex justify-between items-center">
-              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>S</span>
+              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>standing</span>
               <span class="font-mono font-medium">₩165,000</span>
             </li>
             <li class="flex justify-between items-center">
-              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>A</span>
+              <span class="flex items-center font-medium"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>General seats</span>
               <span class="font-mono font-medium">₩154,000</span>
             </li>
           </ul>
@@ -391,20 +392,20 @@
       <!-- Price Breakdown -->
       <div class="p-4 bg-white">
         <h2 class="text-sm font-bold text-gray-900 mb-3" data-i18n="priceTitle">Price</h2>
-        <div class="grid grid-cols-2 gap-y-2.5 text-xs text-gray-700">
+        <div class="grid grid-cols-1 gap-y-2 text-xs text-gray-700">
           <div class="flex items-center">
             <span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>
-            <span class="font-medium">R</span>
+            <span class="font-medium">VIP standing</span>
             <span class="ml-auto font-mono">₩ 176,000</span>
           </div>
-          <div class="flex items-center pl-4">
+          <div class="flex items-center">
             <span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>
-            <span class="font-medium">S</span>
+            <span class="font-medium">standing</span>
             <span class="ml-auto font-mono">₩ 165,000</span>
           </div>
           <div class="flex items-center">
             <span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>
-            <span class="font-medium">A</span>
+            <span class="font-medium">General seats</span>
             <span class="ml-auto font-mono">₩ 154,000</span>
           </div>
         </div>
@@ -442,7 +443,7 @@
       <div class="divide-y divide-gray-100 py-2 overflow-y-auto">
         <button type="button" onclick="app.selectMobileDateSession(0)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
-          <span class="text-xs text-[#2563EB] font-bold">&gt;</span>
+          <span class="text-xs text-gray-300">&gt;</span>
         </button>
         <button type="button" onclick="app.selectMobileDateSession(1)" class="w-full py-4 text-left font-medium text-sm text-gray-800 hover:text-[#2563EB] hover:bg-blue-50/50 px-2 rounded transition-colors flex justify-between items-center">
           <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
@@ -461,10 +462,10 @@
     <span class="text-xs text-gray-400 font-medium">Loading session...</span>
   </div>
 
-  <!-- Waiting Queue Pop-up: Scaled Realistic High Concurrency Wave -->
+  <!-- Waiting Queue Pop-up -->
   <div id="modal-waiting-queue" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-sm border border-gray-200 p-6 relative flex flex-col items-center text-center shadow-2xl">
-      <button type="button" onclick="app.closeWaitingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
+      <button type="button" onclick="app.cancelWaitingQueue()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
         ✕
       </button>
       <div class="text-xs font-semibold text-gray-800 tracking-wide mb-3 truncate w-full px-4">
@@ -476,14 +477,14 @@
         5,382
       </div>
       <p class="text-xs text-gray-600 mb-6 font-medium">
-        <span data-i18n="queueEstPrefix">Estimated time to wait : </span><span id="queue-time-est" class="underline font-bold text-gray-900">0min 05sec</span>
+        <span data-i18n="queueEstPrefix">Estimated time to wait : </span><span id="queue-time-est" class="underline font-bold text-gray-900">1min 45sec</span>
       </p>
       <div class="w-full text-left bg-gray-50 rounded-lg p-3.5 border border-gray-100 text-[11px] text-gray-500 space-y-1.5 leading-relaxed">
         <p data-i18n="queueNotice1">• Many people are currently connected.</p>
         <p class="pl-2" data-i18n="queueNotice2">Please wait a moment to move the next step safely.</p>
         <p data-i18n="queueNotice3">• Notice! If you refresh this page, the waiting order will start again.</p>
       </div>
-      <button type="button" onclick="app.closeWaitingModal()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="cancelBtn">
+      <button type="button" onclick="app.cancelWaitingQueue()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="cancelBtn">
         Cancel
       </button>
     </div>
@@ -578,7 +579,7 @@
             </svg>
           </div>
 
-          <!-- Granular Seat Matrix (Scaled to Fill Viewport Comfortably) -->
+          <!-- Granular Seat Matrix -->
           <div id="grid-seat-matrix-wrap" class="w-full h-full flex flex-col items-center justify-between hidden py-1 sm:py-2 overflow-hidden bg-white">
             <div class="w-full max-w-md py-1 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-[11px] sm:text-xs shrink-0 select-none">
               STAGE
@@ -635,15 +636,15 @@
 
             <div class="space-y-1.5 text-xs">
               <div class="flex justify-between items-center text-gray-800">
-                <span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>R</span>
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>VIP standing</span>
                 <span class="font-mono">₩176,000</span>
               </div>
               <div class="flex justify-between items-center text-gray-800">
-                <span class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>S</span>
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>standing</span>
                 <span class="font-mono">₩165,000</span>
               </div>
               <div class="flex justify-between items-center text-gray-800">
-                <span class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>A</span>
+                <span class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>General seats</span>
                 <span class="font-mono">₩154,000</span>
               </div>
             </div>
@@ -1391,17 +1392,13 @@
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.remove('hidden');
 
-        // Scaled Realistic Global Pass Concurrency Numbers: Typically starting at 5,000 ~ 6,000+
         const ms = this.reactionLatencyMs;
         let baseQueue = 5200;
         if (ms < 350) {
-          // Lightning fast click: Slotted around 5,200 ~ 6,800
           baseQueue = Math.floor(5200 + (ms / 350) * 1600 + Math.random() * 400);
         } else if (ms < 750) {
-          // Standard good reflexes: Slotted around 7,000 ~ 11,500
           baseQueue = Math.floor(7000 + ((ms - 350) / 400) * 4500 + Math.random() * 600);
         } else {
-          // Slight hesitation: Competitors surge ahead to 12,000 ~ 26,000+
           baseQueue = Math.floor(12000 + Math.min(ms - 750, 2500) * 5.5 + Math.random() * 1500);
         }
 
@@ -1413,8 +1410,12 @@
 
         if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
         
-        // Progression still smoothly finishes in 3.5s ~ 5.5s
-        const totalDurationSec = 3.6 + Math.random() * 1.8;
+        // Initial Estimated Time calculation based on queue size (single static-updating value, not range)
+        const initialEstSec = Math.max(30, Math.floor((this.queueInitialTotal / 1000) * (20 + Math.random() * 10)));
+        this.updateSingleEstimatedTime(estElem, initialEstSec);
+
+        // Actual wait time randomized strictly between 5 to 7 seconds
+        const totalDurationSec = 5.0 + Math.random() * 2.0;
         const tickIntervalMs = 200;
         const totalTicks = Math.ceil((totalDurationSec * 1000) / tickIntervalMs);
         const averageStep = Math.max(1, Math.ceil(this.queueInitialTotal / totalTicks));
@@ -1429,9 +1430,9 @@
 
           if (this.queueNumber > 0 && tickCount < totalTicks) {
             if (orderElem) orderElem.innerText = this.queueNumber.toLocaleString();
-            const secLeft = Math.max(1, Math.ceil((totalTicks - tickCount) * (tickIntervalMs / 1000)));
+            const currentEstSec = Math.max(3, Math.round(initialEstSec * (this.queueNumber / this.queueInitialTotal)));
             if (estElem) {
-              estElem.innerText = this.currentLang === 'zh' ? `0分 0${secLeft}秒` : `0min 0${secLeft}sec`;
+              this.updateSingleEstimatedTime(estElem, currentEstSec);
             }
           } else {
             clearInterval(this.queueTimer);
@@ -1448,10 +1449,29 @@
         }, tickIntervalMs);
       },
 
-      closeWaitingModal() {
+      updateSingleEstimatedTime(elem, totalSecs) {
+        if (!elem) return;
+        const m = Math.floor(totalSecs / 60);
+        const s = totalSecs % 60;
+        const sStr = s < 10 ? '0' + s : s;
+        if (this.currentLang === 'zh') {
+          elem.innerText = m > 0 ? `${m}分 ${sStr}秒` : `${s}秒`;
+        } else {
+          elem.innerText = m > 0 ? `${m}min ${sStr}sec` : `${s}sec`;
+        }
+      },
+
+      cancelWaitingQueue() {
         clearInterval(this.queueTimer);
         const modal = document.getElementById('modal-waiting-queue');
         if (modal) modal.classList.add('hidden');
+        // Reset state so that going back in returns to the main venue map cleanly
+        this.selectedSection = null;
+        this.selectedSeats = [];
+      },
+
+      closeWaitingModal() {
+        this.cancelWaitingQueue();
       },
 
       openSeatmapWorkspace() {
@@ -1465,6 +1485,9 @@
         if (seatmapBackdrop) seatmapBackdrop.classList.add('hidden');
         const captchaModal = document.getElementById('modal-captcha');
         if (captchaModal) captchaModal.classList.add('hidden');
+        // Reset section state on modal close
+        this.selectedSection = null;
+        this.selectedSeats = [];
       },
 
       promptCaptcha() {
@@ -1624,7 +1647,6 @@
         const table = document.getElementById('seats-grid-table');
         if (!viewport || !table) return;
 
-        // Reset transform to measure natural content dimensions
         table.style.transform = 'none';
 
         const availW = viewport.clientWidth - 16;
@@ -1635,7 +1657,6 @@
         if (tableW > 0 && tableH > 0 && availW > 0 && availH > 0) {
           const scaleX = availW / tableW;
           const scaleY = availH / tableH;
-          // Scale to comfortably fit ~92% of the viewport container, capped at 1.15
           const optimalScale = Math.min(scaleX, scaleY, 1.15) * 0.96;
           table.style.transform = `scale(${optimalScale.toFixed(3)})`;
         }
@@ -1652,6 +1673,8 @@
         if (notice) notice.classList.remove('hidden');
         if (backBtn) backBtn.classList.add('hidden');
         
+        // Reset section state to return to main venue map
+        this.selectedSection = null;
         this.selectedSeats = [];
         this.updateCompletionButtonState();
       },
@@ -1799,7 +1822,6 @@
         const isMobile = window.innerWidth < 768;
         if (isMobile) {
           this.mobileTappedSeatCount++;
-          // High-frequency tapping spurts trigger anti-bot heuristic eviction
           if (this.mobileTappedSeatCount > 5 || tapInterval < 220) {
             this.tryAgainCount++;
             this.mobileEvictionLockoutUntil = Date.now() + 20000;
@@ -1904,7 +1926,6 @@
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         this.lastSubmitTime = now;
 
-        // Condition A: User double-clicked submit way too fast (< 450ms)
         if (intervalFromLastSubmit < 450) {
           this.tryAgainCount++;
           this.depleteSeats(Math.floor(Math.random() * 4) + 3);
@@ -1918,7 +1939,6 @@
           return;
         }
 
-        // Condition B: Inhuman speed from selecting seat to clicking submit (< 260ms)
         if (intervalFromSeatClick < 260) {
           this.tryAgainCount++;
           this.depleteSeats(Math.floor(Math.random() * 4) + 3);
@@ -1932,22 +1952,18 @@
           return;
         }
 
-        // Condition C: Initial Wave (Attempt 1 or 2) - Priority is ALWAYS seat race conflict ("Another customer is in payments...")
         if (this.submitAttemptsCount <= 2) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
         }
 
-        // Condition D: Later attempts (3+) - realistic concurrency mix of conflict, jam, or success
         const rand = Math.random();
         if (rand < 0.45) {
-          // Seat taken
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
         } else if (rand < 0.78) {
-          // Server traffic jam
           this.tryAgainCount++;
           this.depleteSeats(Math.floor(Math.random() * 4) + 2);
           this.logDiagnosticEvent(
@@ -1960,7 +1976,6 @@
           return;
         }
 
-        // Successful booking lock
         this.handleBookingSuccess();
       },
 
