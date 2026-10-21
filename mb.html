@@ -344,8 +344,8 @@
         <!-- Metadata -->
         <div class="flex-1">
           <h1 class="text-base font-bold text-white tracking-tight leading-snug">WORLD TOUR LIVE IN SEOUL</h1>
-          <p class="text-xs text-white/70 mt-1">• 演唱會</p>
-          <p class="text-xs text-white/70">• 7歲以上觀賞</p>
+          <p class="text-xs text-white/70 mt-1" data-i18n="mobileCategory">• Concert</p>
+          <p class="text-xs text-white/70" data-i18n="mobileAge">• 7 years and over</p>
           <div class="mt-2.5">
             <span class="px-2.5 py-1 rounded-full border border-[#2563EB] text-[#2563EB] text-[11px] font-semibold inline-flex items-center bg-[#2563EB]/10" data-i18n="verifiedBadge">
               認證會員專屬專區 &gt;
@@ -473,8 +473,8 @@
         <p class="pl-2" data-i18n="queueNotice2">請稍候片刻，系統將安全自動跳轉至選位畫面。</p>
         <p data-i18n="queueNotice3">• 注意！若重新整理此頁面，排隊序號將會重新計算。</p>
       </div>
-      <button type="button" onclick="app.closeWaitingModal()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100">
-        取消
+      <button type="button" onclick="app.closeWaitingModal()" class="mt-4 px-6 py-2 border border-gray-300 rounded text-xs text-gray-600 font-bold hover:bg-gray-100" data-i18n="queueCancelBtn">
+        Cancel
       </button>
     </div>
   </div>
@@ -504,7 +504,7 @@
           id="captcha-input" 
           maxlength="6"
           autocomplete="off"
-          placeholder="請輸入字元"
+          placeholder="PLEASE ENTER CHARACTERS"
           class="w-full text-center tracking-widest text-sm font-bold uppercase py-2.5 border border-gray-300 rounded focus:border-[#2563EB] focus:ring-1 focus:ring-[#2563EB] outline-none"
           oninput="this.value = this.value.toUpperCase();"
           onkeydown="if(event.key === 'Enter') app.submitCaptcha();"
@@ -568,97 +568,108 @@
 
             <!-- Main SVG Venue Map: Center X = 380, viewBox 0 0 760 410 -->
             <svg viewBox="0 0 760 410" class="w-full h-auto drop-shadow-sm select-none">
-              <!-- Central connecting runway -->
-              <rect x="372" y="10" width="16" height="195" fill="#e9ecef" stroke="#d5d9e0" rx="1"/>
-
-              <!-- Symmetrical Floor Badges -->
-              <g transform="translate(180, 16)">
-                <rect width="46" height="20" rx="3" fill="#666"/>
-                <text x="23" y="14" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
-              </g>
-              <g transform="translate(534, 16)">
-                <rect width="46" height="20" rx="3" fill="#666"/>
-                <text x="23" y="14" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
-              </g>
-
-              <!-- Level Indicators: Perfectly Symmetrical about X=380 -->
-              <circle cx="120" cy="18" r="13" fill="#666"/>
-              <text x="120" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
-              <circle cx="640" cy="18" r="13" fill="#666"/>
-              <text x="640" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
-
-              <circle cx="60" cy="18" r="13" fill="#666"/>
-              <text x="60" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
-              <circle cx="700" cy="18" r="13" fill="#666"/>
-              <text x="700" y="22" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
-
-              <!-- Floor A, B, C, D (Directly adjacent to Stage, symmetrically balanced) -->
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor A', 'gradeR')">
-                <path d="M 245,15 L 345,15 L 345,88 L 255,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="295" y="58" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
-              </g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor B', 'gradeR')">
-                <path d="M 415,15 L 515,15 L 505,88 L 415,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="465" y="58" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
-              </g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor C', 'gradeR')">
-                <path d="M 258,96 L 345,96 L 336,165 L 275,148 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="303" y="136" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
-              </g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor D', 'gradeR')">
-                <path d="M 415,96 L 502,96 L 485,148 L 424,165 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                <text x="457" y="136" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
-              </g>
-
-              <!-- 1F Tier Grade R: Right side (1 ~ 7) -->
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeR')"><path d="M 618,30 A 260 260 0 0 1 635,68 L 590,68 A 220 220 0 0 0 578,32 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="53" fill="#fff" font-size="13" font-weight="bold">1</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeR')"><path d="M 635,73 A 260 260 0 0 1 640,111 L 595,107 A 220 220 0 0 0 590,73 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="95" fill="#fff" font-size="13" font-weight="bold">2</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeR')"><path d="M 640,116 A 260 260 0 0 1 633,153 L 590,143 A 220 220 0 0 0 595,112 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="137" fill="#fff" font-size="13" font-weight="bold">3</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeR')"><path d="M 632,158 A 260 260 0 0 1 610,198 L 570,183 A 220 220 0 0 0 588,148 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="177" fill="#fff" font-size="13" font-weight="bold">4</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeR')"><path d="M 607,203 A 260 260 0 0 1 575,241 L 540,219 A 220 220 0 0 0 568,187 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="217" fill="#fff" font-size="13" font-weight="bold">5</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeR')"><path d="M 570,245 A 260 260 0 0 1 530,273 L 500,245 A 220 220 0 0 0 535,222 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="250" fill="#fff" font-size="13" font-weight="bold">6</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeR')"><path d="M 524,276 A 260 260 0 0 1 475,293 L 458,261 A 220 220 0 0 0 495,248 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="273" fill="#fff" font-size="13" font-weight="bold">7</text></g>
+              <!-- Stage Backdrop and Frame matching new layout -->
+              <polygon points="290,12 470,12 550,110 520,240 240,240 210,110" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
               
-              <!-- F.O.H: Centered exactly at X=380 (355 to 405) -->
-              <g transform="translate(355, 248)">
-                <rect width="50" height="32" fill="#f0f0f0" stroke="#ddd" rx="2"/>
-                <text x="25" y="20" fill="#bbb" font-size="10" font-weight="bold" text-anchor="middle">F.O.H</text>
+              <!-- STAGE main board -->
+              <rect x="300" y="14" width="160" height="26" fill="#f1f5f9" stroke="#cbd5e1" rx="2"/>
+              <text x="380" y="32" fill="#94a3b8" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="3">STAGE</text>
+
+              <!-- Central Runway and Pentagon Substage -->
+              <rect x="373" y="40" width="14" height="70" fill="#ffffff" stroke="#cbd5e1"/>
+              <polygon points="380,105 408,125 398,155 362,155 352,125" fill="#ffffff" stroke="#cbd5e1"/>
+              <polygon points="380,155 425,200 405,215 380,195 355,215 335,200" fill="#ffffff" stroke="#cbd5e1"/>
+
+              <!-- Floor Badge -->
+              <g transform="translate(356, 268)">
+                <rect width="48" height="19" rx="3" fill="#64748b"/>
+                <text x="24" y="13.5" fill="#fff" font-size="10.5" font-weight="bold" text-anchor="middle">Floor</text>
               </g>
 
-              <!-- 1F Tier Grade R: Left side (9 ~ 15, Symmetrical mirror to 7~1) -->
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeR')"><path d="M 302,293 A 260 260 0 0 1 236,276 L 262,248 A 220 220 0 0 0 322,261 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="273" fill="#fff" font-size="13" font-weight="bold">9</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeR')"><path d="M 230,273 A 260 260 0 0 1 190,245 L 225,222 A 220 220 0 0 0 260,245 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="250" fill="#fff" font-size="13" font-weight="bold">10</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeR')"><path d="M 185,241 A 260 260 0 0 1 153,203 L 192,187 A 220 220 0 0 0 220,219 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="217" fill="#fff" font-size="13" font-weight="bold">11</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeR')"><path d="M 150,198 A 260 260 0 0 1 128,158 L 172,148 A 220 220 0 0 0 190,183 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="177" fill="#fff" font-size="13" font-weight="bold">12</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeR')"><path d="M 127,153 A 260 260 0 0 1 120,116 L 165,112 A 220 220 0 0 0 170,143 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="137" fill="#fff" font-size="13" font-weight="bold">13</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeR')"><path d="M 120,111 A 260 260 0 0 1 125,73 L 170,73 A 220 220 0 0 0 165,107 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="95" fill="#fff" font-size="13" font-weight="bold">14</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeR')"><path d="M 125,68 A 260 260 0 0 1 142,30 L 182,32 A 220 220 0 0 0 170,68 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="53" fill="#fff" font-size="13" font-weight="bold">15</text></g>
+              <!-- Level Indicators: 1F & 2F mirrored -->
+              <circle cx="140" cy="80" r="13" fill="#64748b"/>
+              <text x="140" y="84" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
+              <circle cx="195" cy="80" r="13" fill="#64748b"/>
+              <text x="195" y="84" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
 
-              <!-- 2F Outer Tier: Right Side (24~27) -->
-              <g><path d="M 700,16 A 315 315 0 0 1 715,51 L 675,54 A 275 275 0 0 0 662,23 Z" fill="#d9d9d9" stroke="#fff"/><text x="686" y="39" fill="#fff" font-size="12" font-weight="bold">24</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 715,56 A 315 315 0 0 1 720,96 L 678,94 A 275 275 0 0 0 675,59 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="79" fill="#fff" font-size="12" font-weight="bold">25</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 720,101 A 315 315 0 0 1 714,141 L 672,134 A 275 275 0 0 0 678,99 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="124" fill="#fff" font-size="12" font-weight="bold">26</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 712,146 A 315 315 0 0 1 692,189 L 653,175 A 275 275 0 0 0 670,139 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="169" fill="#fff" font-size="12" font-weight="bold">27</text></g>
+              <circle cx="565" cy="80" r="13" fill="#64748b"/>
+              <text x="565" y="84" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
+              <circle cx="620" cy="80" r="13" fill="#64748b"/>
+              <text x="620" y="84" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
 
-              <!-- 2F Outer Tier: Grade S (28 ~ 39, Perfectly mirrored) -->
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeS')"><path d="M 689,194 A 315 315 0 0 1 660,235 L 626,215 A 275 275 0 0 0 650,180 Z" fill="#7f6aff" stroke="#fff"/><text x="652" y="213" fill="#fff" font-size="12" font-weight="bold">28</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeS')"><path d="M 655,240 A 315 315 0 0 1 615,275 L 588,250 A 275 275 0 0 0 622,219 Z" fill="#7f6aff" stroke="#fff"/><text x="618" y="249" fill="#fff" font-size="12" font-weight="bold">29</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeS')"><path d="M 610,279 A 315 315 0 0 1 565,308 L 544,278 A 275 275 0 0 0 583,254 Z" fill="#7f6aff" stroke="#fff"/><text x="575" y="283" fill="#fff" font-size="12" font-weight="bold">30</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeS')"><path d="M 559,312 A 315 315 0 0 1 508,334 L 493,301 A 275 275 0 0 0 538,282 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="311" fill="#fff" font-size="12" font-weight="bold">31</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeS')"><path d="M 501,337 A 315 315 0 0 1 450,348 L 441,312 A 275 275 0 0 0 487,303 Z" fill="#7f6aff" stroke="#fff"/><text x="470" y="326" fill="#fff" font-size="12" font-weight="bold">32</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeS')"><path d="M 442,349 A 315 315 0 0 1 390,351 L 388,315 A 275 275 0 0 0 434,313 Z" fill="#7f6aff" stroke="#fff"/><text x="412" y="336" fill="#fff" font-size="12" font-weight="bold">33</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeS')"><path d="M 370,351 A 315 315 0 0 1 318,349 L 326,313 A 275 275 0 0 0 372,315 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="336" fill="#fff" font-size="12" font-weight="bold">34</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeS')"><path d="M 310,348 A 315 315 0 0 1 259,337 L 273,303 A 275 275 0 0 0 319,312 Z" fill="#7f6aff" stroke="#fff"/><text x="290" y="326" fill="#fff" font-size="12" font-weight="bold">35</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeS')"><path d="M 252,334 A 315 315 0 0 1 201,312 L 222,282 A 275 275 0 0 0 267,301 Z" fill="#7f6aff" stroke="#fff"/><text x="234" y="311" fill="#fff" font-size="12" font-weight="bold">36</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeS')"><path d="M 195,308 A 315 315 0 0 1 150,279 L 177,254 A 275 275 0 0 0 216,278 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="283" fill="#fff" font-size="12" font-weight="bold">37</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeS')"><path d="M 145,275 A 315 315 0 0 1 105,240 L 138,219 A 275 275 0 0 0 172,250 Z" fill="#7f6aff" stroke="#fff"/><text x="142" y="249" fill="#fff" font-size="12" font-weight="bold">38</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeS')"><path d="M 100,235 A 315 315 0 0 1 71,194 L 110,180 A 275 275 0 0 0 134,215 Z" fill="#7f6aff" stroke="#fff"/><text x="108" y="213" fill="#fff" font-size="12" font-weight="bold">39</text></g>
+              <!-- Inner Rocking Field: 5 Sections A, B, C, D, E with color #b79b71 -->
+              <!-- Floor A (Left Top, former S) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor A', 'gradeR')">
+                <polygon points="275,55 365,55 348,112 258,112" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="312" y="89" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
+              </g>
+              <!-- Floor B (Right Top, former H) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor B', 'gradeR')">
+                <polygon points="395,55 485,55 502,112 412,112" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="448" y="89" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
+              </g>
+              <!-- Floor C (Left Mid, former I) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor C', 'gradeR')">
+                <polygon points="258,124 345,124 370,165 310,210 283,165" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="306" y="168" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
+              </g>
+              <!-- Floor D (Center Bottom, former N) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor D', 'gradeR')">
+                <polygon points="352,168 408,168 450,212 415,230 380,210 345,230 310,212" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="380" y="202" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
+              </g>
+              <!-- Floor E (Right Mid, former E) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('Floor E', 'gradeR')">
+                <polygon points="415,124 502,124 477,165 450,210 390,165" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                <text x="454" y="168" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">E</text>
+              </g>
 
-              <!-- 2F Outer Tier Left: Grade A Pink (40~42) & Disabled Gray (43) -->
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 68,189 A 315 315 0 0 1 48,146 L 90,139 A 275 275 0 0 0 107,175 Z" fill="#ff719e" stroke="#fff"/><text x="80" y="169" fill="#fff" font-size="12" font-weight="bold">40</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 46,141 A 315 315 0 0 1 40,101 L 82,99 A 275 275 0 0 0 88,134 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="124" fill="#fff" font-size="12" font-weight="bold">41</text></g>
-              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 40,96 A 315 315 0 0 1 45,56 L 85,59 A 275 275 0 0 0 82,94 Z" fill="#ff719e" stroke="#fff"/><text x="64" y="79" fill="#fff" font-size="12" font-weight="bold">42</text></g>
-              <g><path d="M 45,51 A 315 315 0 0 1 60,16 L 98,23 A 275 275 0 0 0 85,54 Z" fill="#d9d9d9" stroke="#fff"/><text x="74" y="39" fill="#fff" font-size="12" font-weight="bold">43</text></g>
+              <!-- 1F Tier (1 ~ 15) All in #7f6aff -->
+              <!-- Right side (1 ~ 7) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 1', 'gradeS')"><path d="M 578,102 A 225 225 0 0 1 583,138 L 553,138 A 195 195 0 0 0 549,107 Z" fill="#7f6aff" stroke="#fff"/><text x="566" y="125" fill="#fff" font-size="11" font-weight="bold">1</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 2', 'gradeS')"><path d="M 583,142 A 225 225 0 0 1 582,178 L 552,173 A 195 195 0 0 0 553,142 Z" fill="#7f6aff" stroke="#fff"/><text x="567" y="163" fill="#fff" font-size="11" font-weight="bold">2</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 3', 'gradeS')"><path d="M 581,182 A 225 225 0 0 1 571,217 L 542,207 A 195 195 0 0 0 551,177 Z" fill="#7f6aff" stroke="#fff"/><text x="562" y="202" fill="#fff" font-size="11" font-weight="bold">3</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 4', 'gradeS')"><path d="M 569,221 A 225 225 0 0 1 550,253 L 524,239 A 195 195 0 0 0 540,211 Z" fill="#7f6aff" stroke="#fff"/><text x="546" y="238" fill="#fff" font-size="11" font-weight="bold">4</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 5', 'gradeS')"><path d="M 547,257 A 225 225 0 0 1 520,286 L 498,267 A 195 195 0 0 0 521,242 Z" fill="#7f6aff" stroke="#fff"/><text x="521" y="271" fill="#fff" font-size="11" font-weight="bold">5</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 6', 'gradeS')"><path d="M 516,289 A 225 225 0 0 1 482,311 L 464,289 A 195 195 0 0 0 494,270 Z" fill="#7f6aff" stroke="#fff"/><text x="490" y="298" fill="#fff" font-size="11" font-weight="bold">6</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 7', 'gradeS')"><path d="M 478,314 A 225 225 0 0 1 438,328 L 426,302 A 195 195 0 0 0 460,291 Z" fill="#7f6aff" stroke="#fff"/><text x="450" y="316" fill="#fff" font-size="11" font-weight="bold">7</text></g>
+
+              <!-- Center Back (8) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 8', 'gradeS')"><path d="M 433,329 A 225 225 0 0 1 385,335 L 383,307 A 195 195 0 0 0 422,303 Z" fill="#7f6aff" stroke="#fff"/><text x="407" y="323" fill="#fff" font-size="11" font-weight="bold">8</text></g>
+
+              <!-- Left side (9 ~ 15) Mirrored -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 9', 'gradeS')"><path d="M 375,335 A 225 225 0 0 1 327,329 L 338,303 A 195 195 0 0 0 377,307 Z" fill="#7f6aff" stroke="#fff"/><text x="353" y="323" fill="#fff" font-size="11" font-weight="bold">9</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 10', 'gradeS')"><path d="M 322,328 A 225 225 0 0 1 282,314 L 300,291 A 195 195 0 0 0 334,302 Z" fill="#7f6aff" stroke="#fff"/><text x="310" y="316" fill="#fff" font-size="11" font-weight="bold">10</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 11', 'gradeS')"><path d="M 278,311 A 225 225 0 0 1 244,289 L 266,270 A 195 195 0 0 0 296,289 Z" fill="#7f6aff" stroke="#fff"/><text x="270" y="298" fill="#fff" font-size="11" font-weight="bold">11</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 12', 'gradeS')"><path d="M 240,286 A 225 225 0 0 1 213,257 L 239,242 A 195 195 0 0 0 262,267 Z" fill="#7f6aff" stroke="#fff"/><text x="239" y="271" fill="#fff" font-size="11" font-weight="bold">12</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 13', 'gradeS')"><path d="M 210,253 A 225 225 0 0 1 191,221 L 220,211 A 195 195 0 0 0 236,239 Z" fill="#7f6aff" stroke="#fff"/><text x="214" y="238" fill="#fff" font-size="11" font-weight="bold">13</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 14', 'gradeS')"><path d="M 189,217 A 225 225 0 0 1 179,182 L 209,177 A 195 195 0 0 0 218,207 Z" fill="#7f6aff" stroke="#fff"/><text x="198" y="202" fill="#fff" font-size="11" font-weight="bold">14</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('1F Sec 15', 'gradeS')"><path d="M 178,178 A 225 225 0 0 1 177,102 L 211,107 A 195 195 0 0 0 207,173 Z" fill="#7f6aff" stroke="#fff"/><text x="193" y="144" fill="#fff" font-size="11" font-weight="bold">15</text></g>
+
+              <!-- 2F Tier (24 ~ 43) All in #ff719e -->
+              <!-- Right side (24 ~ 33) -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 24', 'gradeA')"><path d="M 628,75 A 285 285 0 0 1 635,116 L 590,114 A 242 242 0 0 0 584,81 Z" fill="#ff719e" stroke="#fff"/><text x="612" y="99" fill="#fff" font-size="11" font-weight="bold">24</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 25', 'gradeA')"><path d="M 635,120 A 285 285 0 0 1 634,162 L 589,157 A 242 242 0 0 0 590,118 Z" fill="#ff719e" stroke="#fff"/><text x="612" y="143" fill="#fff" font-size="11" font-weight="bold">25</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 26', 'gradeA')"><path d="M 633,166 A 285 285 0 0 1 622,207 L 579,197 A 242 242 0 0 0 588,161 Z" fill="#ff719e" stroke="#fff"/><text x="606" y="188" fill="#fff" font-size="11" font-weight="bold">26</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 27', 'gradeA')"><path d="M 620,211 A 285 285 0 0 1 599,250 L 558,235 A 242 242 0 0 0 576,201 Z" fill="#ff719e" stroke="#fff"/><text x="589" y="232" fill="#fff" font-size="11" font-weight="bold">27</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 28', 'gradeA')"><path d="M 596,254 A 285 285 0 0 1 565,290 L 529,271 A 242 242 0 0 0 555,239 Z" fill="#ff719e" stroke="#fff"/><text x="562" y="271" fill="#fff" font-size="11" font-weight="bold">28</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 29', 'gradeA')"><path d="M 561,294 A 285 285 0 0 1 523,324 L 493,300 A 242 242 0 0 0 525,274 Z" fill="#ff719e" stroke="#fff"/><text x="527" y="306" fill="#fff" font-size="11" font-weight="bold">29</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 30', 'gradeA')"><path d="M 519,327 A 285 285 0 0 1 474,348 L 452,320 A 242 242 0 0 0 489,303 Z" fill="#ff719e" stroke="#fff"/><text x="486" y="334" fill="#fff" font-size="11" font-weight="bold">30</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 31', 'gradeA')"><path d="M 469,350 A 285 285 0 0 1 421,363 L 407,333 A 242 242 0 0 0 448,322 Z" fill="#ff719e" stroke="#fff"/><text x="439" y="352" fill="#fff" font-size="11" font-weight="bold">31</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 32', 'gradeA')"><path d="M 416,364 A 285 285 0 0 1 364,367 L 366,336 A 242 242 0 0 0 403,334 Z" fill="#ff719e" stroke="#fff"/><text x="390" y="357" fill="#fff" font-size="11" font-weight="bold">32</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 33', 'gradeA')"><path d="M 360,367 A 285 285 0 0 1 310,362 L 318,332 A 242 242 0 0 0 360,336 Z" fill="#ff719e" stroke="#fff"/><text x="339" y="356" fill="#fff" font-size="11" font-weight="bold">33</text></g>
+
+              <!-- Left side (34 ~ 43) Mirrored -->
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 34', 'gradeA')"><path d="M 305,361 A 285 285 0 0 1 257,347 L 273,319 A 242 242 0 0 0 314,331 Z" fill="#ff719e" stroke="#fff"/><text x="286" y="347" fill="#fff" font-size="11" font-weight="bold">34</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 35', 'gradeA')"><path d="M 253,345 A 285 285 0 0 1 210,323 L 232,298 A 242 242 0 0 0 269,317 Z" fill="#ff719e" stroke="#fff"/><text x="236" y="327" fill="#fff" font-size="11" font-weight="bold">35</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 36', 'gradeA')"><path d="M 206,320 A 285 285 0 0 1 170,290 L 199,269 A 242 242 0 0 0 228,296 Z" fill="#ff719e" stroke="#fff"/><text x="194" y="302" fill="#fff" font-size="11" font-weight="bold">36</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 37', 'gradeA')"><path d="M 167,287 A 285 285 0 0 1 138,251 L 171,234 A 242 242 0 0 0 196,266 Z" fill="#ff719e" stroke="#fff"/><text x="160" y="268" fill="#fff" font-size="11" font-weight="bold">37</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 38', 'gradeA')"><path d="M 136,247 A 285 285 0 0 1 117,208 L 153,195 A 242 242 0 0 0 169,230 Z" fill="#ff719e" stroke="#fff"/><text x="136" y="228" fill="#fff" font-size="11" font-weight="bold">38</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 39', 'gradeA')"><path d="M 115,204 A 285 285 0 0 1 104,163 L 142,156 A 242 242 0 0 0 151,192 Z" fill="#ff719e" stroke="#fff"/><text x="122" y="186" fill="#fff" font-size="11" font-weight="bold">39</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 40', 'gradeA')"><path d="M 103,159 A 285 285 0 0 1 103,117 L 141,116 A 242 242 0 0 0 141,152 Z" fill="#ff719e" stroke="#fff"/><text x="117" y="143" fill="#fff" font-size="11" font-weight="bold">40</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 41', 'gradeA')"><path d="M 104,113 A 285 285 0 0 1 113,75 L 148,81 A 242 242 0 0 0 142,112 Z" fill="#ff719e" stroke="#fff"/><text x="123" y="101" fill="#fff" font-size="11" font-weight="bold">41</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 42', 'gradeA')"><path d="M 115,72 A 285 285 0 0 1 129,38 L 163,51 A 242 242 0 0 0 149,78 Z" fill="#ff719e" stroke="#fff"/><text x="135" y="61" fill="#fff" font-size="11" font-weight="bold">42</text></g>
+              <g class="kspo-block" onclick="app.onSectionSelectedTrigger('2F Sec 43', 'gradeA')"><path d="M 132,35 A 285 285 0 0 1 154,6 L 183,26 A 242 242 0 0 0 164,48 Z" fill="#ff719e" stroke="#fff"/><text x="156" y="26" fill="#fff" font-size="11" font-weight="bold">43</text></g>
             </svg>
           </div>
 
@@ -667,8 +678,8 @@
             <div class="w-full max-w-xl py-1 sm:py-1.5 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-xs sm:text-sm mb-1 select-none">
               STAGE
             </div>
-            <div id="matrix-section-title" class="text-xs sm:text-sm text-gray-500 font-medium mb-1.5 sm:mb-3 select-none">
-              區域座位分布
+            <div id="matrix-section-title" class="text-xs sm:text-sm text-gray-500 font-medium mb-1.5 sm:mb-3 select-none" data-i18n="matrixSectionTitle">
+              Section Seating Grid
             </div>
 
             <!-- Seat grid container auto-fitting without horizontal scrolling on mobile -->
@@ -695,57 +706,45 @@
                 <div id="mini-map-transform-wrap" class="w-full h-full flex items-center justify-center transition-transform duration-200">
                   <!-- Complete Mirror of Main SVG Map in Mini Map -->
                   <svg viewBox="0 0 760 410" class="w-full h-auto drop-shadow-sm select-none">
-                    <rect x="330" y="2" width="100" height="18" fill="#d0d0d0" rx="1"/>
-                    <text x="380" y="15" fill="#666" font-size="12" font-weight="bold" text-anchor="middle">STAGE</text>
-                    <rect x="372" y="10" width="16" height="195" fill="#e9ecef" stroke="#d5d9e0" rx="1"/>
+                    <polygon points="290,12 470,12 550,110 520,240 240,240 210,110" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+                    <rect x="300" y="14" width="160" height="26" fill="#f1f5f9" stroke="#cbd5e1" rx="2"/>
+                    <text x="380" y="32" fill="#94a3b8" font-size="14" font-weight="bold" text-anchor="middle">STAGE</text>
 
-                    <!-- Mini Floor Sections -->
+                    <!-- Mini Floor Sections A~E in #b79b71 -->
                     <g class="mini-kspo-block" data-section="Floor A" onclick="app.selectSection('Floor A', 'gradeR')">
-                      <path d="M 245,15 L 345,15 L 345,88 L 255,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="295" y="58" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">A</text>
+                      <polygon points="275,55 365,55 348,112 258,112" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="312" y="89" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
                     </g>
                     <g class="mini-kspo-block" data-section="Floor B" onclick="app.selectSection('Floor B', 'gradeR')">
-                      <path d="M 415,15 L 515,15 L 505,88 L 415,88 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="465" y="58" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">B</text>
+                      <polygon points="395,55 485,55 502,112 412,112" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="448" y="89" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
                     </g>
                     <g class="mini-kspo-block" data-section="Floor C" onclick="app.selectSection('Floor C', 'gradeR')">
-                      <path d="M 258,96 L 345,96 L 336,165 L 275,148 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="303" y="136" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">C</text>
+                      <polygon points="258,124 345,124 370,165 310,210 283,165" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="306" y="168" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
                     </g>
                     <g class="mini-kspo-block" data-section="Floor D" onclick="app.selectSection('Floor D', 'gradeR')">
-                      <path d="M 415,96 L 502,96 L 485,148 L 424,165 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                      <text x="457" y="136" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">D</text>
+                      <polygon points="352,168 408,168 450,212 415,230 380,210 345,230 310,212" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="380" y="202" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
+                    </g>
+                    <g class="mini-kspo-block" data-section="Floor E" onclick="app.selectSection('Floor E', 'gradeR')">
+                      <polygon points="415,124 502,124 477,165 450,210 390,165" fill="#b79b71" stroke="#fff" stroke-width="2"/>
+                      <text x="454" y="168" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">E</text>
                     </g>
 
-                    <!-- Mini 1F Sections Right (1~7) -->
-                    <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.selectSection('1F Sec 1', 'gradeR')"><path d="M 618,30 A 260 260 0 0 1 635,68 L 590,68 A 220 220 0 0 0 578,32 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="53" fill="#fff" font-size="14" font-weight="bold">1</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 2" onclick="app.selectSection('1F Sec 2', 'gradeR')"><path d="M 635,73 A 260 260 0 0 1 640,111 L 595,107 A 220 220 0 0 0 590,73 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="95" fill="#fff" font-size="14" font-weight="bold">2</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 3" onclick="app.selectSection('1F Sec 3', 'gradeR')"><path d="M 640,116 A 260 260 0 0 1 633,153 L 590,143 A 220 220 0 0 0 595,112 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="137" fill="#fff" font-size="14" font-weight="bold">3</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 4" onclick="app.selectSection('1F Sec 4', 'gradeR')"><path d="M 632,158 A 260 260 0 0 1 610,198 L 570,183 A 220 220 0 0 0 588,148 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="177" fill="#fff" font-size="14" font-weight="bold">4</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 5" onclick="app.selectSection('1F Sec 5', 'gradeR')"><path d="M 607,203 A 260 260 0 0 1 575,241 L 540,219 A 220 220 0 0 0 568,187 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="217" fill="#fff" font-size="14" font-weight="bold">5</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 6" onclick="app.selectSection('1F Sec 6', 'gradeR')"><path d="M 570,245 A 260 260 0 0 1 530,273 L 500,245 A 220 220 0 0 0 535,222 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="250" fill="#fff" font-size="14" font-weight="bold">6</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 7" onclick="app.selectSection('1F Sec 7', 'gradeR')"><path d="M 524,276 A 260 260 0 0 1 475,293 L 458,261 A 220 220 0 0 0 495,248 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="273" fill="#fff" font-size="14" font-weight="bold">7</text></g>
+                    <!-- Mini 1F Sections in #7f6aff -->
+                    <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.selectSection('1F Sec 1', 'gradeS')"><path d="M 578,102 A 225 225 0 0 1 583,138 L 553,138 A 195 195 0 0 0 549,107 Z" fill="#7f6aff" stroke="#fff"/><text x="566" y="125" fill="#fff" font-size="11" font-weight="bold">1</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 4" onclick="app.selectSection('1F Sec 4', 'gradeS')"><path d="M 569,221 A 225 225 0 0 1 550,253 L 524,239 A 195 195 0 0 0 540,211 Z" fill="#7f6aff" stroke="#fff"/><text x="546" y="238" fill="#fff" font-size="11" font-weight="bold">4</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 8" onclick="app.selectSection('1F Sec 8', 'gradeS')"><path d="M 433,329 A 225 225 0 0 1 385,335 L 383,307 A 195 195 0 0 0 422,303 Z" fill="#7f6aff" stroke="#fff"/><text x="407" y="323" fill="#fff" font-size="11" font-weight="bold">8</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 12" onclick="app.selectSection('1F Sec 12', 'gradeS')"><path d="M 240,286 A 225 225 0 0 1 213,257 L 239,242 A 195 195 0 0 0 262,267 Z" fill="#7f6aff" stroke="#fff"/><text x="239" y="271" fill="#fff" font-size="11" font-weight="bold">12</text></g>
+                    <g class="mini-kspo-block" data-section="1F Sec 15" onclick="app.selectSection('1F Sec 15', 'gradeS')"><path d="M 178,178 A 225 225 0 0 1 177,102 L 211,107 A 195 195 0 0 0 207,173 Z" fill="#7f6aff" stroke="#fff"/><text x="193" y="144" fill="#fff" font-size="11" font-weight="bold">15</text></g>
 
-                    <rect x="355" y="248" width="50" height="32" fill="#f0f0f0" stroke="#ddd" rx="2"/>
-
-                    <!-- Mini 1F Sections Left (9~15) -->
-                    <g class="mini-kspo-block" data-section="1F Sec 9" onclick="app.selectSection('1F Sec 9', 'gradeR')"><path d="M 302,293 A 260 260 0 0 1 236,276 L 262,248 A 220 220 0 0 0 322,261 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="273" fill="#fff" font-size="14" font-weight="bold">9</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 10" onclick="app.selectSection('1F Sec 10', 'gradeR')"><path d="M 230,273 A 260 260 0 0 1 190,245 L 225,222 A 220 220 0 0 0 260,245 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="250" fill="#fff" font-size="14" font-weight="bold">10</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 11" onclick="app.selectSection('1F Sec 11', 'gradeR')"><path d="M 185,241 A 260 260 0 0 1 153,203 L 192,187 A 220 220 0 0 0 220,219 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="217" fill="#fff" font-size="14" font-weight="bold">11</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 12" onclick="app.selectSection('1F Sec 12', 'gradeR')"><path d="M 150,198 A 260 260 0 0 1 128,158 L 172,148 A 220 220 0 0 0 190,183 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="177" fill="#fff" font-size="14" font-weight="bold">12</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 13" onclick="app.selectSection('1F Sec 13', 'gradeR')"><path d="M 127,153 A 260 260 0 0 1 120,116 L 165,112 A 220 220 0 0 0 170,143 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="137" fill="#fff" font-size="14" font-weight="bold">13</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 14" onclick="app.selectSection('1F Sec 14', 'gradeR')"><path d="M 120,111 A 260 260 0 0 1 125,73 L 170,73 A 220 220 0 0 0 165,107 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="95" fill="#fff" font-size="14" font-weight="bold">14</text></g>
-                    <g class="mini-kspo-block" data-section="1F Sec 15" onclick="app.selectSection('1F Sec 15', 'gradeR')"><path d="M 125,68 A 260 260 0 0 1 142,30 L 182,32 A 220 220 0 0 0 170,68 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="53" fill="#fff" font-size="14" font-weight="bold">15</text></g>
-
-                    <!-- Mini 2F Outer Tier Sections -->
-                    <g class="mini-kspo-block" data-section="2F Sec 25" onclick="app.selectSection('2F Sec 25', 'gradeA')"><path d="M 715,56 A 315 315 0 0 1 720,96 L 678,94 A 275 275 0 0 0 675,59 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="79" fill="#fff" font-size="13" font-weight="bold">25</text></g>
-                    <g class="mini-kspo-block" data-section="2F Sec 26" onclick="app.selectSection('2F Sec 26', 'gradeA')"><path d="M 720,101 A 315 315 0 0 1 714,141 L 672,134 A 275 275 0 0 0 678,99 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="124" fill="#fff" font-size="13" font-weight="bold">26</text></g>
-                    <g class="mini-kspo-block" data-section="2F Sec 27" onclick="app.selectSection('2F Sec 27', 'gradeA')"><path d="M 712,146 A 315 315 0 0 1 692,189 L 653,175 A 275 275 0 0 0 670,139 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="169" fill="#fff" font-size="13" font-weight="bold">27</text></g>
-
-                    <g class="mini-kspo-block" data-section="2F Sec 31" onclick="app.selectSection('2F Sec 31', 'gradeS')"><path d="M 559,312 A 315 315 0 0 1 508,334 L 493,301 A 275 275 0 0 0 538,282 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="311" fill="#fff" font-size="13" font-weight="bold">31</text></g>
-                    <g class="mini-kspo-block" data-section="2F Sec 34" onclick="app.selectSection('2F Sec 34', 'gradeS')"><path d="M 370,351 A 315 315 0 0 1 318,349 L 326,313 A 275 275 0 0 0 372,315 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="336" fill="#fff" font-size="13" font-weight="bold">34</text></g>
-                    <g class="mini-kspo-block" data-section="2F Sec 37" onclick="app.selectSection('2F Sec 37', 'gradeS')"><path d="M 195,308 A 315 315 0 0 1 150,279 L 177,254 A 275 275 0 0 0 216,278 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="283" fill="#fff" font-size="13" font-weight="bold">37</text></g>
-                    <g class="mini-kspo-block" data-section="2F Sec 41" onclick="app.selectSection('2F Sec 41', 'gradeA')"><path d="M 46,141 A 315 315 0 0 1 40,101 L 82,99 A 275 275 0 0 0 88,134 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="124" fill="#fff" font-size="13" font-weight="bold">41</text></g>
+                    <!-- Mini 2F Outer Tier in #ff719e -->
+                    <g class="mini-kspo-block" data-section="2F Sec 25" onclick="app.selectSection('2F Sec 25', 'gradeA')"><path d="M 635,120 A 285 285 0 0 1 634,162 L 589,157 A 242 242 0 0 0 590,118 Z" fill="#ff719e" stroke="#fff"/><text x="612" y="143" fill="#fff" font-size="11" font-weight="bold">25</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 29" onclick="app.selectSection('2F Sec 29', 'gradeA')"><path d="M 561,294 A 285 285 0 0 1 523,324 L 493,300 A 242 242 0 0 0 525,274 Z" fill="#ff719e" stroke="#fff"/><text x="527" y="306" fill="#fff" font-size="11" font-weight="bold">29</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 33" onclick="app.selectSection('2F Sec 33', 'gradeA')"><path d="M 360,367 A 285 285 0 0 1 310,362 L 318,332 A 242 242 0 0 0 360,336 Z" fill="#ff719e" stroke="#fff"/><text x="339" y="356" fill="#fff" font-size="11" font-weight="bold">33</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 37" onclick="app.selectSection('2F Sec 37', 'gradeA')"><path d="M 167,287 A 285 285 0 0 1 138,251 L 171,234 A 242 242 0 0 0 196,266 Z" fill="#ff719e" stroke="#fff"/><text x="160" y="268" fill="#fff" font-size="11" font-weight="bold">37</text></g>
+                    <g class="mini-kspo-block" data-section="2F Sec 41" onclick="app.selectSection('2F Sec 41', 'gradeA')"><path d="M 104,113 A 285 285 0 0 1 113,75 L 148,81 A 242 242 0 0 0 142,112 Z" fill="#ff719e" stroke="#fff"/><text x="123" y="101" fill="#fff" font-size="11" font-weight="bold">41</text></g>
                   </svg>
                 </div>
               </div>
@@ -897,11 +896,14 @@
         infoRuntime: "Runtime",
         infoRating: "Rating",
         ratingAge: "7 years and over",
+        mobileCategory: "• Concert",
+        mobileAge: "• 7 years and over",
         selectDateTitle: "Select Date",
         dateLockedMsg: "Sales will open when the countdown reaches 00:00",
         selectedBadge: "Selected",
         selectTimeTitle: "Select Time",
         availSeatsTitle: "Available Seats",
+        availSeatsSidebarTitle: "Available Seats",
         getTicketsBtn: "Get Tickets",
         buyNowBtn: "Buy Now",
         priceTitle: "Price",
@@ -911,12 +913,15 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice Method:",
-        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date drawer and proceed.",
+        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to enter the queue and choose your date.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
         venueNoticeText: "The stage layout is for booking guidance and may differ slightly from the actual venue.<br>The top of each section is closest to the stage. Please select your seats in horizontal order.",
         miniMapTitle: "Mini Map",
+        refreshBtn: "Refresh",
+        matrixSectionTitle: "Section Seating Grid",
+        selectionTitle: "Selected Seats",
         completeSelectionBtn: "Seat Selection completed",
         queueWaitPrompt: "Please, Wait!",
         queueOrderTitle: "Your waiting order",
@@ -924,11 +929,13 @@
         queueNotice1: "• Many people are currently connected.",
         queueNotice2: "Please wait a moment to move the next step safely.",
         queueNotice3: "• Notice! If you refresh this page, the waiting order will start again.",
+        queueCancelBtn: "Cancel",
         captchaHeading: "Secure booking service",
         captchaDesc: "To avoid automated bookings, the secure booking service requires you to enter a security code when selecting a seat",
         captchaError: "Incorrect security code. Please try again.",
         captchaSubmitBtn: "Submit",
         captchaDismissLink: "To See the seats first, Click here",
+        captchaPlaceholder: "PLEASE ENTER CHARACTERS",
         selectSectionPromptTitle: "Select Section",
         cancelBtn: "Cancel",
         nextBtn: "Next",
@@ -944,8 +951,8 @@
         practiceAgainBtn: "Practice Again",
         prepBadge: "Global Ticket Simulator",
         prepHeading: "Ticketing Practice Session",
-        prepStep1: "• Click <b>\"Ready, Start Countdown\"</b> to prepare the session.",
-        prepStep2: "• On mobile, the button counts down. When it reaches 00:00, it turns blue! Click it to select date.",
+        prepStep1: "• Click <b>\"Ready, Start Practice\"</b> to enter the ticketing session.",
+        prepStep2: "• The mobile button shows real countdown. When it hits 00:00 and turns blue, tap it to start!",
         prepStartBtn: "Ready, Start Practice",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
         countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On Sale Now )",
@@ -978,11 +985,14 @@
         infoRuntime: "演出時長",
         infoRating: "觀賞年齡",
         ratingAge: "7歲以上均可觀賞",
+        mobileCategory: "• 演唱會",
+        mobileAge: "• 7歲以上觀賞",
         selectDateTitle: "選擇日期",
         dateLockedMsg: "開賣倒數歸零 00:00 時將開放選取",
         selectedBadge: "已選擇",
         selectTimeTitle: "選擇場次時間",
         availSeatsTitle: "剩餘席位票價",
+        availSeatsSidebarTitle: "剩餘席位",
         getTicketsBtn: "立即購票",
         buyNowBtn: "立即購買",
         priceTitle: "價格資訊",
@@ -992,12 +1002,15 @@
         guideTab2: "演唱會詳情",
         guideTab3: "購票須知",
         guideIntroTitle: "• 練習說明：",
-        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可喚出選擇日期抽屜！",
+        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可進入排隊並選擇日期！",
         guideDisclaimer: "※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。",
         selectSeatsHeader: "選擇座位",
         backToVenueBtn: "< 全區",
         venueNoticeText: "舞台位置僅供購票參考，可能與實際舞台配置稍有不同。<br>各區域上方最靠近舞台，請依照橫向順序挑選座位。",
         miniMapTitle: "迷你全區圖",
+        refreshBtn: "重新整理",
+        matrixSectionTitle: "區域座位分布",
+        selectionTitle: "已選取座位",
         completeSelectionBtn: "完成座位選取",
         queueWaitPrompt: "請稍候！",
         queueOrderTitle: "您的排隊序號",
@@ -1005,11 +1018,13 @@
         queueNotice1: "• 目前連線人數眾多，系統正在依照順序處理。",
         queueNotice2: "請稍候片刻，系統將安全自動跳轉至選位畫面。",
         queueNotice3: "• 注意！若重新整理此頁面，排隊序號將會重新計算。",
+        queueCancelBtn: "取消",
         captchaHeading: "安全預訂服務",
         captchaDesc: "為防範外掛與自動化腳本，選位前請輸入圖形安全驗證碼",
         captchaError: "驗證碼輸入錯誤，請重新輸入。",
         captchaSubmitBtn: "確認送出",
         captchaDismissLink: "點此先預覽空位分佈",
+        captchaPlaceholder: "請輸入字元",
         selectSectionPromptTitle: "選擇區域",
         cancelBtn: "取消",
         nextBtn: "下一步",
@@ -1026,7 +1041,7 @@
         prepBadge: "Global 搶票手速模擬器",
         prepHeading: "搶票實戰練習模式",
         prepStep1: "• 點擊 <b>「準備完成，進入練習」</b> 進入搶票主頁面。",
-        prepStep2: "• 手機版底部按鈕將直接顯示真實倒數，歸零變藍時點擊即可喚出選擇日期抽屜！",
+        prepStep2: "• 手機版底部按鈕將直接顯示真實倒數，歸零變藍時點擊即可開始！",
         prepStartBtn: "準備完成，進入練習",
         countdownPrefix: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 剩餘時間: ",
         countdownOpen: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 熱烈開賣中 )",
@@ -1054,7 +1069,7 @@
 
     const app = {
       state: 'PREP',
-      currentLang: 'zh',
+      currentLang: 'en',
       practiceStartTime: null,
       countdownRemaining: 3,
       countdownTimer: null,
@@ -1137,13 +1152,19 @@
           }
         });
 
-        // Date labels
+        // Date labels (both desktop and mobile drawer)
         document.querySelectorAll('.d-date-label-1').forEach(el => {
-          el.innerText = this.currentLang === 'zh' ? `周六, 10月 31, 2026 06:00 下午` : `Sat, Oct 31, 2026 06:00 PM`;
+          el.innerText = this.currentLang === 'zh' ? `2026.10.31(星期六) 18:00` : `Sat, Oct 31, 2026 06:00 PM`;
         });
         document.querySelectorAll('.d-date-label-2').forEach(el => {
-          el.innerText = this.currentLang === 'zh' ? `周日, 11月 01, 2026 05:00 下午` : `Sun, Nov 01, 2026 05:00 PM`;
+          el.innerText = this.currentLang === 'zh' ? `2026.11.01(星期日) 17:00` : `Sun, Nov 01, 2026 05:00 PM`;
         });
+
+        // Captcha placeholder
+        const captchaInput = document.getElementById('captcha-input');
+        if (captchaInput) {
+          captchaInput.placeholder = this.t('captchaPlaceholder');
+        }
 
         this.renderCountdownText();
         this.updateCompletionButtonState();
@@ -1222,7 +1243,8 @@
           mBuyBtn.disabled = false;
           mBuyBtn.classList.remove('bg-gray-300', 'text-gray-700', 'cursor-not-allowed');
           mBuyBtn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'shadow-md', 'cursor-pointer');
-          mBuyBtn.onclick = () => this.openMobileDateDrawer();
+          // Clicking Buy Now directly enters queue first
+          mBuyBtn.onclick = () => this.startWaitingQueue();
         }
 
         // Realistic late time delay
@@ -1271,7 +1293,7 @@
 
         setTimeout(() => {
           if (spinner) spinner.classList.add('hidden');
-          this.startWaitingQueue();
+          this.openSeatmapWorkspace();
         }, 900);
       },
 
@@ -1342,7 +1364,14 @@
           } else {
             clearInterval(this.queueTimer);
             if (modal) modal.classList.add('hidden');
-            this.openSeatmapWorkspace();
+            
+            // On mobile: after queue finishes, show Date/Time selection drawer first!
+            const isMobile = window.innerWidth < 768;
+            if (isMobile) {
+              this.openMobileDateDrawer();
+            } else {
+              this.openSeatmapWorkspace();
+            }
           }
         }, 260);
       },
@@ -1740,7 +1769,8 @@
 
         const count = this.selectedSeats.length;
         if (titleElem) {
-          titleElem.innerText = `已選取座位 (${count}/${this.maxSeatsAllowed})`;
+          const prefix = this.t('selectionTitle');
+          titleElem.innerText = `${prefix} (${count}/${this.maxSeatsAllowed})`;
         }
 
         if (count > 0) {
