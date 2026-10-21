@@ -161,7 +161,7 @@
       <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing practice session</h2>
       <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-2">
         <p data-i18n="prepStep1">• Click <b>"Ready, start practice"</b> to enter the ticketing session.</p>
-        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!</p>
+        <p data-i18n="prepStep2">• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the date selection menu!</p>
         <p class="text-amber-800 bg-amber-50 p-2.5 rounded border border-amber-200/70 font-medium leading-normal" data-i18n="prepStep3">
           • Queue order will be assigned based on your reaction time right after countdown ends, requiring a waiting period. Stay sharp and click the instant it opens!
         </p>
@@ -294,7 +294,7 @@
         </div>
         <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
           <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• Practice method:</p>
-          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
+          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
           <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
             ※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.
           </p>
@@ -392,7 +392,7 @@
 
       <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
         <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• Practice method:</p>
-        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.</p>
+        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
         <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.</p>
       </div>
     </div>
@@ -413,7 +413,7 @@
   <div id="drawer-date-backdrop" class="fixed inset-0 bg-black/60 z-50 hidden flex flex-col justify-end">
     <div id="drawer-date-panel" class="w-full bg-white rounded-t-2xl p-4 drawer-enter flex flex-col max-h-[80vh] shadow-2xl">
       <div class="flex items-center justify-between pb-3 border-b border-gray-100">
-        <span class="text-base font-bold text-gray-900" data-i18n="selectDateTitle">Select date</span>
+        <span class="text-base font-bold text-gray-900" data-i18n="selectDateTitle">Select Date</span>
         <button type="button" onclick="app.closeMobileDateDrawer()" class="text-gray-400 hover:text-gray-700 text-xl font-light p-1">✕</button>
       </div>
 
@@ -517,10 +517,10 @@
     
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
-      <!-- Desktop Seating Top Bar (Melon Style: Persistent Mini Map on right) -->
+      <!-- Desktop Seating Top Bar (Melon Style) -->
       <div class="hidden md:flex bg-[#1e293b] border-b border-gray-700 px-4 py-2.5 items-center justify-between text-xs text-white shrink-0">
         <div class="flex items-center space-x-2 truncate">
-          <span class="font-bold text-sm tracking-wide text-blue-400" data-i18n="selectSeatsHeader">Select Seats</span>
+          <span class="font-bold text-sm tracking-wide text-white" data-i18n="selectSeatsHeader">Select Seats</span>
           <span class="text-gray-500">|</span>
           <span class="text-gray-200 font-medium truncate max-w-xs">WORLD TOUR LIVE IN SEOUL</span>
           <span class="text-gray-500">|</span>
@@ -571,7 +571,7 @@
 
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
-        <!-- Main Workspace -->
+        <!-- Desktop Layout matched to Melon Image 1: Main Venue Map left, Sidebar right -->
         <div class="flex-1 bg-white relative p-2 sm:p-4 flex flex-col items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
           
           <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-500 text-center max-w-xl mb-2 leading-relaxed shrink-0 font-medium" data-i18n="venueNoticeText">
@@ -596,16 +596,17 @@
             </div>
           </div>
 
-          <!-- Bottom Venue Notice Bar -->
-          <div id="desktop-bottom-notice-bar" class="w-full bg-[#525252] text-white text-xs py-2 px-4 text-center shrink-0 font-medium tracking-wide">
-            Please select the section first. (Click the section of the venue.)
+          <!-- Bottom Venue Notice Bar / Melon Bottom Status Bar -->
+          <div id="desktop-bottom-notice-bar" class="w-full bg-[#525252] text-white text-xs py-2 px-4 text-left shrink-0 font-medium tracking-wide flex items-center justify-between">
+            <span id="desktop-bottom-status-text">Please select the section first. (Click the section of the venue.)</span>
+            <span class="text-[10px] text-gray-300">▲</span>
           </div>
         </div>
 
-        <!-- Desktop Right Sidebar (Melon Style: Persistent Mini Map Always Present) -->
+        <!-- Desktop Right Sidebar matched to Melon Image 1 & 5 -->
         <div class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
           <div>
-            <!-- Persistent Mini Map Container (Always visible in Melon style) -->
+            <!-- Desktop Mini Map Container (Always visible in Melon style) -->
             <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50">
               <div class="flex justify-between items-center mb-1 text-[11px] text-gray-500">
                 <span class="font-medium" data-i18n="miniMapTitle">Mini Map</span>
@@ -625,14 +626,6 @@
 
             <div class="flex justify-end mb-2">
               <button type="button" onclick="app.backToVenue()" class="text-xs text-[#2563EB] hover:underline font-medium" data-i18n="viewAllArea">View all area &gt;</button>
-            </div>
-
-            <!-- Seat Selection Status Header -->
-            <div class="flex items-center justify-between border-b border-gray-200 pb-2 mb-3 text-xs">
-              <span class="font-bold text-gray-800" id="selection-seats-title">Please select seats. 0seat(s)</span>
-              <span id="selected-seat-badge" class="hidden font-mono font-bold bg-[#2563EB] text-white px-2 py-0.5 rounded text-[10px]">
-                1 SELECTED
-              </span>
             </div>
 
             <div class="flex items-center justify-between border-b border-gray-100 pb-2 mb-3">
@@ -770,10 +763,10 @@
         infoRuntime: "Runtime",
         infoRating: "Rating",
         ratingAge: "7 years and over",
-        selectDateTitle: "Select date",
+        selectDateTitle: "Select Date",
         dateLockedMsg: "Sales will open when the countdown reaches 00:00",
         selectedBadge: "Selected",
-        selectTimeTitle: "Select time",
+        selectTimeTitle: "Select Time",
         availSeatsTitle: "Available seats",
         availSeatsSidebarTitle: "Available Seats",
         refreshBtn: "Refresh",
@@ -786,7 +779,7 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice method:",
-        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date menu and proceed.",
+        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -822,7 +815,7 @@
         prepBadge: "Global ticket simulator",
         prepHeading: "Ticketing practice session",
         prepStep1: "• Click <b>\"Ready, start practice\"</b> to enter the ticketing session.",
-        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the session menu!",
+        prepStep2: "• On mobile, the bottom button displays real-time countdown. Once it hits 00:00, tap to open the date selection menu!",
         prepStep3: "• Queue order will be assigned based on your reaction time right after countdown ends, requiring a waiting period. Stay sharp and click the instant it opens!",
         prepStartBtn: "Ready, start practice",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
@@ -889,7 +882,7 @@
         queueEstPrefix: "預估等待時間：",
         queueNotice1: "• 目前連線人數眾多，系統正在依照順序處理。",
         queueNotice2: "請稍候片刻，系統將安全自動跳轉至選位畫面。",
-        queueNotice3: "• 注意! 若重新整理此頁面，排隊序號將會重新計算。",
+        queueNotice3: "• 注意！若重新整理此頁面，排隊序號將會重新計算。",
         captchaHeading: "安全預訂服務",
         captchaDesc: "為防範外掛與自動化腳本，選位前請輸入圖形安全驗證碼",
         captchaError: "驗證碼輸入錯誤，請重新輸入。",
@@ -928,7 +921,7 @@
         diagServerTitle: "伺服器瞬間大塞車",
         diagServerDetail: "同一秒瞬間湧入太多人搶票，售票系統直接塞車打結。",
         diagServerTip: "這不是你的操作失誤，純粹是系統塞爆了！保持冷靜，點 OK 關閉後立刻重新按送出！",
-        diagMobileRapidTapTitle: "高頻盲點連擊換位（點擊頻率過急）",
+        diagMobileRapidTapTitle: "High-frequency rapid seat tapping",
         diagMobileRapidTapDetail: "在極短時間內急促更換點擊多個座位（平均點擊間隔僅 {ms}ms），因點擊頻率過高被系統風控判定為腳本異常，強制踢回全景圖。",
         diagMobileRapidTapTip: "手機端狂戳螢幕會被判定為外掛狂刷。請保持冷靜，看準單一空位果斷點選。",
         diagOpeningSpeedTitle: "開賣點擊反應",
@@ -1614,7 +1607,6 @@
 
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
-        const bottomNoticeBar = document.getElementById('desktop-bottom-notice-bar');
         const gridWrap = document.getElementById('grid-seat-matrix-wrap');
         const titleElem = document.getElementById('matrix-section-title');
         const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
@@ -1622,7 +1614,6 @@
 
         if (svgWrap) svgWrap.classList.add('hidden');
         if (notice) notice.classList.add('hidden');
-        if (bottomNoticeBar) bottomNoticeBar.classList.add('hidden');
         if (gridWrap) gridWrap.classList.remove('hidden');
         if (titleElem) titleElem.innerText = `${sectionName}`;
         if (mobileZoneLabel) mobileZoneLabel.innerText = sectionName;
@@ -1660,14 +1651,14 @@
         const gridWrap = document.getElementById('grid-seat-matrix-wrap');
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
-        const bottomNoticeBar = document.getElementById('desktop-bottom-notice-bar');
+        const statusText = document.getElementById('desktop-bottom-status-text');
         const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
         const mobileMiniMapBox = document.getElementById('mobile-mini-map-box');
 
         if (gridWrap) gridWrap.classList.add('hidden');
         if (svgWrap) svgWrap.classList.remove('hidden');
         if (notice) notice.classList.remove('hidden');
-        if (bottomNoticeBar) bottomNoticeBar.classList.remove('hidden');
+        if (statusText) statusText.innerText = 'Please select the section first. (Click the section of the venue.)';
         if (mobileZoneLabel) mobileZoneLabel.innerText = this.currentLang === 'zh' ? '請先選擇區域' : 'Please select a grade first';
         if (mobileMiniMapBox) mobileMiniMapBox.style.display = 'none';
         
@@ -1860,16 +1851,13 @@
 
       updateCompletionButtonState() {
         const btn = document.getElementById('btn-complete-selection');
-        const badge = document.getElementById('selected-seat-badge');
-        const titleElem = document.getElementById('selection-seats-title');
+        const statusText = document.getElementById('desktop-bottom-status-text');
 
         const count = this.selectedSeats.length;
-        if (titleElem) {
-          if (count === 0) {
-            titleElem.innerText = this.currentLang === 'zh' ? '請選擇座位。 0個座位' : 'Please select seats. 0seat(s)';
-          } else {
-            titleElem.innerText = this.currentLang === 'zh' ? `已選座位。 1個座位` : `Selection seats. 1seat(s)`;
-          }
+        if (statusText) {
+          statusText.innerText = count > 0 
+            ? `Selection seats. ${count}seat(s)` 
+            : `Please select seats. 0seat(s)`;
         }
 
         if (count > 0) {
@@ -1878,17 +1866,12 @@
             btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
             btn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
           }
-          if (badge) {
-            badge.classList.remove('hidden');
-            badge.innerText = this.currentLang === 'zh' ? `已選 1 個座位` : `1 SELECTED`;
-          }
         } else {
           if (btn) {
             btn.disabled = true;
             btn.classList.remove('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
             btn.classList.add('bg-gray-400', 'cursor-not-allowed');
           }
-          if (badge) badge.classList.add('hidden');
         }
       },
 
