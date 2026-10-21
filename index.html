@@ -27,7 +27,7 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans TC", sans-serif;
-      background-color: #e9ecef;
+      background-color: #eaedf1;
       margin: 0;
       padding: 0;
       color: #333;
@@ -52,8 +52,8 @@
       cursor: pointer;
     }
     .seat-cube.available:hover {
-      filter: brightness(0.9);
-      transform: scale(1.05);
+      filter: brightness(0.92);
+      transform: scale(1.06);
     }
     .seat-cube.selected {
       outline: 2.5px solid #000000 !important;
@@ -72,28 +72,29 @@
       font-family: "Segoe UI", Roboto, sans-serif;
       user-select: none;
     }
-    .kspo-block:hover {
-      filter: brightness(0.9);
+    .kspo-block {
       cursor: pointer;
+      transition: filter 0.15s ease;
+    }
+    .kspo-block:hover {
+      filter: brightness(0.92);
     }
     .mini-kspo-block {
       cursor: pointer;
-      transition: filter 0.15s ease, stroke-width 0.15s ease;
+      transition: filter 0.12s ease;
     }
     .mini-kspo-block:hover {
-      filter: brightness(0.85) contrast(1.15);
-      stroke: #ffffff !important;
-      stroke-width: 2.5px !important;
+      filter: brightness(0.92);
     }
   </style>
 </head>
-<body class="min-h-screen bg-[#eaedf1] flex flex-col items-center justify-start py-6 px-3 sm:px-6">
+<body class="min-h-screen bg-[#eaedf1] flex flex-col items-center justify-start py-6 px-3 sm:px-6 relative">
 
   <!-- ================= MAIN EMBEDDED FRAME ================= -->
-  <div class="w-full max-w-[1024px] bg-white border border-[#dce0e6] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex flex-col relative min-h-[720px]">
+  <div class="w-full max-w-[1024px] bg-white border border-[#dce0e6] shadow-[0_2px_14px_rgba(0,0,0,0.06)] flex flex-col relative min-h-[720px] rounded-sm overflow-hidden">
     
     <!-- Top Global Header -->
-    <header class="border-b border-gray-100 px-6 py-3.5 flex items-center justify-between bg-white">
+    <header class="border-b border-gray-100 px-6 py-3.5 flex items-center justify-between bg-white z-10">
       <div class="flex items-center space-x-2">
         <span class="text-xl font-black tracking-tight text-[#2563EB]">GLOBAL PASS</span>
         <span class="text-sm font-bold text-gray-800 tracking-tight" data-i18n="headerTitle">Ticket Simulator</span>
@@ -272,114 +273,11 @@
                 The top of each section is closest to the stage. Please select your seats in horizontal order.
               </div>
 
-              <!-- View A: KSPO DOME Full Layout Replica -->
+              <!-- View A: KSPO DOME Full Layout Replica (Container for Dynamic SVG) -->
               <div id="kspo-dome-svg-wrap" class="w-full max-w-[650px] flex flex-col items-center justify-center my-auto">
-                
-                <!-- STAGE Box -->
-                <div class="w-72 py-1.5 bg-gray-100 border border-gray-300 text-gray-500 font-bold text-center tracking-widest text-base -mb-1 rounded-sm z-10">
-                  STAGE
+                <div id="main-kspo-svg-container" class="w-full">
+                  <!-- Injected via SVG Engine -->
                 </div>
-
-                <!-- Main SVG Venue Map -->
-                <svg viewBox="0 0 760 420" class="w-full h-auto drop-shadow-sm select-none">
-                  <!-- Central Runway: directly connecting from Stage down into Floor -->
-                  <rect x="372" y="20" width="16" height="215" fill="#f0f0f0" stroke="#dcdcdc" rx="1"/>
-
-                  <!-- Floor Indicators (Symmetrically Placed) -->
-                  <g transform="translate(195, 25)">
-                    <rect width="45" height="22" rx="4" fill="#666"/>
-                    <text x="22.5" y="15" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
-                  </g>
-                  <g transform="translate(520, 25)">
-                    <rect width="45" height="22" rx="4" fill="#666"/>
-                    <text x="22.5" y="15" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
-                  </g>
-
-                  <!-- 1F / 2F Badges (Mirrored around center line X=380) -->
-                  <circle cx="132" cy="20" r="13" fill="#666"/>
-                  <text x="132" y="24" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
-                  <circle cx="628" cy="20" r="13" fill="#666"/>
-                  <text x="628" y="24" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">1F</text>
-
-                  <circle cx="70" cy="15" r="13" fill="#666"/>
-                  <text x="70" y="19" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
-                  <circle cx="690" cy="15" r="13" fill="#666"/>
-                  <text x="690" y="19" fill="#fff" font-size="10" font-weight="bold" text-anchor="middle">2F</text>
-
-                  <!-- Floor A (Top Left - directly under STAGE) -->
-                  <g class="kspo-block" onclick="app.selectSection('Floor A', 'gradeR')">
-                    <path d="M 250,25 L 345,25 L 345,100 L 262,100 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                    <text x="300" y="68" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">A</text>
-                  </g>
-
-                  <!-- Floor B (Top Right - directly under STAGE) -->
-                  <g class="kspo-block" onclick="app.selectSection('Floor B', 'gradeR')">
-                    <path d="M 415,25 L 510,25 L 498,100 L 415,100 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                    <text x="460" y="68" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">B</text>
-                  </g>
-
-                  <!-- Floor C (Bottom Left) -->
-                  <g class="kspo-block" onclick="app.selectSection('Floor C', 'gradeR')">
-                    <path d="M 264,110 L 345,110 L 336,180 L 280,160 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                    <text x="303" y="148" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">C</text>
-                  </g>
-
-                  <!-- Floor D (Bottom Right) -->
-                  <g class="kspo-block" onclick="app.selectSection('Floor D', 'gradeR')">
-                    <path d="M 415,110 L 496,110 L 480,160 L 424,180 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                    <text x="457" y="148" fill="#fff" font-size="18" font-weight="bold" text-anchor="middle">D</text>
-                  </g>
-
-                  <!-- 1F Tier (1 ~ 15) Grade R (#b79b71) shifted up by 105px -->
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 1', 'gradeR')"><path d="M 618,35 A 260 260 0 0 1 635,73 L 590,73 A 220 220 0 0 0 578,37 Z" fill="#b79b71" stroke="#fff"/><text x="605" y="58" fill="#fff" font-size="13" font-weight="bold">1</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 2', 'gradeR')"><path d="M 635,78 A 260 260 0 0 1 640,116 L 595,112 A 220 220 0 0 0 590,78 Z" fill="#b79b71" stroke="#fff"/><text x="612" y="100" fill="#fff" font-size="13" font-weight="bold">2</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 3', 'gradeR')"><path d="M 640,121 A 260 260 0 0 1 633,158 L 590,148 A 220 220 0 0 0 595,117 Z" fill="#b79b71" stroke="#fff"/><text x="610" y="142" fill="#fff" font-size="13" font-weight="bold">3</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 4', 'gradeR')"><path d="M 632,163 A 260 260 0 0 1 610,203 L 570,188 A 220 220 0 0 0 588,153 Z" fill="#b79b71" stroke="#fff"/><text x="596" y="182" fill="#fff" font-size="13" font-weight="bold">4</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 5', 'gradeR')"><path d="M 607,208 A 260 260 0 0 1 575,246 L 540,224 A 220 220 0 0 0 568,192 Z" fill="#b79b71" stroke="#fff"/><text x="568" y="222" fill="#fff" font-size="13" font-weight="bold">5</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 6', 'gradeR')"><path d="M 570,250 A 260 260 0 0 1 530,278 L 500,250 A 220 220 0 0 0 535,227 Z" fill="#b79b71" stroke="#fff"/><text x="530" y="255" fill="#fff" font-size="13" font-weight="bold">6</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 7', 'gradeR')"><path d="M 524,281 A 260 260 0 0 1 475,298 L 458,266 A 220 220 0 0 0 495,253 Z" fill="#b79b71" stroke="#fff"/><text x="485" y="278" fill="#fff" font-size="13" font-weight="bold">7</text></g>
-                  
-                  <!-- F.O.H Console: Perfectly Centered at X = 355..405 (Center 380) -->
-                  <g transform="translate(355, 255)">
-                    <rect width="50" height="34" fill="#f0f0f0" stroke="#ddd" rx="2"/>
-                    <text x="25" y="21" fill="#bbb" font-size="10" font-weight="bold" text-anchor="middle">F.O.H</text>
-                  </g>
-
-                  <!-- 1F Left Symmetric Tier (9 ~ 15) shifted up by 105px -->
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 9', 'gradeR')"><path d="M 302,298 A 260 260 0 0 1 236,281 L 262,253 A 220 220 0 0 0 322,266 Z" fill="#b79b71" stroke="#fff"/><text x="275" y="278" fill="#fff" font-size="13" font-weight="bold">9</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 10', 'gradeR')"><path d="M 230,278 A 260 260 0 0 1 190,250 L 225,227 A 220 220 0 0 0 260,250 Z" fill="#b79b71" stroke="#fff"/><text x="228" y="255" fill="#fff" font-size="13" font-weight="bold">10</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 11', 'gradeR')"><path d="M 185,246 A 260 260 0 0 1 153,208 L 192,192 A 220 220 0 0 0 220,224 Z" fill="#b79b71" stroke="#fff"/><text x="187" y="222" fill="#fff" font-size="13" font-weight="bold">11</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 12', 'gradeR')"><path d="M 150,203 A 260 260 0 0 1 128,163 L 172,153 A 220 220 0 0 0 190,188 Z" fill="#b79b71" stroke="#fff"/><text x="160" y="182" fill="#fff" font-size="13" font-weight="bold">12</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 13', 'gradeR')"><path d="M 127,158 A 260 260 0 0 1 120,121 L 165,117 A 220 220 0 0 0 170,148 Z" fill="#b79b71" stroke="#fff"/><text x="146" y="142" fill="#fff" font-size="13" font-weight="bold">13</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 14', 'gradeR')"><path d="M 120,116 A 260 260 0 0 1 125,78 L 170,78 A 220 220 0 0 0 165,112 Z" fill="#b79b71" stroke="#fff"/><text x="145" y="100" fill="#fff" font-size="13" font-weight="bold">14</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('1F Sec 15', 'gradeR')"><path d="M 125,73 A 260 260 0 0 1 142,35 L 182,37 A 220 220 0 0 0 170,73 Z" fill="#b79b71" stroke="#fff"/><text x="150" y="58" fill="#fff" font-size="13" font-weight="bold">15</text></g>
-
-                  <!-- 2F Outer Tier: Right Side (24~27) -->
-                  <g><path d="M 700,20 A 315 315 0 0 1 715,55 L 675,58 A 275 275 0 0 0 662,27 Z" fill="#d9d9d9" stroke="#fff"/><text x="686" y="43" fill="#fff" font-size="12" font-weight="bold">24</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 25', 'gradeA')"><path d="M 715,60 A 315 315 0 0 1 720,100 L 678,98 A 275 275 0 0 0 675,63 Z" fill="#ff719e" stroke="#fff"/><text x="696" y="83" fill="#fff" font-size="12" font-weight="bold">25</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 26', 'gradeA')"><path d="M 720,105 A 315 315 0 0 1 714,145 L 672,138 A 275 275 0 0 0 678,103 Z" fill="#ff719e" stroke="#fff"/><text x="694" y="128" fill="#fff" font-size="12" font-weight="bold">26</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 27', 'gradeA')"><path d="M 712,150 A 315 315 0 0 1 692,193 L 653,179 A 275 275 0 0 0 670,143 Z" fill="#ff719e" stroke="#fff"/><text x="680" y="173" fill="#fff" font-size="12" font-weight="bold">27</text></g>
-
-                  <!-- 2F Outer Tier: Grade S Purple (28 ~ 39) -->
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 28', 'gradeS')"><path d="M 689,198 A 315 315 0 0 1 660,239 L 626,219 A 275 275 0 0 0 650,184 Z" fill="#7f6aff" stroke="#fff"/><text x="652" y="217" fill="#fff" font-size="12" font-weight="bold">28</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 29', 'gradeS')"><path d="M 655,244 A 315 315 0 0 1 615,279 L 588,254 A 275 275 0 0 0 622,223 Z" fill="#7f6aff" stroke="#fff"/><text x="618" y="253" fill="#fff" font-size="12" font-weight="bold">29</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 30', 'gradeS')"><path d="M 610,283 A 315 315 0 0 1 565,312 L 544,282 A 275 275 0 0 0 583,258 Z" fill="#7f6aff" stroke="#fff"/><text x="575" y="287" fill="#fff" font-size="12" font-weight="bold">30</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 31', 'gradeS')"><path d="M 559,316 A 315 315 0 0 1 508,338 L 493,305 A 275 275 0 0 0 538,286 Z" fill="#7f6aff" stroke="#fff"/><text x="526" y="315" fill="#fff" font-size="12" font-weight="bold">31</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 32', 'gradeS')"><path d="M 501,341 A 315 315 0 0 1 450,352 L 441,316 A 275 275 0 0 0 487,307 Z" fill="#7f6aff" stroke="#fff"/><text x="470" y="330" fill="#fff" font-size="12" font-weight="bold">32</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 33', 'gradeS')"><path d="M 442,353 A 315 315 0 0 1 390,355 L 388,319 A 275 275 0 0 0 434,317 Z" fill="#7f6aff" stroke="#fff"/><text x="412" y="340" fill="#fff" font-size="12" font-weight="bold">33</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 34', 'gradeS')"><path d="M 370,355 A 315 315 0 0 1 318,353 L 326,317 A 275 275 0 0 0 372,319 Z" fill="#7f6aff" stroke="#fff"/><text x="348" y="340" fill="#fff" font-size="12" font-weight="bold">34</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 35', 'gradeS')"><path d="M 310,352 A 315 315 0 0 1 259,341 L 273,307 A 275 275 0 0 0 319,316 Z" fill="#7f6aff" stroke="#fff"/><text x="290" y="330" fill="#fff" font-size="12" font-weight="bold">35</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 36', 'gradeS')"><path d="M 252,338 A 315 315 0 0 1 201,316 L 222,286 A 275 275 0 0 0 267,305 Z" fill="#7f6aff" stroke="#fff"/><text x="234" y="315" fill="#fff" font-size="12" font-weight="bold">36</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 37', 'gradeS')"><path d="M 195,312 A 315 315 0 0 1 150,283 L 177,258 A 275 275 0 0 0 216,282 Z" fill="#7f6aff" stroke="#fff"/><text x="185" y="287" fill="#fff" font-size="12" font-weight="bold">37</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 38', 'gradeS')"><path d="M 145,279 A 315 315 0 0 1 105,244 L 138,223 A 275 275 0 0 0 172,254 Z" fill="#7f6aff" stroke="#fff"/><text x="142" y="253" fill="#fff" font-size="12" font-weight="bold">38</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 39', 'gradeS')"><path d="M 100,239 A 315 315 0 0 1 71,198 L 110,184 A 275 275 0 0 0 134,219 Z" fill="#7f6aff" stroke="#fff"/><text x="108" y="217" fill="#fff" font-size="12" font-weight="bold">39</text></g>
-
-                  <!-- 2F Outer Tier Left: Grade A Pink (40~42) & Disabled Gray (43) -->
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 40', 'gradeA')"><path d="M 68,193 A 315 315 0 0 1 48,150 L 90,143 A 275 275 0 0 0 107,179 Z" fill="#ff719e" stroke="#fff"/><text x="80" y="173" fill="#fff" font-size="12" font-weight="bold">40</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 41', 'gradeA')"><path d="M 46,145 A 315 315 0 0 1 40,105 L 82,103 A 275 275 0 0 0 88,138 Z" fill="#ff719e" stroke="#fff"/><text x="66" y="128" fill="#fff" font-size="12" font-weight="bold">41</text></g>
-                  <g class="kspo-block" onclick="app.selectSection('2F Sec 42', 'gradeA')"><path d="M 40,100 A 315 315 0 0 1 45,60 L 85,63 A 275 275 0 0 0 82,98 Z" fill="#ff719e" stroke="#fff"/><text x="64" y="83" fill="#fff" font-size="12" font-weight="bold">42</text></g>
-                  <g><path d="M 45,55 A 315 315 0 0 1 60,20 L 98,27 A 275 275 0 0 0 85,58 Z" fill="#d9d9d9" stroke="#fff"/><text x="74" y="43" fill="#fff" font-size="12" font-weight="bold">43</text></g>
-                </svg>
               </div>
 
               <!-- View B: Granular Seat Matrix -->
@@ -419,96 +317,9 @@
                   </div>
                   <div class="w-full h-32 bg-white border border-gray-200 rounded flex items-center justify-center p-1 overflow-hidden relative" id="mini-map-viewport">
                     <div id="mini-map-transform-wrap" class="w-full h-full flex items-center justify-center transition-transform duration-200" style="transform: scale(1);">
-                      <svg viewBox="0 0 760 420" class="w-full h-auto drop-shadow-sm select-none" id="mini-kspo-svg">
-                        <!-- Runway and Stage -->
-                        <rect x="372" y="20" width="16" height="215" fill="#e8e8e8" rx="1"/>
-                        <rect x="330" y="2" width="100" height="24" fill="#d0d0d0" rx="2"/>
-                        <text x="380" y="18" fill="#666" font-size="13" font-weight="bold" text-anchor="middle">STAGE</text>
-
-                        <!-- Floor Indicators -->
-                        <g transform="translate(195, 25)">
-                          <rect width="45" height="22" rx="4" fill="#666"/>
-                          <text x="22.5" y="15" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
-                        </g>
-                        <g transform="translate(520, 25)">
-                          <rect width="45" height="22" rx="4" fill="#666"/>
-                          <text x="22.5" y="15" fill="#fff" font-size="11" font-weight="bold" text-anchor="middle">Floor</text>
-                        </g>
-
-                        <!-- Floor A -->
-                        <g class="mini-kspo-block" data-section="Floor A" onclick="app.selectSection('Floor A', 'gradeR')">
-                          <path d="M 250,25 L 345,25 L 345,100 L 262,100 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                          <text x="300" y="68" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">A</text>
-                        </g>
-
-                        <!-- Floor B -->
-                        <g class="mini-kspo-block" data-section="Floor B" onclick="app.selectSection('Floor B', 'gradeR')">
-                          <path d="M 415,25 L 510,25 L 498,100 L 415,100 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                          <text x="460" y="68" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">B</text>
-                        </g>
-
-                        <!-- Floor C -->
-                        <g class="mini-kspo-block" data-section="Floor C" onclick="app.selectSection('Floor C', 'gradeR')">
-                          <path d="M 264,110 L 345,110 L 336,180 L 280,160 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                          <text x="303" y="148" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">C</text>
-                        </g>
-
-                        <!-- Floor D -->
-                        <g class="mini-kspo-block" data-section="Floor D" onclick="app.selectSection('Floor D', 'gradeR')">
-                          <path d="M 415,110 L 496,110 L 480,160 L 424,180 Z" fill="#b79b71" stroke="#fff" stroke-width="2"/>
-                          <text x="457" y="148" fill="#fff" font-size="20" font-weight="bold" text-anchor="middle">D</text>
-                        </g>
-
-                        <!-- 1F Tier Grade R (#b79b71) -->
-                        <g class="mini-kspo-block" data-section="1F Sec 1" onclick="app.selectSection('1F Sec 1', 'gradeR')"><path d="M 618,35 A 260 260 0 0 1 635,73 L 590,73 A 220 220 0 0 0 578,37 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="605" y="58" fill="#fff" font-size="14" font-weight="bold">1</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 2" onclick="app.selectSection('1F Sec 2', 'gradeR')"><path d="M 635,78 A 260 260 0 0 1 640,116 L 595,112 A 220 220 0 0 0 590,78 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="612" y="100" fill="#fff" font-size="14" font-weight="bold">2</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 3" onclick="app.selectSection('1F Sec 3', 'gradeR')"><path d="M 640,121 A 260 260 0 0 1 633,158 L 590,148 A 220 220 0 0 0 595,117 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="610" y="142" fill="#fff" font-size="14" font-weight="bold">3</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 4" onclick="app.selectSection('1F Sec 4', 'gradeR')"><path d="M 632,163 A 260 260 0 0 1 610,203 L 570,188 A 220 220 0 0 0 588,153 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="596" y="182" fill="#fff" font-size="14" font-weight="bold">4</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 5" onclick="app.selectSection('1F Sec 5', 'gradeR')"><path d="M 607,208 A 260 260 0 0 1 575,246 L 540,224 A 220 220 0 0 0 568,192 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="568" y="222" fill="#fff" font-size="14" font-weight="bold">5</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 6" onclick="app.selectSection('1F Sec 6', 'gradeR')"><path d="M 570,250 A 260 260 0 0 1 530,278 L 500,250 A 220 220 0 0 0 535,227 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="530" y="255" fill="#fff" font-size="14" font-weight="bold">6</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 7" onclick="app.selectSection('1F Sec 7', 'gradeR')"><path d="M 524,281 A 260 260 0 0 1 475,298 L 458,266 A 220 220 0 0 0 495,253 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="485" y="278" fill="#fff" font-size="14" font-weight="bold">7</text></g>
-
-                        <!-- F.O.H -->
-                        <g transform="translate(355, 255)">
-                          <rect width="50" height="34" fill="#f0f0f0" stroke="#ddd" rx="2"/>
-                          <text x="25" y="21" fill="#bbb" font-size="10" font-weight="bold" text-anchor="middle">F.O.H</text>
-                        </g>
-
-                        <!-- 1F Left Symmetric Tier (9 ~ 15) -->
-                        <g class="mini-kspo-block" data-section="1F Sec 9" onclick="app.selectSection('1F Sec 9', 'gradeR')"><path d="M 302,298 A 260 260 0 0 1 236,281 L 262,253 A 220 220 0 0 0 322,266 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="275" y="278" fill="#fff" font-size="14" font-weight="bold">9</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 10" onclick="app.selectSection('1F Sec 10', 'gradeR')"><path d="M 230,278 A 260 260 0 0 1 190,250 L 225,227 A 220 220 0 0 0 260,250 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="228" y="255" fill="#fff" font-size="14" font-weight="bold">10</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 11" onclick="app.selectSection('1F Sec 11', 'gradeR')"><path d="M 185,246 A 260 260 0 0 1 153,208 L 192,192 A 220 220 0 0 0 220,224 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="187" y="222" fill="#fff" font-size="14" font-weight="bold">11</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 12" onclick="app.selectSection('1F Sec 12', 'gradeR')"><path d="M 150,203 A 260 260 0 0 1 128,163 L 172,153 A 220 220 0 0 0 190,188 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="160" y="182" fill="#fff" font-size="14" font-weight="bold">12</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 13" onclick="app.selectSection('1F Sec 13', 'gradeR')"><path d="M 127,158 A 260 260 0 0 1 120,121 L 165,117 A 220 220 0 0 0 170,148 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="146" y="142" fill="#fff" font-size="14" font-weight="bold">13</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 14" onclick="app.selectSection('1F Sec 14', 'gradeR')"><path d="M 120,116 A 260 260 0 0 1 125,78 L 170,78 A 220 220 0 0 0 165,112 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="145" y="100" fill="#fff" font-size="14" font-weight="bold">14</text></g>
-                        <g class="mini-kspo-block" data-section="1F Sec 15" onclick="app.selectSection('1F Sec 15', 'gradeR')"><path d="M 125,73 A 260 260 0 0 1 142,35 L 182,37 A 220 220 0 0 0 170,73 Z" fill="#b79b71" stroke="#fff" stroke-width="1.5"/><text x="150" y="58" fill="#fff" font-size="14" font-weight="bold">15</text></g>
-
-                        <!-- 2F Grade A Pink (25~27, 40~42) & Disabled Gray (24, 43) -->
-                        <g><path d="M 700,20 A 315 315 0 0 1 715,55 L 675,58 A 275 275 0 0 0 662,27 Z" fill="#d9d9d9" stroke="#fff" stroke-width="1"/><text x="686" y="43" fill="#fff" font-size="12" font-weight="bold">24</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 25" onclick="app.selectSection('2F Sec 25', 'gradeA')"><path d="M 715,60 A 315 315 0 0 1 720,100 L 678,98 A 275 275 0 0 0 675,63 Z" fill="#ff719e" stroke="#fff" stroke-width="1.5"/><text x="696" y="83" fill="#fff" font-size="13" font-weight="bold">25</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 26" onclick="app.selectSection('2F Sec 26', 'gradeA')"><path d="M 720,105 A 315 315 0 0 1 714,145 L 672,138 A 275 275 0 0 0 678,103 Z" fill="#ff719e" stroke="#fff" stroke-width="1.5"/><text x="694" y="128" fill="#fff" font-size="13" font-weight="bold">26</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 27" onclick="app.selectSection('2F Sec 27', 'gradeA')"><path d="M 712,150 A 315 315 0 0 1 692,193 L 653,179 A 275 275 0 0 0 670,143 Z" fill="#ff719e" stroke="#fff" stroke-width="1.5"/><text x="680" y="173" fill="#fff" font-size="13" font-weight="bold">27</text></g>
-
-                        <!-- 2F Grade S Purple (28 ~ 39) -->
-                        <g class="mini-kspo-block" data-section="2F Sec 28" onclick="app.selectSection('2F Sec 28', 'gradeS')"><path d="M 689,198 A 315 315 0 0 1 660,239 L 626,219 A 275 275 0 0 0 650,184 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="652" y="217" fill="#fff" font-size="13" font-weight="bold">28</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 29" onclick="app.selectSection('2F Sec 29', 'gradeS')"><path d="M 655,244 A 315 315 0 0 1 615,279 L 588,254 A 275 275 0 0 0 622,223 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="618" y="253" fill="#fff" font-size="13" font-weight="bold">29</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 30" onclick="app.selectSection('2F Sec 30', 'gradeS')"><path d="M 610,283 A 315 315 0 0 1 565,312 L 544,282 A 275 275 0 0 0 583,258 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="575" y="287" fill="#fff" font-size="13" font-weight="bold">30</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 31" onclick="app.selectSection('2F Sec 31', 'gradeS')"><path d="M 559,316 A 315 315 0 0 1 508,338 L 493,305 A 275 275 0 0 0 538,286 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="526" y="315" fill="#fff" font-size="13" font-weight="bold">31</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 32" onclick="app.selectSection('2F Sec 32', 'gradeS')"><path d="M 501,341 A 315 315 0 0 1 450,352 L 441,316 A 275 275 0 0 0 487,307 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="470" y="330" fill="#fff" font-size="12" font-weight="bold">32</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 33" onclick="app.selectSection('2F Sec 33', 'gradeS')"><path d="M 442,353 A 315 315 0 0 1 390,355 L 388,319 A 275 275 0 0 0 434,317 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="412" y="340" fill="#fff" font-size="13" font-weight="bold">33</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 34" onclick="app.selectSection('2F Sec 34', 'gradeS')"><path d="M 370,355 A 315 315 0 0 1 318,353 L 326,317 A 275 275 0 0 0 372,319 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="348" y="340" fill="#fff" font-size="13" font-weight="bold">34</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 35" onclick="app.selectSection('2F Sec 35', 'gradeS')"><path d="M 310,352 A 315 315 0 0 1 259,341 L 273,307 A 275 275 0 0 0 319,316 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="290" y="330" fill="#fff" font-size="13" font-weight="bold">35</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 36" onclick="app.selectSection('2F Sec 36', 'gradeS')"><path d="M 252,338 A 315 315 0 0 1 201,316 L 222,286 A 275 275 0 0 0 267,305 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="234" y="315" fill="#fff" font-size="13" font-weight="bold">36</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 37" onclick="app.selectSection('2F Sec 37', 'gradeS')"><path d="M 195,312 A 315 315 0 0 1 150,283 L 177,258 A 275 275 0 0 0 216,282 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="185" y="287" fill="#fff" font-size="13" font-weight="bold">37</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 38" onclick="app.selectSection('2F Sec 38', 'gradeS')"><path d="M 145,279 A 315 315 0 0 1 105,244 L 138,223 A 275 275 0 0 0 172,254 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="142" y="253" fill="#fff" font-size="13" font-weight="bold">38</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 39" onclick="app.selectSection('2F Sec 39', 'gradeS')"><path d="M 100,239 A 315 315 0 0 1 71,198 L 110,184 A 275 275 0 0 0 134,219 Z" fill="#7f6aff" stroke="#fff" stroke-width="1.5"/><text x="108" y="217" fill="#fff" font-size="13" font-weight="bold">39</text></g>
-
-                        <!-- 2F Grade A Pink Left (40~42) & Disabled Gray (43) -->
-                        <g class="mini-kspo-block" data-section="2F Sec 40" onclick="app.selectSection('2F Sec 40', 'gradeA')"><path d="M 68,193 A 315 315 0 0 1 48,150 L 90,143 A 275 275 0 0 0 107,179 Z" fill="#ff719e" stroke="#fff" stroke-width="1.5"/><text x="80" y="173" fill="#fff" font-size="13" font-weight="bold">40</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 41" onclick="app.selectSection('2F Sec 41', 'gradeA')"><path d="M 46,145 A 315 315 0 0 1 40,105 L 82,103 A 275 275 0 0 0 88,138 Z" fill="#ff719e" stroke="#fff" stroke-width="1.5"/><text x="66" y="128" fill="#fff" font-size="13" font-weight="bold">41</text></g>
-                        <g class="mini-kspo-block" data-section="2F Sec 42" onclick="app.selectSection('2F Sec 42', 'gradeA')"><path d="M 40,100 A 315 315 0 0 1 45,60 L 85,63 A 275 275 0 0 0 82,98 Z" fill="#ff719e" stroke="#fff" stroke-width="1.5"/><text x="64" y="83" fill="#fff" font-size="13" font-weight="bold">42</text></g>
-                        <g><path d="M 45,55 A 315 315 0 0 1 60,20 L 98,27 A 275 275 0 0 0 85,58 Z" fill="#d9d9d9" stroke="#fff" stroke-width="1"/><text x="74" y="43" fill="#fff" font-size="12" font-weight="bold">43</text></g>
-                      </svg>
+                      <div id="mini-kspo-svg-container" class="w-full">
+                        <!-- Injected via SVG Engine -->
+                      </div>
                     </div>
                   </div>
                   <div class="text-right mt-1">
@@ -700,23 +511,6 @@
         </div>
       </div>
 
-      <!-- ================= 7. START PRACTICE PREPARATION OVERLAY ================= -->
-      <div id="ready-prep-overlay" class="absolute inset-0 bg-white/95 z-40 flex items-center justify-center p-4">
-        <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center">
-          <div class="inline-block px-3 py-1 bg-blue-50 text-[#2563EB] border border-blue-200 text-xs font-bold rounded-full mb-3" data-i18n="prepBadge">
-            Global Ticket Simulator
-          </div>
-          <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
-          <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3 rounded border border-gray-100 space-y-1.5">
-            <p data-i18n="prepStep1">• Click <b>"Ready, Start Countdown"</b> to begin the realistic pre-sale countdown.</p>
-            <p data-i18n="prepStep2">• Once the countdown reaches 00:00, ticketing opens. Select a date and click <b>Get Tickets</b>.</p>
-          </div>
-          <button type="button" onclick="app.startPracticeFromPrep()" class="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg shadow transition-all active:scale-[0.99]" data-i18n="prepStartBtn">
-            Ready, Start Countdown
-          </button>
-        </div>
-      </div>
-
     </main>
 
     <!-- Bottom Footer Notice -->
@@ -725,6 +519,23 @@
         <span data-i18n="footerDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice.</span>
       </div>
     </footer>
+
+    <!-- ================= 7. START PRACTICE PREPARATION OVERLAY (Always on Top Initially) ================= -->
+    <div id="ready-prep-overlay" class="absolute inset-0 bg-white/95 backdrop-blur-[2px] z-50 flex items-center justify-center p-4">
+      <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-2xl text-center animate-fade-in">
+        <div class="inline-block px-3 py-1 bg-blue-50 text-[#2563EB] border border-blue-200 text-xs font-bold rounded-full mb-3" data-i18n="prepBadge">
+          Global Ticket Simulator
+        </div>
+        <h2 class="text-lg font-bold text-gray-900 mb-2" data-i18n="prepHeading">Ticketing Practice Session</h2>
+        <div class="text-xs text-gray-600 leading-relaxed mb-5 text-left bg-gray-50 p-3.5 rounded border border-gray-100 space-y-1.5">
+          <p data-i18n="prepStep1">• Click <b>"Ready, Start Countdown"</b> to begin the realistic pre-sale countdown.</p>
+          <p data-i18n="prepStep2">• Once the countdown reaches 00:00, ticketing opens. Select a date and click <b>Get Tickets</b>.</p>
+        </div>
+        <button type="button" onclick="app.startPracticeFromPrep()" class="w-full py-3.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm rounded-lg shadow-md hover:shadow-lg transition-all active:scale-[0.99] cursor-pointer" data-i18n="prepStartBtn">
+          Ready, Start Countdown
+        </button>
+      </div>
+    </div>
 
   </div>
 
@@ -802,8 +613,6 @@
         prepStep2: "• Once the countdown reaches 00:00, ticketing opens. Select a date and click <b>Get Tickets</b>.",
         prepStartBtn: "Ready, Start Countdown",
         footerDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice.",
-        footerTerms: "Terms of Use",
-        footerPrivacy: "Privacy Policy",
         countdownPrefix: "Priority booking starts : 2026.10.31(Sat) 20:00 ( Time left: ",
         countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On Sale Now )",
         alertSelectTime: "Please select the time.",
@@ -889,8 +698,6 @@
         prepStep2: "• 倒數歸零（00:00）後立即開賣，確認日期後點擊 <b>立即購票</b> 搶進排隊室。",
         prepStartBtn: "準備完成，開始倒數",
         footerDisclaimer: "※ 獨立搶票模擬練習工具，專供測試反應手速與實戰演練使用。",
-        footerTerms: "使用條款",
-        footerPrivacy: "隱私權政策",
         countdownPrefix: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 剩餘時間: ",
         countdownOpen: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 熱烈開賣中 )",
         alertSelectTime: "Please select the time.",
@@ -921,8 +728,166 @@
       }
     };
 
+    // ================= KSPO DOME MATHEMATICAL SEATING ENGINE =================
+    // Computes strictly equal annular sector paths in polar coordinates to guarantee zero overlap.
+    const KspoMapBuilder = {
+      cx: 380,
+      cy: 65,
+
+      // Generate precise annular sector SVG path
+      createSector(rIn, rOut, aStartDeg, aEndDeg) {
+        const rad = Math.PI / 180;
+        const a1 = aStartDeg * rad;
+        const a2 = aEndDeg * rad;
+
+        const x1 = this.cx + rOut * Math.cos(a1);
+        const y1 = this.cy + rOut * Math.sin(a1);
+        const x2 = this.cx + rOut * Math.cos(a2);
+        const y2 = this.cy + rOut * Math.sin(a2);
+
+        const x3 = this.cx + rIn * Math.cos(a2);
+        const y3 = this.cy + rIn * Math.sin(a2);
+        const x4 = this.cx + rIn * Math.cos(a1);
+        const y4 = this.cy + rIn * Math.sin(a1);
+
+        const arcAngle = Math.abs(aEndDeg - aStartDeg);
+        const largeArc = arcAngle > 180 ? 1 : 0;
+
+        return `M ${x1.toFixed(1)},${y1.toFixed(1)} A ${rOut} ${rOut} 0 ${largeArc} 1 ${x2.toFixed(1)},${y2.toFixed(1)} L ${x3.toFixed(1)},${y3.toFixed(1)} A ${rIn} ${rIn} 0 ${largeArc} 0 ${x4.toFixed(1)},${y4.toFixed(1)} Z`;
+      },
+
+      // Center point of the annular sector for labels
+      getSectorCenter(rIn, rOut, aStartDeg, aEndDeg) {
+        const rad = Math.PI / 180;
+        const midA = ((aStartDeg + aEndDeg) / 2) * rad;
+        const midR = (rIn + rOut) / 2;
+        return {
+          x: (this.cx + midR * Math.cos(midA)).toFixed(1),
+          y: (this.cy + midR * Math.sin(midA) + 4).toFixed(1)
+        };
+      },
+
+      renderSvg(isMini = false) {
+        const strokeW = isMini ? "1" : "1.8";
+        const blockClass = isMini ? "mini-kspo-block" : "kspo-block";
+
+        // 1F: 15 sections symmetrically from 170 deg to 10 deg (center Sec 8 at 90 deg)
+        const totalSpan1F = 160;
+        const step1F = totalSpan1F / 15; // ~10.666 deg per section
+        const gap1F = 1.3;
+        const rIn1F = 180;
+        const rOut1F = 224;
+
+        let sec1FPaths = "";
+        for (let i = 0; i < 15; i++) {
+          const secNum = 15 - i; // 15 on left down to 1 on right
+          const startA = 170 - (i * step1F) - (step1F - gap1F);
+          const endA = 170 - (i * step1F);
+          const d = this.createSector(rIn1F, rOut1F, startA, endA);
+          const center = this.getSectorCenter(rIn1F, rOut1F, startA, endA);
+          const secName = `1F Sec ${secNum}`;
+
+          sec1FPaths += `
+            <g class="${blockClass}" data-section="${secName}" onclick="app.selectSection('${secName}', 'gradeS')">
+              <path d="${d}" fill="#7f6aff" stroke="#ffffff" stroke-width="${strokeW}"/>
+              <text x="${center.x}" y="${center.y}" fill="#ffffff" font-size="${isMini ? '9' : '11'}" font-weight="bold" text-anchor="middle">${secNum}</text>
+            </g>
+          `;
+        }
+
+        // 2F: 20 sections symmetrically from 172 deg to 8 deg
+        const totalSpan2F = 164;
+        const step2F = totalSpan2F / 20; // 8.2 deg per section
+        const gap2F = 1.1;
+        const rIn2F = 232;
+        const rOut2F = 278;
+
+        let sec2FPaths = "";
+        for (let i = 0; i < 20; i++) {
+          const secNum = 43 - i; // 43 on left down to 24 on right
+          const startA = 172 - (i * step2F) - (step2F - gap2F);
+          const endA = 172 - (i * step2F);
+          const d = this.createSector(rIn2F, rOut2F, startA, endA);
+          const center = this.getSectorCenter(rIn2F, rOut2F, startA, endA);
+          const secName = `2F Sec ${secNum}`;
+
+          sec2FPaths += `
+            <g class="${blockClass}" data-section="${secName}" onclick="app.selectSection('${secName}', 'gradeA')">
+              <path d="${d}" fill="#ff719e" stroke="#ffffff" stroke-width="${strokeW}"/>
+              <text x="${center.x}" y="${center.y}" fill="#ffffff" font-size="${isMini ? '8.5' : '10'}" font-weight="bold" text-anchor="middle">${secNum}</text>
+            </g>
+          `;
+        }
+
+        return `
+          <svg viewBox="0 0 760 380" class="w-full h-auto drop-shadow-sm select-none" id="${isMini ? 'mini-kspo-svg' : 'main-kspo-svg'}">
+            <!-- Main Stage (Top Gray Box) -->
+            <rect x="235" y="10" width="290" height="34" fill="#e2e5e9" stroke="#ccd1d8" stroke-width="1.5" rx="3"/>
+            <text x="380" y="32" fill="#475569" font-size="14" font-weight="bold" tracking-widest text-anchor="middle">STAGE</text>
+
+            <!-- Runway Crosswalk to Center Stage -->
+            <rect x="374" y="44" width="12" height="170" fill="#f1f3f5" stroke="#d5d8dc" stroke-width="1" rx="1"/>
+
+            <!-- Center Stage (Middle Gray Box) -->
+            <rect x="330" y="106" width="100" height="28" fill="#cbd2d9" stroke="#9aa5b1" stroke-width="1.5" rx="2"/>
+            <text x="380" y="125" fill="#1e293b" font-size="11" font-weight="bold" text-anchor="middle">STAGE</text>
+
+            <!-- Floor Badges: Right below F3 & F4, in front of Sec 8 -->
+            <g transform="translate(355, 218)">
+              <rect width="50" height="20" rx="3" fill="#475569"/>
+              <text x="25" y="14" fill="#ffffff" font-size="10" font-weight="bold" text-anchor="middle">Floor</text>
+            </g>
+
+            <!-- 1F Badges: Symmetrically above Sec 15 and Sec 1 -->
+            <circle cx="166" cy="46" r="11" fill="#475569"/>
+            <text x="166" y="50" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">1F</text>
+            <circle cx="594" cy="46" r="11" fill="#475569"/>
+            <text x="594" y="50" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">1F</text>
+
+            <!-- 2F Badges: Symmetrically above Sec 43 and Sec 24 -->
+            <circle cx="98" cy="40" r="11" fill="#475569"/>
+            <text x="98" y="44" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">2F</text>
+            <circle cx="662" cy="40" r="11" fill="#475569"/>
+            <text x="662" y="44" fill="#ffffff" font-size="9" font-weight="bold" text-anchor="middle">2F</text>
+
+            <!-- Floor F1 ~ F4 (Golden Brown #b79b71) -->
+            <!-- F1 (Top Left) -->
+            <g class="${blockClass}" data-section="Floor F1" onclick="app.selectSection('Floor F1', 'gradeR')">
+              <path d="M 235,50 L 366,50 L 366,100 L 324,100 L 324,116 L 235,116 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
+              <text x="296" y="85" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F1</text>
+            </g>
+
+            <!-- F2 (Top Right) -->
+            <g class="${blockClass}" data-section="Floor F2" onclick="app.selectSection('Floor F2', 'gradeR')">
+              <path d="M 394,50 L 525,50 L 525,116 L 436,116 L 436,100 L 394,100 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
+              <text x="464" y="85" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F2</text>
+            </g>
+
+            <!-- F3 (Bottom Left - Diagonal Cut Corner) -->
+            <g class="${blockClass}" data-section="Floor F3" onclick="app.selectSection('Floor F3', 'gradeR')">
+              <path d="M 235,124 L 324,124 L 324,140 L 366,140 L 366,206 L 275,206 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
+              <text x="296" y="172" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F3</text>
+            </g>
+
+            <!-- F4 (Bottom Right - Diagonal Cut Corner) -->
+            <g class="${blockClass}" data-section="Floor F4" onclick="app.selectSection('Floor F4', 'gradeR')">
+              <path d="M 436,124 L 525,124 L 485,206 L 394,206 L 394,140 L 436,140 Z" fill="#b79b71" stroke="#ffffff" stroke-width="${strokeW}"/>
+              <text x="464" y="172" fill="#ffffff" font-size="15" font-weight="bold" text-anchor="middle">F4</text>
+            </g>
+
+            <!-- 1F Annular Sectors (1 ~ 15) -->
+            ${sec1FPaths}
+
+            <!-- 2F Annular Sectors (24 ~ 43) -->
+            ${sec2FPaths}
+          </svg>
+        `;
+      }
+    };
+
+    // ================= APPLICATION CORE STATE =================
     const app = {
-      state: 'PREP',
+      state: 'PREP', // Starts in PREP mode
       currentLang: 'en',
       practiceStartTime: null,
       countdownRemaining: 3,
@@ -938,32 +903,48 @@
       tryAgainCount: 0,
       conflictCount: 0,
 
-      // Captcha Timing
+      // Captcha Timing & Code
       captchaStartTime: null,
       captchaDurationSec: null,
+      currentCaptchaCode: '',
+      captchaDismissedToViewOnly: false,
+      captchaVerified: false,
 
       // Diagnostics Tracking
       lastSeatClickTime: 0,
       lastSubmitTime: 0,
       diagnosticsHistory: [],
 
-      currentCaptchaCode: '',
-      captchaDismissedToViewOnly: false,
-      captchaVerified: false,
-
+      // Seat selection (Strictly 1 seat)
       selectedSection: null,
       selectedSectionGrade: 'gradeR',
       currentSeats: [],
-      selectedSeats: [], // Array of selected seat objects (up to 1)
+      selectedSeats: [],
       maxSeatsAllowed: 1,
       recentRefreshClicks: [],
 
       miniMapZoomLevel: 1.0,
-
       queueNumber: 352,
       queueTimer: null,
 
       init() {
+        // Guarantee the initial preparation overlay is strictly visible on startup
+        const prepOverlay = document.getElementById('ready-prep-overlay');
+        if (prepOverlay) {
+          prepOverlay.classList.remove('hidden');
+        }
+
+        // Render mathematical SVG venue maps
+        const mainSvgContainer = document.getElementById('main-kspo-svg-container');
+        if (mainSvgContainer) {
+          mainSvgContainer.innerHTML = KspoMapBuilder.renderSvg(false);
+        }
+
+        const miniSvgContainer = document.getElementById('mini-kspo-svg-container');
+        if (miniSvgContainer) {
+          miniSvgContainer.innerHTML = KspoMapBuilder.renderSvg(true);
+        }
+
         this.renderCountdownText();
         this.applyLanguage();
       },
@@ -974,19 +955,11 @@
         const btnZh = document.getElementById('lang-btn-zh');
 
         if (lang === 'zh') {
-          if (btnZh) {
-            btnZh.className = 'text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors';
-          }
-          if (btnEn) {
-            btnEn.className = 'text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
-          }
+          if (btnZh) btnZh.className = 'text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors';
+          if (btnEn) btnEn.className = 'text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
         } else {
-          if (btnEn) {
-            btnEn.className = 'text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors';
-          }
-          if (btnZh) {
-            btnZh.className = 'text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
-          }
+          if (btnEn) btnEn.className = 'text-[#2563EB] font-bold px-1.5 py-0.5 rounded transition-colors';
+          if (btnZh) btnZh.className = 'text-gray-500 hover:text-gray-900 px-1.5 py-0.5 rounded transition-colors';
         }
 
         this.applyLanguage();
@@ -1011,16 +984,13 @@
           }
         });
 
-        // Update Date Button text
+        // Date Button labels
         const d1 = document.getElementById('date-label-1');
         const d2 = document.getElementById('date-label-2');
         if (d1) d1.innerText = this.currentLang === 'zh' ? this.dates[0].labelZh : this.dates[0].labelEn;
         if (d2) d2.innerText = this.currentLang === 'zh' ? this.dates[1].labelZh : this.dates[1].labelEn;
 
-        // Update countdown text
         this.renderCountdownText();
-
-        // Update status bar in seating
         this.updateCompletionButtonState();
       },
 
@@ -1034,44 +1004,6 @@
           const timeSec = this.countdownRemaining < 10 ? `0${this.countdownRemaining}` : `${this.countdownRemaining}`;
           line.innerHTML = `${this.t('countdownPrefix')}<span id="countdown-timer" class="font-bold ml-1 font-mono text-[#1D4ED8]">00:${timeSec}</span> )`;
         }
-      },
-
-      updateMiniMapActiveSection(sectionName) {
-        const miniBlocks = document.querySelectorAll('.mini-kspo-block');
-        miniBlocks.forEach(el => {
-          if (sectionName && el.getAttribute('data-section') === sectionName) {
-            el.classList.add('active-section');
-          } else {
-            el.classList.remove('active-section');
-          }
-        });
-      },
-
-      zoomMiniMap(delta) {
-        this.miniMapZoomLevel = Math.max(0.7, Math.min(2.5, this.miniMapZoomLevel + delta));
-        const wrap = document.getElementById('mini-map-transform-wrap');
-        if (wrap) {
-          wrap.style.transform = `scale(${this.miniMapZoomLevel})`;
-        }
-      },
-
-      resetMiniMapZoom() {
-        this.miniMapZoomLevel = 1.0;
-        const wrap = document.getElementById('mini-map-transform-wrap');
-        if (wrap) {
-          wrap.style.transform = 'scale(1)';
-        }
-      },
-
-      logDiagnosticEvent(category, reason, detail, tip) {
-        const elapsed = this.practiceStartTime ? ((Date.now() - this.practiceStartTime) / 1000).toFixed(1) : '0.0';
-        this.diagnosticsHistory.push({
-          timeSec: elapsed,
-          category: category,
-          reason: reason,
-          detail: detail,
-          tip: tip
-        });
       },
 
       startPracticeFromPrep() {
@@ -1137,7 +1069,6 @@
 
       handleGetTicketsClicked() {
         if (!this.isTimeLoaded) {
-          // Keep authentic English dialog text as requested
           this.showMelonAlert("Please select the time.");
           return;
         }
@@ -1220,13 +1151,9 @@
 
       closeSeatmapModal() {
         const seatmapBackdrop = document.getElementById('step-seatmap-backdrop');
-        if (seatmapBackdrop) {
-          seatmapBackdrop.classList.add('hidden');
-        }
+        if (seatmapBackdrop) seatmapBackdrop.classList.add('hidden');
         const captchaModal = document.getElementById('modal-captcha');
-        if (captchaModal) {
-          captchaModal.classList.add('hidden');
-        }
+        if (captchaModal) captchaModal.classList.add('hidden');
       },
 
       promptCaptcha() {
@@ -1239,9 +1166,7 @@
         if (errMsg) errMsg.classList.add('hidden');
         this.regenerateCaptcha();
         
-        // Track start time for captcha input speed analysis
         this.captchaStartTime = Date.now();
-
         setTimeout(() => {
           if (input) input.focus();
         }, 100);
@@ -1345,7 +1270,6 @@
         if (backBtn) backBtn.classList.remove('hidden');
         if (titleElem) titleElem.innerText = `${sectionName}`;
 
-        this.updateMiniMapActiveSection(sectionName);
         this.buildSeatGrid(sectionName, this.selectedSectionGrade);
         this.updateCompletionButtonState();
       },
@@ -1361,9 +1285,20 @@
         if (notice) notice.classList.remove('hidden');
         if (backBtn) backBtn.classList.add('hidden');
         
-        this.updateMiniMapActiveSection(null);
         this.selectedSeats = [];
         this.updateCompletionButtonState();
+      },
+
+      zoomMiniMap(delta) {
+        this.miniMapZoomLevel = Math.max(0.7, Math.min(2.5, this.miniMapZoomLevel + delta));
+        const wrap = document.getElementById('mini-map-transform-wrap');
+        if (wrap) wrap.style.transform = `scale(${this.miniMapZoomLevel})`;
+      },
+
+      resetMiniMapZoom() {
+        this.miniMapZoomLevel = 1.0;
+        const wrap = document.getElementById('mini-map-transform-wrap');
+        if (wrap) wrap.style.transform = 'scale(1)';
       },
 
       buildSeatGrid(sectionName, gradeKey) {
@@ -1375,7 +1310,6 @@
         this.updateCompletionButtonState();
 
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeR;
-        let availableCount = 0;
 
         const sectionConfig = [
           { row: 1,  leftEmpty: 3, leftCols: 3, midCols: 6, rightCols: 5, rightEmpty: 1 },
@@ -1424,7 +1358,6 @@
           }
           for (let i = 0; i < cfg.leftCols; i++) {
             const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme);
-            if (seat.isAvail) availableCount++;
             leftBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(leftBlock);
@@ -1439,7 +1372,6 @@
           midBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.midCols; i++) {
             const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme);
-            if (seat.isAvail) availableCount++;
             midBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(midBlock);
@@ -1454,7 +1386,6 @@
           rightBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.rightCols; i++) {
             const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme);
-            if (seat.isAvail) availableCount++;
             rightBlock.appendChild(seat.element);
           }
           for (let i = 0; i < cfg.rightEmpty; i++) {
@@ -1466,7 +1397,6 @@
 
           container.appendChild(rowDiv);
         });
-
       },
 
       createSeatCube(sectionName, row, colIdentifier, theme) {
@@ -1500,12 +1430,10 @@
 
         if (seatObj.status === 'sold') return;
 
-        // Record timestamp for bot-like ultra-fast speed analysis
         this.lastSeatClickTime = Date.now();
-
         const existingIndex = this.selectedSeats.findIndex(s => s.id === seatObj.id);
 
-        // If already selected, deselect it (toggle off)
+        // Deselect if already chosen (toggle off)
         if (existingIndex !== -1) {
           this.selectedSeats.splice(existingIndex, 1);
           const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
@@ -1514,13 +1442,13 @@
           return;
         }
 
-        // Check maximum 1 seat constraint
+        // Limit is strictly 1 seat
         if (this.selectedSeats.length >= this.maxSeatsAllowed) {
           this.showMelonAlert("You can select up to 1 seat.");
           return;
         }
 
-        // Add new seat to selection
+        // Select new seat
         this.selectedSeats.push(seatObj);
         const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
         if (currentCube) currentCube.classList.add('selected');
@@ -1567,7 +1495,6 @@
       },
 
       depleteSeats(count, originSeat) {
-        // Exclude seats that the user currently has selected
         let available = this.currentSeats.filter(s => s.status === 'available' && !this.selectedSeats.some(sel => sel.id === s.id));
         if (available.length === 0) return;
 
@@ -1597,6 +1524,17 @@
         }
       },
 
+      logDiagnosticEvent(category, reason, detail, tip) {
+        const elapsed = this.practiceStartTime ? ((Date.now() - this.practiceStartTime) / 1000).toFixed(1) : '0.0';
+        this.diagnosticsHistory.push({
+          timeSec: elapsed,
+          category: category,
+          reason: reason,
+          detail: detail,
+          tip: tip
+        });
+      },
+
       submitSeatSelection() {
         if (this.selectedSeats.length === 0) return;
 
@@ -1607,13 +1545,11 @@
 
         const rand = Math.random();
 
-        // 1. High probability "Please try again." (User's seat selection STAYS ACTIVE)
+        // 1. High probability "Please try again." (Selection remains active)
         if (rand < 0.48) {
           this.tryAgainCount++;
-          // Deplete 3 to 6 unrelated seats on the board
           this.depleteSeats(Math.floor(Math.random() * 4) + 3);
 
-          // Identify trigger reason based on user action timing
           if (intervalFromLastSubmit < 420) {
             this.logDiagnosticEvent(
               'Rapid Submit',
@@ -1637,7 +1573,6 @@
             );
           }
 
-          // User's selected seat remains selected (with black border) so they can immediately re-submit
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1677,7 +1612,6 @@
         const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeR;
         const targets = [...this.selectedSeats];
 
-        // 1. Synchronously turn all selected targets into sold (grey) and strip black borders completely
         targets.forEach(target => {
           target.status = 'sold';
           const cube = document.getElementById(`seat-cube-${target.id}`);
@@ -1688,15 +1622,12 @@
           }
         });
 
-        // 2. Clear selectedSeats state array
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        // 3. Deplete 12 to 18 surrounding seats in panic wave around the conflicted seat
         const batchDepleteCount = Math.floor(Math.random() * 7) + 12;
         this.depleteSeats(batchDepleteCount, targets[0]);
 
-        // 4. Alert with authentic English phrase
         this.showMelonAlert("Another customer is in payments for the seat.");
       },
 
