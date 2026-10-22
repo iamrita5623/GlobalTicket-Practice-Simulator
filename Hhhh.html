@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.1 -->
+  <!-- VERSION: v7.2 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -803,7 +803,7 @@
         viewAllArea: "View all area >",
         venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
-        completeSelectionBtn: "Seat Selection Completed >",
+        completeSelectionBtn: "Seat Selection Completed",
         completeSelectionBtnMobile: "Seat Selection Completed",
         queueWaitPrompt: "Please, wait!",
         queueOrderTitle: "Your waiting order",
@@ -874,7 +874,7 @@
         viewAllArea: "View all area >",
         venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
-        completeSelectionBtn: "Seat Selection Completed >",
+        completeSelectionBtn: "Seat Selection Completed",
         completeSelectionBtnMobile: "Seat Selection Completed",
         queueWaitPrompt: "請稍候！",
         queueOrderTitle: "您的排隊序號",
@@ -1433,7 +1433,7 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              // 403 server overload block: Max 1 time occurrence for realistic testing
+              // 403 server overload block: Max 1 time occurrence
               if (!this.hasEncountered403ThisSession && Math.random() < 0.45) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
@@ -1463,7 +1463,6 @@
         const seatmapBackdrop = document.getElementById('step-seatmap-backdrop');
         if (seatmapBackdrop) seatmapBackdrop.classList.remove('hidden');
         
-        // Show mobile bottom control bar if mobile
         const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
         if (mobileSeatBar && window.innerWidth < 768) {
           mobileSeatBar.classList.remove('hidden');
@@ -1715,9 +1714,7 @@
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeVIP;
         const isFloor = sectionName.startsWith('Floor');
 
-        // Higher depletion rates: Floor 55%-65% sold, Grandstand 40%-50% sold
-        const availThreshold = isFloor ? 0.40 : (row => row <= 6 ? 0.55 : 0.48);
-
+        // +15% higher depletion rates: Floor 70%-80% sold, Grandstand 55%-65% sold
         const floorConfig = [];
         for (let r = 1; r <= 16; r++) {
           floorConfig.push({ row: r, leftEmpty: 0, leftCols: 10, midCols: 10, rightCols: 0, rightEmpty: 0 });
@@ -1762,7 +1759,7 @@
           rowLabel.innerText = cfg.row;
           rowDiv.appendChild(rowLabel);
 
-          const threshold = isFloor ? 0.42 : (cfg.row <= 6 ? 0.58 : 0.50);
+          const threshold = isFloor ? 0.25 : (cfg.row <= 6 ? 0.40 : 0.45);
 
           const leftBlock = document.createElement('div');
           leftBlock.className = 'flex items-center';
@@ -1842,17 +1839,16 @@
         if (seatObj.status === 'sold') return;
 
         const now = Date.now();
-        const tapInterval = now - this.lastSeatClickTime;
+        const tapInterval = this.lastSeatClickTime ? (now - this.lastSeatClickTime) : 9999;
         this.lastSeatClickTime = now;
 
-        // Platform-specific anti-spam sensitivity: Stricter on mobile (<280ms), relaxed on desktop (<120ms)
         const isMobile = window.innerWidth < 768;
         const spamThreshold = isMobile ? 280 : 120;
 
         if (tapInterval < spamThreshold && this.selectedSeats.length > 0) {
           this.tryAgainCount++;
           this.mobileEvictionLockoutUntil = Date.now() + 12000;
-          this.depleteSeats(Math.floor(Math.random() * 8) + 8); // Strips 8-15 seats on conflict
+          this.depleteSeats(Math.floor(Math.random() * 11) + 15); // Strips 15-25 seats on conflict
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1950,7 +1946,7 @@
 
         if (intervalFromLastSubmit < submitSpamThreshold) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 8) + 8);
+          this.depleteSeats(Math.floor(Math.random() * 11) + 15);
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1981,7 +1977,7 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 8) + 8; // Strips 8-15 seats
+        const batchDepleteCount = Math.floor(Math.random() * 11) + 15; // Strips 15-25 seats
         this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
@@ -1993,11 +1989,11 @@
         this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1500);
 
         const isMobile = window.innerWidth < 768;
-        const refreshLimit = isMobile ? 3 : 5;
+        const refreshLimit = isMobile ? 3 : 6;
 
         if (this.recentRefreshClicks.length >= refreshLimit) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 8) + 8);
+          this.depleteSeats(Math.floor(Math.random() * 11) + 15);
           this.showMelonAlert("Please try again.");
           return;
         }
