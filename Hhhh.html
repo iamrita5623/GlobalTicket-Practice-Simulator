@@ -241,12 +241,12 @@
           <div class="flex-1 flex flex-col justify-start text-gray-400 text-xs">
             <span id="desktop-date-locked-msg" class="my-auto text-center text-gray-400" data-i18n="dateLockedMsg">Sales will open when the countdown reaches 00:00</span>
             <div id="desktop-date-active-list" class="w-full space-y-2 hidden">
-              <button type="button" id="d-date-btn-1" onclick="app.selectDate(0)" class="w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors">
-                <span class="d-date-label-1">Sat, Oct 31, 2026 06:00 PM</span>
+              <button type="button" id="d-date-btn-1" onclick="app.selectDesktopDate(0)" class="w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors">
+                <span class="d-date-pure-1">Sat, Oct 31, 2026</span>
                 <span class="text-xs text-gray-300">&gt;</span>
               </button>
-              <button type="button" id="d-date-btn-2" onclick="app.selectDate(1)" class="w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors">
-                <span class="d-date-label-2">Sun, Nov 01, 2026 05:00 PM</span>
+              <button type="button" id="d-date-btn-2" onclick="app.selectDesktopDate(1)" class="w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors">
+                <span class="d-date-pure-2">Sun, Nov 01, 2026</span>
                 <span class="text-xs text-gray-300">&gt;</span>
               </button>
             </div>
@@ -263,7 +263,7 @@
             <div id="desktop-time-active-box" class="w-full hidden">
               <div class="py-2.5 px-4 border border-[#2563EB] bg-blue-50/50 rounded text-sm font-semibold text-[#2563EB] flex items-center justify-between">
                 <span id="desktop-time-value-display">06:00 PM</span>
-                <span class="text-xs text-gray-300">&gt;</span>
+                <span class="text-xs text-[#2563EB] font-bold">&gt;</span>
               </div>
             </div>
           </div>
@@ -632,33 +632,87 @@
               <button type="button" onclick="app.backToVenue()" class="text-xs text-[#2563EB] hover:underline font-medium" data-i18n="viewAllArea">View all area &gt;</button>
             </div>
 
-            <div class="flex items-center justify-between border-b border-gray-100 pb-2 mb-3">
-              <span class="text-xs font-bold text-gray-600 uppercase" data-i18n="availSeatsSidebarTitle">AVAILABLE SEATS</span>
-              <button type="button" onclick="app.onRefreshClicked()" class="text-xs px-2.5 py-1 border border-gray-300 rounded text-gray-600 hover:bg-gray-100 flex items-center space-x-1 transition-colors cursor-pointer font-medium">
-                <svg class="w-3 h-3 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                <span data-i18n="refreshBtn">Refresh</span>
+            <div class="flex items-center justify-between border-b border-gray-100 pb-2 mb-2">
+              <div class="flex items-center space-x-1">
+                <span class="text-xs font-bold text-gray-800" data-i18n="availSeatsSidebarTitle">座位等級/剩餘座位</span>
+                <span class="text-[11px] text-gray-400 cursor-pointer" title="Information">ⓘ</span>
+              </div>
+              <button type="button" onclick="app.onRefreshClicked()" class="text-[11px] px-2 py-0.5 border border-gray-300 rounded text-gray-600 hover:bg-gray-100 flex items-center space-x-1 transition-colors cursor-pointer font-medium">
+                <span data-i18n="refreshBtn">刷新</span>
               </button>
             </div>
 
-            <div class="space-y-2 text-xs">
-              <div class="flex justify-between items-center text-gray-800">
-                <span class="flex items-center"><span class="w-3 h-3 bg-[#b79b71] rounded-sm mr-2 inline-block"></span>VIP Standing</span>
-                <span class="font-mono">₩176,000</span>
+            <div class="border border-gray-200 rounded divide-y divide-gray-100 max-h-64 overflow-y-auto text-xs bg-white">
+              
+              <div class="select-none">
+                <div onclick="app.toggleSidebarAccordion('accordion-vip')" class="flex items-center justify-between p-2.5 hover:bg-gray-50 cursor-pointer transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3.5 h-3.5 bg-[#b79b71] rounded-sm shrink-0 inline-block"></span>
+                    <span class="font-medium text-gray-800">VIP Standing</span>
+                  </div>
+                  <div class="flex items-center space-x-2 font-mono">
+                    <span class="text-gray-700">₩176,000</span>
+                    <span id="accordion-vip-icon" class="text-gray-400 text-[10px] transform transition-transform">⌄</span>
+                  </div>
+                </div>
+                <div id="accordion-vip-body" class="hidden bg-gray-50/70 border-t border-gray-100 py-1 px-3 space-y-1">
+                  <div onclick="app.selectSectionFromAccordion('Floor F1', 'gradeVIP')" class="py-1.5 px-2 hover:bg-blue-50 text-gray-600 hover:text-[#2563EB] rounded cursor-pointer transition-colors flex justify-between items-center text-[11px]">
+                    <span>Floor F1</span>
+                    <span class="text-gray-400">&gt;</span>
+                  </div>
+                  <div onclick="app.selectSectionFromAccordion('Floor F2', 'gradeVIP')" class="py-1.5 px-2 hover:bg-blue-50 text-gray-600 hover:text-[#2563EB] rounded cursor-pointer transition-colors flex justify-between items-center text-[11px]">
+                    <span>Floor F2</span>
+                    <span class="text-gray-400">&gt;</span>
+                  </div>
+                  <div onclick="app.selectSectionFromAccordion('Floor F3', 'gradeVIP')" class="py-1.5 px-2 hover:bg-blue-50 text-gray-600 hover:text-[#2563EB] rounded cursor-pointer transition-colors flex justify-between items-center text-[11px]">
+                    <span>Floor F3</span>
+                    <span class="text-gray-400">&gt;</span>
+                  </div>
+                  <div onclick="app.selectSectionFromAccordion('Floor F4', 'gradeVIP')" class="py-1.5 px-2 hover:bg-blue-50 text-gray-600 hover:text-[#2563EB] rounded cursor-pointer transition-colors flex justify-between items-center text-[11px]">
+                    <span>Floor F4</span>
+                    <span class="text-gray-400">&gt;</span>
+                  </div>
+                </div>
               </div>
-              <div class="flex justify-between items-center text-gray-800">
-                <span class="flex items-center"><span class="w-3 h-3 bg-[#7f6aff] rounded-sm mr-2 inline-block"></span>Standing</span>
-                <span class="font-mono">₩165,000</span>
+
+              <div class="select-none">
+                <div onclick="app.toggleSidebarAccordion('accordion-standing')" class="flex items-center justify-between p-2.5 hover:bg-gray-50 cursor-pointer transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3.5 h-3.5 bg-[#7f6aff] rounded-sm shrink-0 inline-block"></span>
+                    <span class="font-medium text-gray-800">Standing</span>
+                  </div>
+                  <div class="flex items-center space-x-2 font-mono">
+                    <span class="text-gray-700">₩165,000</span>
+                    <span id="accordion-standing-icon" class="text-gray-400 text-[10px] transform transition-transform">⌄</span>
+                  </div>
+                </div>
+                <div id="accordion-standing-body" class="hidden bg-gray-50/70 border-t border-gray-100 py-1 px-3 space-y-0.5 max-h-40 overflow-y-auto">
+                  <div id="accordion-standing-items"></div>
+                </div>
               </div>
-              <div class="flex justify-between items-center text-gray-800">
-                <span class="flex items-center"><span class="w-3 h-3 bg-[#ff719e] rounded-sm mr-2 inline-block"></span>General Seats</span>
-                <span class="font-mono">₩154,000</span>
+
+              <div class="select-none">
+                <div onclick="app.toggleSidebarAccordion('accordion-general')" class="flex items-center justify-between p-2.5 hover:bg-gray-50 cursor-pointer transition-colors">
+                  <div class="flex items-center space-x-2">
+                    <span class="w-3.5 h-3.5 bg-[#ff719e] rounded-sm shrink-0 inline-block"></span>
+                    <span class="font-medium text-gray-800">General Seats</span>
+                  </div>
+                  <div class="flex items-center space-x-2 font-mono">
+                    <span class="text-gray-700">₩154,000</span>
+                    <span id="accordion-general-icon" class="text-gray-400 text-[10px] transform transition-transform">⌄</span>
+                  </div>
+                </div>
+                <div id="accordion-general-body" class="hidden bg-gray-50/70 border-t border-gray-100 py-1 px-3 space-y-0.5 max-h-40 overflow-y-auto">
+                  <div id="accordion-general-items"></div>
+                </div>
               </div>
+
             </div>
           </div>
 
           <div class="mt-4 pt-3 border-t border-gray-200">
             <button id="btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="w-full py-3.5 bg-gray-400 text-white font-bold text-xs sm:text-sm rounded transition-colors flex items-center justify-center space-x-1 cursor-not-allowed">
-              <span data-i18n="completeSelectionBtn">Seat Selection Completed</span>
+              <span data-i18n="completeSelectionBtn">選座完成</span>
             </button>
           </div>
         </div>
@@ -1063,15 +1117,35 @@
       countdownRemaining: 3,
       countdownTimer: null,
 
-      selectedDateIndex: 0,
+      selectedDateIndex: -1,
       dates: [
-        { labelEn: 'Sat, Oct 31, 2026 06:00 PM', labelZh: '2026.10.31(星期六) 18:00', time: '06:00 PM', session: '2026.10.31 18:00' },
-        { labelEn: 'Sun, Nov 01, 2026 05:00 PM', labelZh: '2026.11.01(星期日) 17:00', time: '05:00 PM', session: '2026.11.01 17:00' }
+        { 
+          labelEn: 'Sat, Oct 31, 2026 06:00 PM', 
+          labelZh: '2026.10.31(星期六) 18:00',
+          desktopDateEn: 'Sat, Oct 31, 2026',
+          desktopDateZh: '2026.10.31 (六)',
+          timeEn: '06:00 PM',
+          timeZh: '18:00',
+          time: '06:00 PM', 
+          session: '2026.10.31 18:00' 
+        },
+        { 
+          labelEn: 'Sun, Nov 01, 2026 05:00 PM', 
+          labelZh: '2026.11.01(星期日) 17:00',
+          desktopDateEn: 'Sun, Nov 01, 2026',
+          desktopDateZh: '2026.11.01 (日)',
+          timeEn: '05:00 PM',
+          timeZh: '17:00',
+          time: '05:00 PM', 
+          session: '2026.11.01 17:00' 
+        }
       ],
 
       isTimeLoaded: false,
       submitAttemptsCount: 0,
       tryAgainCount: 0,
+      consecutiveTryAgainCount: 0,
+      hasReSelectedSeatAfterTryAgain: true,
       conflictCount: 0,
       encountered403Count: 0,
       hasEncountered403ThisSession: false,
@@ -1105,12 +1179,67 @@
       init() {
         this.renderVenueSvg();
         this.renderCountdownText();
+        this.populateSidebarAccordionItems();
         this.applyLanguage();
         window.addEventListener('resize', () => {
           if (this.selectedSection) {
             this.adjustSeatGridScale();
           }
         });
+      },
+
+      populateSidebarAccordionItems() {
+        const standingContainer = document.getElementById('accordion-standing-items');
+        const generalContainer = document.getElementById('accordion-general-items');
+
+        if (standingContainer) {
+          let standingHtml = '';
+          for (let i = 1; i <= 15; i++) {
+            standingHtml += `
+              <div onclick="app.selectSectionFromAccordion('1F Sec ${i}', 'gradeStanding')" class="py-1 px-2 hover:bg-blue-50 text-gray-600 hover:text-[#2563EB] rounded cursor-pointer transition-colors flex justify-between items-center text-[11px]">
+                <span>Floor 1, Sec ${i}</span>
+                <span class="text-gray-400">&gt;</span>
+              </div>
+            `;
+          }
+          standingContainer.innerHTML = standingHtml;
+        }
+
+        if (generalContainer) {
+          let generalHtml = '';
+          for (let i = 24; i <= 43; i++) {
+            generalHtml += `
+              <div onclick="app.selectSectionFromAccordion('2F Sec ${i}', 'gradeGen')" class="py-1 px-2 hover:bg-blue-50 text-gray-600 hover:text-[#2563EB] rounded cursor-pointer transition-colors flex justify-between items-center text-[11px]">
+                <span>Floor 2, Sec ${i}</span>
+                <span class="text-gray-400">&gt;</span>
+              </div>
+            `;
+          }
+          generalContainer.innerHTML = generalHtml;
+        }
+      },
+
+      toggleSidebarAccordion(idPrefix) {
+        const body = document.getElementById(`${idPrefix}-body`);
+        const icon = document.getElementById(`${idPrefix}-icon`);
+        if (!body) return;
+
+        const isCurrentlyHidden = body.classList.contains('hidden');
+        if (isCurrentlyHidden) {
+          body.classList.remove('hidden');
+          if (icon) icon.innerText = '⌃';
+        } else {
+          body.classList.add('hidden');
+          if (icon) icon.innerText = '⌄';
+        }
+      },
+
+      selectSectionFromAccordion(sectionName, gradeKey) {
+        if (!this.captchaVerified) {
+          this.promptCaptcha();
+          return;
+        }
+        this.selectSection(sectionName, gradeKey);
       },
 
       renderVenueSvg() {
@@ -1166,12 +1295,29 @@
           }
         });
 
+        // Desktop Date pure label
+        document.querySelectorAll('.d-date-pure-1').forEach(el => {
+          el.innerText = this.currentLang === 'zh' ? this.dates[0].desktopDateZh : this.dates[0].desktopDateEn;
+        });
+        document.querySelectorAll('.d-date-pure-2').forEach(el => {
+          el.innerText = this.currentLang === 'zh' ? this.dates[1].desktopDateZh : this.dates[1].desktopDateEn;
+        });
+
+        // Mobile drawer labels
         document.querySelectorAll('.d-date-label-1').forEach(el => {
-          el.innerText = this.currentLang === 'zh' ? `周六, 10月 31, 2026 06:00 下午` : `Sat, Oct 31, 2026 06:00 PM`;
+          el.innerText = this.currentLang === 'zh' ? this.dates[0].labelZh : this.dates[0].labelEn;
         });
         document.querySelectorAll('.d-date-label-2').forEach(el => {
-          el.innerText = this.currentLang === 'zh' ? `周日, 11月 01, 2026 05:00 下午` : `Sun, Nov 01, 2026 05:00 PM`;
+          el.innerText = this.currentLang === 'zh' ? this.dates[1].labelZh : this.dates[1].labelEn;
         });
+
+        // Current selected time box
+        if (this.selectedDateIndex !== -1) {
+          const timeBox = document.getElementById('desktop-time-value-display');
+          if (timeBox) {
+            timeBox.innerText = this.currentLang === 'zh' ? this.dates[this.selectedDateIndex].timeZh : this.dates[this.selectedDateIndex].timeEn;
+          }
+        }
 
         this.renderCountdownText();
         this.updateCompletionButtonState();
@@ -1228,20 +1374,16 @@
 
         const dDateLocked = document.getElementById('desktop-date-locked-msg');
         const dDateActive = document.getElementById('desktop-date-active-list');
-        const dTimeLocked = document.getElementById('desktop-time-locked-msg');
-        const dTimeActive = document.getElementById('desktop-time-active-box');
         const dBtnGet = document.getElementById('desktop-btn-get-tickets');
 
         if (dDateLocked) dDateLocked.classList.add('hidden');
         if (dDateActive) dDateActive.classList.remove('hidden');
 
-        this.selectDate(0);
-
+        this.selectedDateIndex = -1;
         if (dBtnGet) {
-          dBtnGet.disabled = false;
-          dBtnGet.classList.remove('bg-gray-300', 'cursor-not-allowed');
-          dBtnGet.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
-          dBtnGet.onclick = () => this.handleDesktopGetTickets();
+          dBtnGet.disabled = true;
+          dBtnGet.classList.add('bg-gray-300', 'cursor-not-allowed');
+          dBtnGet.classList.remove('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
         }
 
         const mBuyBtn = document.getElementById('mobile-btn-buy-now');
@@ -1254,21 +1396,10 @@
             this.openMobileDateDrawer();
           };
         }
+      },
 
-        const delayMs = Math.random() < 0.5 ? 900 : 0;
-        if (delayMs === 0) {
-          this.isTimeLoaded = true;
-          if (dTimeLocked) dTimeLocked.classList.add('hidden');
-          if (dTimeActive) dTimeActive.classList.remove('hidden');
-        } else {
-          this.isTimeLoaded = false;
-          if (dTimeLocked) dTimeLocked.innerText = this.currentLang === 'zh' ? '載入時間中...' : 'Loading session...';
-          setTimeout(() => {
-            this.isTimeLoaded = true;
-            if (dTimeLocked) dTimeLocked.classList.add('hidden');
-            if (dTimeActive) dTimeActive.classList.remove('hidden');
-          }, delayMs);
-        }
+      selectDesktopDate(index) {
+        this.selectDate(index);
       },
 
       recordReactionSpeed() {
@@ -1282,7 +1413,6 @@
       openMobileDateDrawer() {
         const backdrop = document.getElementById('drawer-date-backdrop');
         const panel = document.getElementById('drawer-date-panel');
-        if (backdrop) backdrop.classList.add('hidden');
         if (backdrop) backdrop.classList.remove('hidden');
         setTimeout(() => {
           if (panel) panel.classList.add('drawer-active');
@@ -1325,6 +1455,10 @@
       },
 
       handleDesktopGetTickets() {
+        if (this.selectedDateIndex === -1) {
+          this.showMelonAlert("Please select the date.");
+          return;
+        }
         if (!this.isTimeLoaded) {
           this.showMelonAlert("Please select the time.");
           return;
@@ -1338,22 +1472,40 @@
         const btn1 = document.getElementById('d-date-btn-1');
         const btn2 = document.getElementById('d-date-btn-2');
         const timeBox = document.getElementById('desktop-time-value-display');
+        const dTimeLocked = document.getElementById('desktop-time-locked-msg');
+        const dTimeActive = document.getElementById('desktop-time-active-box');
+        const dBtnGet = document.getElementById('desktop-btn-get-tickets');
         const sessionSelect = document.getElementById('seatmap-session-select');
         const mobileVenueDate = document.getElementById('mobile-venue-date-label');
         const mobileMatrixDate = document.getElementById('mobile-matrix-date-label');
 
-        if (index === 0) {
-          if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
-          if (btn2) btn2.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
-        } else {
-          if (btn2) btn2.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
-          if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
+        if (btn1 && btn2) {
+          if (index === 0) {
+            btn1.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors shadow-sm';
+            btn2.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
+          } else {
+            btn2.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors shadow-sm';
+            btn1.className = 'w-full py-2.5 px-3 border border-gray-200 hover:border-gray-300 text-gray-600 rounded text-sm text-left flex items-center justify-between transition-colors';
+          }
         }
 
-        if (timeBox) timeBox.innerText = this.dates[index].time;
+        const chosenTime = this.currentLang === 'zh' ? this.dates[index].timeZh : this.dates[index].timeEn;
+        if (timeBox) timeBox.innerText = chosenTime;
+
+        if (dTimeLocked) dTimeLocked.classList.add('hidden');
+        if (dTimeActive) dTimeActive.classList.remove('hidden');
+        this.isTimeLoaded = true;
+
+        if (dBtnGet) {
+          dBtnGet.disabled = false;
+          dBtnGet.classList.remove('bg-gray-300', 'cursor-not-allowed');
+          dBtnGet.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
+          dBtnGet.onclick = () => this.handleDesktopGetTickets();
+        }
+
         if (sessionSelect) sessionSelect.value = String(index);
         
-        const labelText = this.dates[index].labelEn;
+        const labelText = this.currentLang === 'zh' ? this.dates[index].labelZh : this.dates[index].labelEn;
         if (mobileVenueDate) mobileVenueDate.innerText = labelText;
         if (mobileMatrixDate) mobileMatrixDate.innerText = labelText;
 
@@ -1428,7 +1580,6 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              // 1. 403 Server overload probability: 30% to 45% (Math.random() < 0.30 + Math.random() * 0.15)
               if (!this.hasEncountered403ThisSession && Math.random() < (0.30 + Math.random() * 0.15)) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
@@ -1848,6 +1999,8 @@
           return;
         }
 
+        this.hasReSelectedSeatAfterTryAgain = true;
+
         const existingIndex = this.selectedSeats.findIndex(s => s.id === seatObj.id);
 
         if (existingIndex !== -1) {
@@ -1940,23 +2093,64 @@
         const submitSpamThreshold = isMobile ? 380 : 180;
 
         if (intervalFromLastSubmit < submitSpamThreshold) {
-          this.tryAgainCount++;
-          this.showMelonAlert("Please try again.");
+          this.triggerTryAgainCongestion(true);
           return;
         }
 
-        // 衝突發生機率：90% ~ 96% 的地獄難度隨機範圍
-        const conflictRate = 0.90 + Math.random() * 0.06;
-        if (Math.random() < conflictRate) {
+        if (this.consecutiveTryAgainCount > 0 && !this.hasReSelectedSeatAfterTryAgain) {
+          this.triggerTryAgainCongestion(false);
+          return;
+        }
+
+        // 1. Attempts 1 & 2: 100% trigger race conflict
+        if (this.submitAttemptsCount <= 2) {
+          this.consecutiveTryAgainCount = 0;
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
         }
 
-        this.handleBookingSuccess();
+        // 2. Attempt 3 and later: 45% conflict / 33% congested / 22% secured
+        const rand = Math.random();
+
+        if (rand < 0.45) {
+          this.consecutiveTryAgainCount = 0;
+          this.conflictCount++;
+          this.handleSeatRaceConflict();
+          return;
+        } else if (rand < 0.78) {
+          this.triggerTryAgainCongestion(false);
+          return;
+        } else {
+          this.consecutiveTryAgainCount = 0;
+          this.handleBookingSuccess();
+        }
+      },
+
+      triggerTryAgainCongestion(isSpamTrigger = false) {
+        this.tryAgainCount++;
+        this.consecutiveTryAgainCount++;
+        this.hasReSelectedSeatAfterTryAgain = false;
+
+        const isMobile = window.innerWidth < 768;
+        const trafficDepleteCount = Math.floor(Math.random() * 4) + 2; // 2 ~ 5 seats
+        this.depleteSeats(trafficDepleteCount);
+
+        // Mobile consecutive eviction
+        if (isMobile && this.consecutiveTryAgainCount >= 2) {
+          this.consecutiveTryAgainCount = 0;
+          this.showMelonAlert("Please try again.", () => {
+            this.backToVenue();
+          });
+          return;
+        }
+
+        this.showMelonAlert("Please try again.");
       },
 
       handleSeatRaceConflict() {
+        this.consecutiveTryAgainCount = 0;
+        this.hasReSelectedSeatAfterTryAgain = true;
         const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeVIP;
         const targets = [...this.selectedSeats];
 
@@ -1973,12 +2167,10 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        // 隨機搶走約 25 ~ 40 個座位
         const batchDepleteCount = Math.floor(Math.random() * 16) + 25;
         this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.", () => {
-          // interaction-frozen 縮短至超短瞬間微延遲（約 50ms ~ 80ms），無死機感，手速過快連點時能極為順暢地觸發 Please try again
           const panel = document.getElementById('seat-visual-panel');
           if (panel) {
             panel.classList.add('interaction-frozen');
