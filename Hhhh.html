@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.5 -->
+  <!-- VERSION: v7.6 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -149,7 +149,7 @@
 
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
-      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.5</span>
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.6</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -1424,7 +1424,9 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              if (!this.hasEncountered403ThisSession && Math.random() < 0.50) {
+              // 403 server overload block check (Range 30% ~ 55%)
+              const rand403Chance = 0.30 + Math.random() * 0.25;
+              if (!this.hasEncountered403ThisSession && Math.random() < rand403Chance) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
@@ -1858,7 +1860,7 @@
           return;
         }
 
-        // Pure selection only - NO sudden conflict prompt while picking seats!
+        // Pure selection only - conflicts happen exclusively upon clicking Seat Selection Completed
         this.selectedSeats.push(seatObj);
         const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
         if (currentCube) currentCube.classList.add('selected');
@@ -1941,8 +1943,12 @@
           return;
         }
 
-        // 55% chance of race conflict ONLY upon clicking Seat Selection Completed!
-        if (Math.random() < 0.55) {
+        // Submission conflict probability ranges (Mobile: 75%~90%, Desktop: 65%~80%)
+        const conflictMin = isMobile ? 0.75 : 0.65;
+        const conflictMax = isMobile ? 0.90 : 0.80;
+        const randConflictChance = conflictMin + Math.random() * (conflictMax - conflictMin);
+
+        if (Math.random() < randConflictChance) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
@@ -1968,10 +1974,15 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 11) + 15; // 15-25 seats depleted after OK
-        this.depleteSeats(batchDepleteCount);
+        // Depletion Range: Floor = 28~40 seats, Grandstand = 14~22 seats
+        const isFloor = this.selectedSection && this.selectedSection.startsWith('Floor');
+        const depleteCount = isFloor 
+          ? Math.floor(Math.random() * 13) + 28  // 28 to 40
+          : Math.floor(Math.random() * 9) + 14;   // 14 to 22
 
-        this.showMelonAlert("Another customer is in payments for the seat.");
+        this.showMelonAlert("Another customer is in payments for the seat.", () => {
+          this.depleteSeats(depleteCount);
+        });
       },
 
       onRefreshClicked() {
