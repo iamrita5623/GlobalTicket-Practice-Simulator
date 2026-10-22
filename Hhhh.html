@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v8.2 -->
+  <!-- VERSION: v8.8 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Global Pass Ticket Simulator v8.2</title>
+  <title>Global Pass Ticket Simulator v8.8</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -147,7 +147,7 @@
   <!-- 準備開始遮罩 (Prep Modal) -->
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
-      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v8.2</span>
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v8.8</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -955,6 +955,8 @@
         reportFirewallTitle: "🛡️ Server Concurrency Firewall (403 Event)",
         reportHellPassedTitle: "Hell Mode Pressure Test Passed",
         reportHellPassedDesc: "You survived fierce competitor auto-depletion and seat race conflicts. Excellent reflexes!",
+        diagThrottlingTitle: "High-Frequency Action Throttling",
+        diagThrottlingDetail: "Triggered server protection after performing 5 rapid actions within 12 seconds.",
         fatalErrorDesc: "The webpage is not loading properly. Please check your network connection or try again later.",
         fatalRetryBtn: "Try Again",
         fatalHomeBtn: "Home",
@@ -962,24 +964,25 @@
         alertMaxSeat: "You can select up to 1 seat.",
         diagRapidSubmitTitle: "Rapid Double-Clicking Submit",
         diagRapidSubmitDetail: "Clicked submit within {ms}ms of previous attempt.",
-        diagRapidSubmitTip: "Avoid frantic spamming. Allow a 0.5s pause after dismissing alerts.",
         diagBotTitle: "Bot-like Ultra-fast Submission",
         diagBotDetail: "Clicked submit only {ms}ms after selecting seat.",
-        diagBotTip: "The system flagged an inhumanly fast click pattern. Aim for a 300–500ms pacing.",
         diagServerTitle: "Simulated Server Peak Traffic Jam",
         diagServerDetail: "Traffic surge of ~{users} users/sec caused an API latency of {sec}s, exceeding gateway throughput.",
-        diagServerTip: "This is not your fault! Dismiss with OK and immediately click submit again.",
         diagMobileRapidTapTitle: "High-Frequency Rapid Seat Tapping",
         diagMobileRapidTapDetail: "Rapidly tapped multiple seats in a flurry ({ms}ms interval). Inhuman tapping speed triggered anti-bot heuristics, forcing an eviction back to the venue map.",
-        diagMobileRapidTapTip: "Frantic screen tapping triggers bot-protection rate limits. Aim for calm, deliberate single-seat clicks.",
         diagOpeningSpeedTitle: "Opening Click Timing",
-        adviceFastReaction: "⚡ Lightning reaction ({ms}ms)! Secured top-tier queue wave (Queue #{queue}) with pro-level reflex.",
-        adviceMidReaction: "🎯 Solid timing ({ms}ms). Comfortably slotted into the leading queue wave (Queue #{queue}).",
-        adviceSlowReaction: "⚠️ Noticeable delay ({sec}s) caused competitors to surge ahead (Queue #{queue}). Keep your finger hovered firmly right over the button in the final second!",
-        adviceMobileRapidTap: "💡 Key Takeaway: Frantic, rapid-fire tapping on mobile triggered anti-bot heuristics and evicted you. Stay calm, pick one available seat decisively, and avoid frantic screen tapping!",
+        factFastReaction: "⚡ Lead Wave: Slotted into Queue #{queue} ({ms}ms).",
+        factMidReaction: "🎯 Competitive Wave: Slotted into Queue #{queue} ({ms}ms).",
+        factSlowReaction: "⚠️ Trailing Wave: Slotted into Queue #{queue} ({sec}s delay).",
+        adviceFastReaction: "💡 Key Takeaway: Pro-level reaction! You entered the session with a top-tier queue wave.",
+        adviceMidReaction: "💡 Key Takeaway: Solid rhythm! Pacing was clean and stable without triggering rate-limits.",
+        adviceSlowReaction: "💡 Key Takeaway: Your opening reaction lagged behind competitor traffic. Hover your finger firmly over the button during the final second and tap the instant it activates!",
+        adviceThrottling: "💡 Key Takeaway: You were evicted to the error screen by exceeding 5 rapid actions in 12s. Avoid frantic multi-action bursts!",
+        adviceMobileRapidTap: "💡 Key Takeaway: Rapid-fire tapping triggered anti-bot heuristics and evicted you. Stay calm, pick one available seat decisively, and avoid frantic screen tapping!",
         adviceRapidSubmit: "💡 Key Takeaway: Double-clicking submit caused rate-limiting. Dismiss alerts calmly with a 400ms rhythm.",
-        adviceBot: "💡 Key Takeaway: Transitioning from seat to submit under 250ms mimics automation bots.",
+        adviceBot: "💡 Key Takeaway: Transitioning from seat to submit under 250ms mimics automation bots. Aim for a 300–450ms human pace.",
         adviceSlowCaptcha: "💡 Key Takeaway: Captcha verification took over 4.0s. Practice typing 6 uppercase letters blindly!",
+        adviceServerJam: "💡 Key Takeaway: Server congestion encountered. Dismiss warning alerts calmly with OK and re-submit with a stable 400ms rhythm!",
         adviceGood: "💡 Key Takeaway: Clean rhythm! You handled server concurrency hurdles efficiently."
       },
       zh: {
@@ -1061,6 +1064,8 @@
         reportFirewallTitle: "🛡️ 伺服器並發流量防線 (403 事件)",
         reportHellPassedTitle: "地獄難度高壓搶票測試通過",
         reportHellPassedDesc: "您在對手自動化狂掃空位與極限座位爭搶衝突中順利突圍，反應節奏無可挑剔！",
+        diagThrottlingTitle: "高頻操作觸發伺服器熔斷",
+        diagThrottlingDetail: "在 12 秒內進行了 5 次急促切換或點擊操作，觸發了伺服器防刷白畫面熔斷。",
         fatalErrorDesc: "網頁無法正常載入。請檢查您的網路連線或稍後再試。",
         fatalRetryBtn: "重試",
         fatalHomeBtn: "首頁",
@@ -1068,24 +1073,25 @@
         alertMaxSeat: "每筆訂單最多僅能選擇 1 個座位。",
         diagRapidSubmitTitle: "送出按鈕連點過急",
         diagRapidSubmitDetail: "在上次送出後 {ms}ms 內再次狂按送出。",
-        diagRapidSubmitTip: "請避免緊張狂點送出鍵，彈窗關閉後請維持至少 0.5 秒的節奏。",
         diagBotTitle: "選位至送出過快（疑似機器人特徵）",
         diagBotDetail: "點選座位至點擊送出間隔僅 {ms}ms。",
-        diagBotTip: "觸發了超人手速的腳本風控防護。點完位置後建議保持 300~500ms 的自然敲擊間隔。",
         diagServerTitle: "伺服器瞬間大塞車",
         diagServerDetail: "同一秒瞬間湧入約 {users} 人同時送出搶票，API 伺服器響應卡頓達 {sec} 秒，超出即時連線處理閾值。",
-        diagServerTip: "這不是你的操作失誤，純粹是系統塞爆了！保持冷靜，點 OK 關閉後立刻重新按送出！",
         diagMobileRapidTapTitle: "高頻盲點連擊換位（點擊頻率過急）",
         diagMobileRapidTapDetail: "在極短時間內急促更換點擊多個座位（平均點擊間隔僅 {ms}ms），因點擊頻率過高被系統風控判定為腳本異常，強制踢回全景圖。",
-        diagMobileRapidTapTip: "手機端狂戳螢幕會被判定為外掛狂刷。請保持冷靜，看準單一空位果斷點選。",
         diagOpeningSpeedTitle: "開賣點擊反應",
-        adviceFastReaction: "⚡ 開賣點擊反應極快（{ms} 毫秒）！搶下前排黃金排隊序號（第 {queue} 號），手速與專注力達到職業選手級別。",
-        adviceMidReaction: "🎯 點擊時機精準穩定（{ms} 毫秒），順利卡進前段班排隊隊伍（第 {queue} 號）。",
-        adviceSlowReaction: "⚠️ 開賣點擊稍有延遲（{sec} 秒），導致排隊序號被千名對手超前（第 {queue} 號），建議倒數最後 1 秒將手指緊貼在按鈕上方預備，搶下開賣第一時間波次！",
-        adviceMobileRapidTap: "💡 實戰改進建議：在手機端因「手指連續狂戳、點擊過急」觸發了連擊風控被踢出。正式搶票時請保持冷靜，看準單一空位果斷點選並送出，切忌慌亂連續狂戳螢幕！",
+        factFastReaction: "⚡ 前排黃金梯隊：卡位第 #{queue} 號 ({ms}ms)。",
+        factMidReaction: "🎯 穩定競爭梯隊：卡位第 #{queue} 號 ({ms}ms)。",
+        factSlowReaction: "⚠️ 落後超前梯隊：卡位第 #{queue} 號 (延遲 {sec} 秒)。",
+        adviceFastReaction: "💡 實戰改進建議：開賣反應處於頂尖水平！搶下了極前段班的排隊優勢。",
+        adviceMidReaction: "💡 實戰改進建議：節奏穩健，在開賣第一時間順利切入排隊隊伍，未觸發任何連點風控。",
+        adviceSlowReaction: "💡 實戰改進建議：開賣反應稍有延遲。建議倒數最後 1 秒將手指緊貼在按鈕正上方預備，變藍的瞬間果斷秒點！",
+        adviceThrottling: "💡 實戰改進建議：在手機端因「12 秒內累積 5 次高頻操作」被系統熔斷強制踢至錯誤白頁。正式搶票切忌手忙腳亂連續狂按與頻繁切換！",
+        adviceMobileRapidTap: "💡 實戰改進建議：在手機端因「手指連續狂戳、點擊過急」觸發了連擊風控被踢出。正式搶票時請保持冷念，看準單一空位果斷點選並送出！",
         adviceRapidSubmit: "💡 實戰改進建議：連續狂按確認引發了二次送出錯誤。遇到警告時請保持從容以約 400ms 間隔再按。",
         adviceBot: "💡 實戰改進建議：點下座位到按送出小於 250ms 會被伺服器誤判為腳本，請保持 300～450ms 人手敲擊節奏。",
         adviceSlowCaptcha: "💡 實戰改進建議：驗證碼耗時超過 4.0 秒。建議多練習盲打 6 碼大寫英文字母！",
+        adviceServerJam: "💡 實戰改進建議：遭遇伺服器瞬間並發塞車。請從容點擊 OK 關閉警告，並維持 400ms 節奏重新送出！",
         adviceGood: "💡 實戰改進建議：節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
       }
     };
@@ -1242,6 +1248,10 @@
       reactionLatencyMs: 0,
       countdownRemaining: 3,
       countdownTimer: null,
+
+      isMobileDevice() {
+        return window.innerWidth < 768 || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+      },
 
       selectedDateIndex: -1,
       dates: [
@@ -1849,12 +1859,12 @@
       },
 
       recordMobileAction() {
-        const isMobile = window.innerWidth < 768;
+        const isMobile = this.isMobileDevice();
         if (!isMobile) return false;
 
         const now = Date.now();
         this.mobileActionHistory.push(now);
-        this.mobileActionHistory = this.mobileActionHistory.filter(t => now - t < 10000);
+        this.mobileActionHistory = this.mobileActionHistory.filter(t => now - t < 12000);
 
         if (this.mobileActionHistory.length >= 5) {
           this.triggerFatalErrorPage();
@@ -1864,6 +1874,12 @@
       },
 
       triggerFatalErrorPage() {
+        if (!this.diagnosticsHistory.some(d => d.type === 'GLOBAL_THROTTLING')) {
+          this.diagnosticsHistory.push({
+            type: 'GLOBAL_THROTTLING',
+            count: 5
+          });
+        }
         const errorView = document.getElementById('view-fatal-error-page');
         if (errorView) errorView.classList.remove('hidden');
       },
@@ -1884,8 +1900,10 @@
 
       showOopsLimitDialog() {
         const modal = document.getElementById('modal-oops-dialog');
-        const text = document.getElementById('oops-dialog-text');
-        if (text) text.innerText = this.t('oopsLimitMsg');
+        const textElem = document.getElementById('oops-dialog-text');
+        if (textElem) {
+          textElem.innerText = this.t('oopsLimitMsg');
+        }
         if (modal) modal.classList.remove('hidden');
       },
 
@@ -1905,7 +1923,10 @@
           return;
         }
 
-        const isMobile = window.innerWidth < 768;
+        // [保留計數] 1. 點擊體育館地圖上的分區方塊
+        if (this.recordMobileAction()) return;
+
+        const isMobile = this.isMobileDevice();
         if (isMobile) {
           this.pendingMobileSection = { name: sectionName, grade: gradeKey };
           const pName = document.getElementById('mobile-prompt-target-name');
@@ -1921,7 +1942,7 @@
         const promptModal = document.getElementById('modal-mobile-section-prompt');
         if (promptModal) promptModal.classList.add('hidden');
         
-        if (this.recordMobileAction()) return;
+        // [移除計數] 2. 點擊確認彈窗的 Next 不再計入
 
         if (this.pendingMobileSection) {
           this.selectSection(this.pendingMobileSection.name, this.pendingMobileSection.grade);
@@ -1990,6 +2011,7 @@
       },
 
       backToVenue() {
+        // [移除計數] 3. 點擊頂部 ↻ Zone 不再計入
         const gridWrap = document.getElementById('grid-seat-matrix-wrap');
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
@@ -2004,7 +2026,7 @@
         if (notice) notice.classList.remove('hidden');
         if (statusText) statusText.innerText = this.t('statusSelectSection');
 
-        const isMobile = window.innerWidth < 768;
+        const isMobile = this.isMobileDevice();
         if (isMobile) {
           if (mobileVenueHeader) mobileVenueHeader.classList.remove('hidden');
           if (mobileMatrixHeader) mobileMatrixHeader.classList.add('hidden');
@@ -2164,11 +2186,13 @@
 
         if (seatObj.status === 'sold') return;
 
+        // [移除計數] 7. 點選座位方塊不再計入 5 次全頁熔斷
+
         const now = Date.now();
         const tapInterval = this.lastSeatClickTime ? (now - this.lastSeatClickTime) : 9999;
         this.lastSeatClickTime = now;
 
-        const isMobile = window.innerWidth < 768;
+        const isMobile = this.isMobileDevice();
         const spamThreshold = isMobile ? 280 : 120;
 
         if (tapInterval < spamThreshold && this.selectedSeats.length > 0) {
@@ -2267,13 +2291,16 @@
       submitSeatSelection() {
         if (this.selectedSeats.length === 0) return;
 
+        // [保留計數] 8. 點擊選座完成按鈕計入次數
+        if (this.recordMobileAction()) return;
+
         this.submitAttemptsCount++;
         const now = Date.now();
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         const transitionFromSeatMs = this.lastSeatClickTime ? (now - this.lastSeatClickTime) : 9999;
         this.lastSubmitTime = now;
 
-        const isMobile = window.innerWidth < 768;
+        const isMobile = this.isMobileDevice();
         const submitSpamThreshold = isMobile ? 380 : 180;
 
         if (intervalFromLastSubmit < submitSpamThreshold) {
@@ -2385,13 +2412,14 @@
       },
 
       onRefreshClicked() {
+        // [保留計數] 6. 點擊刷新按鈕計入次數
         if (this.recordMobileAction()) return;
 
         const now = Date.now();
         this.recentRefreshClicks.push(now);
         this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1500);
 
-        const isMobile = window.innerWidth < 768;
+        const isMobile = this.isMobileDevice();
         const refreshLimit = isMobile ? 3 : 6;
 
         if (this.recentRefreshClicks.length >= refreshLimit) {
@@ -2460,80 +2488,87 @@
         if (logContainer) {
           let logsHtml = '';
 
-          // 1. 403 Concurrency Firewall Event
+          // 1. 403 Concurrency Firewall Event (純事實數據)
           if (this.encountered403Count > 0) {
             const log403Text = this.currentLang === 'zh'
-              ? `本次遭遇 403 伺服器過載攔截 1 次：在熱門搶票瞬間這是常見的伺服器防線，你冷靜地重新排隊並成功突破，處理得非常漂亮！`
-              : `Encountered 403 server overload block 1 time: A standard concurrency firewall during peak ticket open hours. You calmly re-queued and broke through successfully!`;
+              ? `遭遇 403 伺服器並發過載攔截 1 次（已自動重新排隊並順利通過）。`
+              : `Encountered 403 server overload block 1 time (recovered via queue re-entry).`;
             logsHtml += `
               <div class="p-2 bg-amber-50 border border-amber-200 rounded text-amber-800 flex flex-col space-y-0.5">
-                <div class="font-semibold"><span>${this.t('reportFirewallTitle')}</span></div>
+                <div class="font-semibold text-[11px]"><span>${this.t('reportFirewallTitle')}</span></div>
                 <div class="text-[10px] text-amber-700">${log403Text}</div>
               </div>
             `;
           }
 
-          // 2. Opening Timing Assessment Card
+          // 2. Opening Timing Telemetry Card (乾淨精簡的儀表板數據，不寫建議廢話)
           const openingSec = (this.reactionLatencyMs / 1000).toFixed(2);
-          let openingDetailText = '';
+          let openingFactText = '';
           if (this.reactionLatencyMs < 350) {
-            openingDetailText = this.t('adviceFastReaction')
+            openingFactText = this.t('factFastReaction')
               .replace('{ms}', this.reactionLatencyMs)
               .replace('{queue}', this.queueInitialTotal.toLocaleString());
           } else if (this.reactionLatencyMs < 750) {
-            openingDetailText = this.t('adviceMidReaction')
+            openingFactText = this.t('factMidReaction')
               .replace('{ms}', this.reactionLatencyMs)
               .replace('{queue}', this.queueInitialTotal.toLocaleString());
           } else {
-            openingDetailText = this.t('adviceSlowReaction')
+            openingFactText = this.t('factSlowReaction')
               .replace('{sec}', openingSec)
               .replace('{queue}', this.queueInitialTotal.toLocaleString());
           }
 
           logsHtml += `
             <div class="p-2 bg-indigo-50 border border-indigo-200 rounded text-indigo-900 flex flex-col space-y-0.5">
-              <div class="flex items-center justify-between font-semibold">
+              <div class="flex items-center justify-between font-semibold text-[11px]">
                 <span>${this.t('diagOpeningSpeedTitle')}</span>
                 <span class="text-[10px] font-mono text-indigo-700 font-bold">${this.reactionLatencyMs}ms</span>
               </div>
-              <div class="text-[10px] text-indigo-700 leading-normal">${openingDetailText}</div>
+              <div class="text-[10px] text-indigo-700 leading-normal font-medium">${openingFactText}</div>
             </div>
           `;
 
           // 3. User Errors / Diagnostics History Cards
           if (this.diagnosticsHistory && this.diagnosticsHistory.length > 0) {
             this.diagnosticsHistory.forEach(item => {
-              if (item.type === 'RAPID_SUBMIT') {
+              if (item.type === 'GLOBAL_THROTTLING') {
                 logsHtml += `
                   <div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-900 flex flex-col space-y-0.5">
-                    <div class="flex items-center justify-between font-semibold">
+                    <div class="flex items-center justify-between font-semibold text-[11px]">
+                      <span>${this.t('diagThrottlingTitle')}</span>
+                      <span class="text-[10px] font-mono text-rose-600 font-bold">5 actions / 12s</span>
+                    </div>
+                    <div class="text-[10px] text-rose-700">${this.t('diagThrottlingDetail')}</div>
+                  </div>
+                `;
+              } else if (item.type === 'RAPID_SUBMIT') {
+                logsHtml += `
+                  <div class="p-2 bg-rose-50 border border-rose-200 rounded text-rose-900 flex flex-col space-y-0.5">
+                    <div class="flex items-center justify-between font-semibold text-[11px]">
                       <span>${this.t('diagRapidSubmitTitle')}</span>
                       <span class="text-[10px] font-mono text-rose-600 font-bold">${item.ms}ms</span>
                     </div>
                     <div class="text-[10px] text-rose-700">${this.t('diagRapidSubmitDetail').replace('{ms}', item.ms)}</div>
-                    <div class="text-[10px] text-rose-600 font-medium">${this.t('diagRapidSubmitTip')}</div>
                   </div>
                 `;
               } else if (item.type === 'BOT_LIKE') {
                 logsHtml += `
                   <div class="p-2 bg-purple-50 border border-purple-200 rounded text-purple-900 flex flex-col space-y-0.5">
-                    <div class="flex items-center justify-between font-semibold">
+                    <div class="flex items-center justify-between font-semibold text-[11px]">
                       <span>${this.t('diagBotTitle')}</span>
                       <span class="text-[10px] font-mono text-purple-600 font-bold">${item.ms}ms</span>
                     </div>
                     <div class="text-[10px] text-purple-700">${this.t('diagBotDetail').replace('{ms}', item.ms)}</div>
-                    <div class="text-[10px] text-purple-600 font-medium">${this.t('diagBotTip')}</div>
                   </div>
                 `;
               } else if (item.type === 'MOBILE_RAPID_TAP') {
                 logsHtml += `
                   <div class="p-2 bg-red-50 border border-red-200 rounded text-red-900 flex flex-col space-y-0.5">
-                    <div class="flex items-center justify-between font-semibold">
+                    <div class="flex items-center justify-between font-semibold text-[11px]">
                       <span>${this.t('diagMobileRapidTapTitle')}</span>
                       <span class="text-[10px] font-mono text-red-600 font-bold">${item.ms}ms</span>
                     </div>
                     <div class="text-[10px] text-red-700">${this.t('diagMobileRapidTapDetail').replace('{ms}', item.ms)}</div>
-                    <div class="text-[10px] text-red-600 font-medium">${this.t('diagMobileRapidTapTip')}</div>
                   </div>
                 `;
               } else if (item.type === 'SERVER_JAM') {
@@ -2543,12 +2578,11 @@
                   .replace('{sec}', item.sec || '0.95');
                 logsHtml += `
                   <div class="p-2 bg-amber-50 border border-amber-200 rounded text-amber-900 flex flex-col space-y-0.5">
-                    <div class="flex items-center justify-between font-semibold">
+                    <div class="flex items-center justify-between font-semibold text-[11px]">
                       <span>${this.t('diagServerTitle')}</span>
                       <span class="text-[10px] font-mono text-amber-700 font-bold">${badgeLabel}</span>
                     </div>
                     <div class="text-[10px] text-amber-700 leading-normal">${detailText}</div>
-                    <div class="text-[10px] text-amber-600 font-medium">${this.t('diagServerTip')}</div>
                   </div>
                 `;
               }
@@ -2558,7 +2592,7 @@
           // 4. Clean execution bonus card if no errors
           if (this.diagnosticsHistory.length === 0 && this.conflictCount <= 2 && this.tryAgainCount === 0) {
             logsHtml += `
-              <div class="p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-700 flex items-center justify-between">
+              <div class="p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-700 flex items-center justify-between text-[11px]">
                 <span>${this.t('noIssuesReport')}</span>
                 <span class="font-bold text-xs">A+</span>
               </div>
@@ -2568,16 +2602,20 @@
           logContainer.innerHTML = logsHtml;
         }
 
-        // Determine the single most critical Coaching Advice
+        // 方案A核心：下方獨立藍框專注於戰術指導，不再重複覆誦上方已出現過的三遍數字
         if (adviceBox) {
           let chosenAdvice = this.t('adviceGood');
 
+          const hasThrottling = this.diagnosticsHistory.some(d => d.type === 'GLOBAL_THROTTLING');
           const hasMobileTap = this.diagnosticsHistory.some(d => d.type === 'MOBILE_RAPID_TAP');
           const hasRapidSubmit = this.diagnosticsHistory.some(d => d.type === 'RAPID_SUBMIT');
           const hasBotLike = this.diagnosticsHistory.some(d => d.type === 'BOT_LIKE');
+          const hasServerJam = this.diagnosticsHistory.some(d => d.type === 'SERVER_JAM');
           const captchaSecNum = parseFloat(this.captchaDurationSec);
 
-          if (hasMobileTap) {
+          if (hasThrottling) {
+            chosenAdvice = this.t('adviceThrottling');
+          } else if (hasMobileTap) {
             chosenAdvice = this.t('adviceMobileRapidTap');
           } else if (hasRapidSubmit) {
             chosenAdvice = this.t('adviceRapidSubmit');
@@ -2586,14 +2624,13 @@
           } else if (!isNaN(captchaSecNum) && captchaSecNum > 4.0) {
             chosenAdvice = this.t('adviceSlowCaptcha');
           } else if (this.reactionLatencyMs > 750) {
-            const secStr = (this.reactionLatencyMs / 1000).toFixed(2);
-            chosenAdvice = this.t('adviceSlowReaction')
-              .replace('{sec}', secStr)
-              .replace('{queue}', this.queueInitialTotal.toLocaleString());
+            chosenAdvice = this.t('adviceSlowReaction');
+          } else if (hasServerJam) {
+            chosenAdvice = this.t('adviceServerJam');
           } else if (this.reactionLatencyMs < 350) {
-            chosenAdvice = this.t('adviceFastReaction')
-              .replace('{ms}', this.reactionLatencyMs)
-              .replace('{queue}', this.queueInitialTotal.toLocaleString());
+            chosenAdvice = this.t('adviceFastReaction');
+          } else {
+            chosenAdvice = this.t('adviceGood');
           }
 
           adviceBox.innerText = chosenAdvice;
