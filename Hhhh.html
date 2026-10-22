@@ -1430,8 +1430,8 @@
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
-                  ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
-                  : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
+                  ? "403 Forbidden: 伺服器流量過載，請重新點擊購票按鈕。"
+                  : "403 Forbidden: Server traffic overload. Please click the booking button again.";
                 this.showMelonAlert(msg);
                 return;
               }
@@ -1974,11 +1974,11 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        // Depletion Range: Floor = 28~40 seats, Grandstand = 14~22 seats
+        // Depletion Range: Floor = 45~57 seats, Grandstand = 21~29 seats
         const isFloor = this.selectedSection && this.selectedSection.startsWith('Floor');
         const depleteCount = isFloor 
-          ? Math.floor(Math.random() * 13) + 28  // 28 to 40
-          : Math.floor(Math.random() * 9) + 14;   // 14 to 22
+          ? Math.floor(Math.random() * 13) + 45  // 45 to 57
+          : Math.floor(Math.random() * 9) + 21;   // 21 to 29
 
         this.showMelonAlert("Another customer is in payments for the seat.", () => {
           this.depleteSeats(depleteCount);
