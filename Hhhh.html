@@ -443,7 +443,7 @@
       <button type="button" onclick="app.cancelTransition()" class="text-gray-400 hover:text-gray-600 text-lg">✕</button>
     </div>
     <div class="loader-spin mb-4"></div>
-    <span class="text-xs text-gray-400 font-medium">Loading session...</span>
+    <span class="text-xs text-gray-400 font-medium" data-i18n="loadingSession">Loading session...</span>
   </div>
 
   <div id="modal-waiting-queue" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
@@ -554,7 +554,7 @@
             </button>
           </div>
           <div class="px-3 py-2 flex items-center justify-between bg-gray-50">
-            <span class="font-medium text-gray-500 text-xs">Please select a grade first</span>
+            <span class="font-medium text-gray-500 text-xs" data-i18n="selectGradeFirst">Please select a grade first</span>
             <button type="button" class="text-xs text-gray-400 font-medium flex items-center space-x-1 shrink-0 pl-2 cursor-default">
               <span>↻ Zone</span>
             </button>
@@ -850,7 +850,7 @@
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
         viewAllArea: "View all area >",
-        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
+        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대和 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
         completeSelectionBtn: "Seat Selection Completed",
         completeSelectionBtnMobile: "Seat Selection Completed",
@@ -889,7 +889,18 @@
         countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On sale now )",
         unitTimes: "times",
         noIssuesReport: "Flawless execution! No rate-limits or rapid-click penalties encountered.",
-        adviceGood: "💡 Key takeaway: Clean rhythm! You handled severe concurrency and high competitor pressure efficiently."
+        adviceGood: "💡 Key takeaway: Clean rhythm! You handled severe concurrency and high competitor pressure efficiently.",
+        selectGradeFirst: "Please select a grade first",
+        captchaPlaceholder: "PLEASE ENTER THE CHARACTERS",
+        loadingSession: "Loading session...",
+        alertMaxSeat: "You can select up to 1 seat.",
+        statusSelectSection: "Please select the section first. (Click the section of the venue.)",
+        statusSelectedSeats: "Selection seats. ",
+        statusPleaseSelect: "Please select seats. 0seat(s)",
+        seatUnit: "seat(s)",
+        reportFirewallTitle: "🛡️ Server Concurrency Firewall (403 Event)",
+        reportHellPassedTitle: "Hell Mode Pressure Test Passed",
+        reportHellPassedDesc: "You survived fierce competitor auto-depletion and seat race conflicts. Excellent reflexes!"
       },
       zh: {
         headerTitle: "搶票練習模擬器",
@@ -921,7 +932,7 @@
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
         viewAllArea: "View all area >",
-        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
+        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대和 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
         completeSelectionBtn: "Seat Selection Completed",
         completeSelectionBtnMobile: "Seat Selection Completed",
@@ -960,7 +971,18 @@
         countdownOpen: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 熱烈開賣中 )",
         unitTimes: "次",
         noIssuesReport: "操作行雲流水！完全未觸發任何狂刷、連擊或機器人防護懲罰。",
-        adviceGood: "💡 Key takeaway: 節奏掌握非常優秀！成功應對了伺服器並發阻擋與高壓競爭。"
+        adviceGood: "💡 Key takeaway: 節奏掌握非常優秀！成功應對了伺服器並發阻擋與高壓競爭。",
+        selectGradeFirst: "請先點選票價等級",
+        captchaPlaceholder: "請輸入圖形驗證碼字符",
+        loadingSession: "正在載入選位場次...",
+        alertMaxSeat: "每筆訂單最多僅能選擇 1 個座位。",
+        statusSelectSection: "請先選擇區域。（點擊場館指定區域）",
+        statusSelectedSeats: "已選取席位：",
+        statusPleaseSelect: "請選擇座位。 0 席",
+        seatUnit: "席",
+        reportFirewallTitle: "🛡️ 伺服器並發流量防線 (403 事件)",
+        reportHellPassedTitle: "地獄難度高壓搶票測試通過",
+        reportHellPassedDesc: "您在對手自動化狂掃空位與極限座位爭搶衝突中順利突圍，反應節奏無可挑剔！"
       }
     };
 
@@ -1294,6 +1316,12 @@
             }
           }
         });
+
+        // Captcha Placeholder
+        const captchaInput = document.getElementById('captcha-input');
+        if (captchaInput) {
+          captchaInput.placeholder = this.t('captchaPlaceholder');
+        }
 
         // Desktop Date pure label
         document.querySelectorAll('.d-date-pure-1').forEach(el => {
@@ -1823,7 +1851,7 @@
         if (gridWrap) gridWrap.classList.add('hidden');
         if (svgWrap) svgWrap.classList.remove('hidden');
         if (notice) notice.classList.remove('hidden');
-        if (statusText) statusText.innerText = 'Please select the section first. (Click the section of the venue.)';
+        if (statusText) statusText.innerText = this.t('statusSelectSection');
 
         const isMobile = window.innerWidth < 768;
         if (isMobile) {
@@ -2012,7 +2040,7 @@
         }
 
         if (this.selectedSeats.length >= this.maxSeatsAllowed) {
-          this.showMelonAlert("You can select up to 1 seat.");
+          this.showMelonAlert(this.t('alertMaxSeat'));
           return;
         }
 
@@ -2031,8 +2059,8 @@
         const count = this.selectedSeats.length;
         if (statusText) {
           statusText.innerText = count > 0 
-            ? `Selection seats. ${count}seat(s)` 
-            : `Please select seats. 0seat(s)`;
+            ? `${this.t('statusSelectedSeats')}${count} ${this.t('seatUnit')}` 
+            : this.t('statusPleaseSelect');
         }
 
         if (count > 0) {
@@ -2261,7 +2289,7 @@
               : `Encountered 403 server overload block 1 time: A standard concurrency firewall during peak ticket open hours. You calmly re-queued and broke through successfully!`;
             logsHtml += `
               <div class="p-2 bg-amber-50 border border-amber-200 rounded text-amber-800 flex flex-col space-y-0.5">
-                <div class="font-semibold"><span>🛡️ Server Concurrency Firewall (403 Event)</span></div>
+                <div class="font-semibold"><span>${this.t('reportFirewallTitle')}</span></div>
                 <div class="text-[10px] text-amber-700">${log403Text}</div>
               </div>
             `;
@@ -2278,10 +2306,10 @@
             logContainer.innerHTML = logsHtml + `
               <div class="p-2 bg-blue-50 border border-blue-200 rounded flex flex-col space-y-0.5">
                 <div class="flex items-center justify-between font-semibold text-gray-800">
-                  <span class="text-blue-800 font-medium">Hell Mode Pressure Test Passed</span>
+                  <span class="text-blue-800 font-medium">${this.t('reportHellPassedTitle')}</span>
                   <span class="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded font-mono">PRO</span>
                 </div>
-                <div class="text-gray-600 text-[10px]">You survived fierce competitor auto-depletion and seat race conflicts. Excellent reflexes!</div>
+                <div class="text-gray-600 text-[10px]">${this.t('reportHellPassedDesc')}</div>
               </div>
             `;
           }
