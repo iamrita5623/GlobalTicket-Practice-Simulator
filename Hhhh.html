@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.6 -->
+  <!-- VERSION: v7.5 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -149,7 +149,7 @@
 
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
-      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.6</span>
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.5</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -666,7 +666,7 @@
     <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
     </button>
-    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]" data-i18n="completeSelectionBtn">
+    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]" data-i18n="completeSelectionBtnMobile">
       Seat Selection Completed
     </button>
   </div>
@@ -795,6 +795,7 @@
         venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
         completeSelectionBtn: "Seat Selection Completed",
+        completeSelectionBtnMobile: "Seat Selection Completed",
         queueWaitPrompt: "Please, wait!",
         queueOrderTitle: "Your waiting order",
         queueEstPrefix: "Estimated time to wait : ",
@@ -865,6 +866,7 @@
         venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
         completeSelectionBtn: "Seat Selection Completed",
+        completeSelectionBtnMobile: "Seat Selection Completed",
         queueWaitPrompt: "請稍候！",
         queueOrderTitle: "您的排隊序號",
         queueEstPrefix: "預估等待時間：",
@@ -1422,12 +1424,12 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              if (!this.hasEncountered403ThisSession && Math.random() < 0.32) {
+              if (!this.hasEncountered403ThisSession && Math.random() < 0.50) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
                   ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
-                  : "403 Forbidden: Server traffic overload. Please click Buy Now / Get Tickets again.";
+                  : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
                 this.showMelonAlert(msg);
                 return;
               }
@@ -1746,8 +1748,7 @@
           rowLabel.innerText = cfg.row;
           rowDiv.appendChild(rowLabel);
 
-          // Seat density (76% ~ 88% sold rate to create high competition)
-          const soldThreshold = 0.76 + Math.random() * 0.12;
+          const threshold = isFloor ? 0.35 : 0.45;
 
           const leftBlock = document.createElement('div');
           leftBlock.className = 'flex items-center';
@@ -1757,7 +1758,7 @@
             leftBlock.appendChild(emptySpace);
           }
           for (let i = 0; i < cfg.leftCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme, soldThreshold);
+            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme, threshold);
             leftBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(leftBlock);
@@ -1769,7 +1770,7 @@
           const midBlock = document.createElement('div');
           midBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.midCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme, soldThreshold);
+            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme, threshold);
             midBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(midBlock);
@@ -1781,7 +1782,7 @@
           const rightBlock = document.createElement('div');
           rightBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.rightCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme, soldThreshold);
+            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme, threshold);
             rightBlock.appendChild(seat.element);
           }
           for (let i = 0; i < cfg.rightEmpty; i++) {
@@ -1795,8 +1796,8 @@
         });
       },
 
-      createSeatCube(sectionName, row, colIdentifier, theme, soldThreshold) {
-        const isAvail = Math.random() > soldThreshold;
+      createSeatCube(sectionName, row, colIdentifier, theme, threshold) {
+        const isAvail = Math.random() > threshold;
         const seatId = `${sectionName}-R${row}-${colIdentifier}`;
 
         const seatObj = {
@@ -1857,6 +1858,7 @@
           return;
         }
 
+        // Pure selection only - NO sudden conflict prompt while picking seats!
         this.selectedSeats.push(seatObj);
         const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
         if (currentCube) currentCube.classList.add('selected');
@@ -1939,7 +1941,7 @@
           return;
         }
 
-        // Conflict Range: 12 ~ 18 seats depleted on conflict OK click
+        // 55% chance of race conflict ONLY upon clicking Seat Selection Completed!
         if (Math.random() < 0.55) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
@@ -1966,8 +1968,7 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        // Depletion Range: 12 ~ 18 seats
-        const batchDepleteCount = Math.floor(Math.random() * 7) + 12;
+        const batchDepleteCount = Math.floor(Math.random() * 11) + 15; // 15-25 seats depleted after OK
         this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
