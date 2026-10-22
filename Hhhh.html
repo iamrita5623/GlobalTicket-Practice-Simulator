@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.0 -->
+  <!-- VERSION: v7.1 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -139,7 +139,7 @@
       100% { transform: rotate(360deg); }
     }
     @media (max-width: 767px) {
-      .mobile-hidden-sidebar {
+      .desktop-sidebar-panel, .desktop-minimap-container {
         display: none !important;
       }
     }
@@ -611,10 +611,10 @@
         </div>
 
         <!-- Desktop Right Sidebar & Mobile Hidden Panel -->
-        <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0 mobile-hidden-sidebar">
+        <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0 desktop-sidebar-panel">
           <div>
             <!-- Desktop Mini Map Container -->
-            <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50">
+            <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 desktop-minimap-container">
               <div class="flex justify-between items-center mb-1 text-[11px] text-gray-500">
                 <span class="font-medium" data-i18n="miniMapTitle">Mini Map</span>
                 <div class="flex space-x-1">
@@ -675,7 +675,7 @@
     <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
     </button>
-    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]" data-i18n="completeSelectionBtn">
+    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]" data-i18n="completeSelectionBtnMobile">
       Seat Selection Completed
     </button>
   </div>
@@ -803,7 +803,8 @@
         viewAllArea: "View all area >",
         venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
-        completeSelectionBtn: "Seat Selection Completed",
+        completeSelectionBtn: "Seat Selection Completed >",
+        completeSelectionBtnMobile: "Seat Selection Completed",
         queueWaitPrompt: "Please, wait!",
         queueOrderTitle: "Your waiting order",
         queueEstPrefix: "Estimated time to wait : ",
@@ -866,14 +867,15 @@
         guideTab2: "演唱會詳情",
         guideTab3: "購票須知",
         guideIntroTitle: "• 練習說明：",
-        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 按鈕將轉為藍色「立即購買」，點擊即可喚出選擇日期選單！",
+        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 點擊購票按鈕即可喚出選擇日期選單並進行操作。",
         guideDisclaimer: "※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
         viewAllArea: "View all area >",
         venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
-        completeSelectionBtn: "Seat Selection Completed",
+        completeSelectionBtn: "Seat Selection Completed >",
+        completeSelectionBtnMobile: "Seat Selection Completed",
         queueWaitPrompt: "請稍候！",
         queueOrderTitle: "您的排隊序號",
         queueEstPrefix: "預估等待時間：",
@@ -894,8 +896,8 @@
         statReactionSpeed: "開賣點擊反應：",
         statTotalTime: "本次練習總耗時：",
         statCaptchaTime: "驗證碼輸入耗時：",
-        statConflictCount: "遭遇座位被搶付款衝突次數：",
         statTryAgainCount: "克服「Please Try Again」次數：",
+        statConflictCount: "遭遇座位被搶付款衝突次數：",
         reportTitle: "操作速度與失誤診斷報告",
         reportSubtitle: "事後覆盤檢討",
         practiceAgainBtn: "再次練習",
@@ -1076,7 +1078,8 @@
       submitAttemptsCount: 0,
       tryAgainCount: 0,
       conflictCount: 0,
-      consecutive403Count: 0,
+      encountered403Count: 0,
+      hasEncountered403ThisSession: false,
 
       mobileEvictionLockoutUntil: 0,
       pendingMobileSection: null,
@@ -1284,7 +1287,7 @@
       openMobileDateDrawer() {
         const backdrop = document.getElementById('drawer-date-backdrop');
         const panel = document.getElementById('drawer-date-panel');
-        if (backdrop) backdrop.classList.add('hidden'); // Ensure no duplicate drawer layer
+        if (backdrop) backdrop.classList.add('hidden');
         if (backdrop) backdrop.classList.remove('hidden');
         setTimeout(() => {
           if (panel) panel.classList.add('drawer-active');
@@ -1430,8 +1433,10 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              if (this.consecutive403Count < 2 && Math.random() < 0.35) {
-                this.consecutive403Count++;
+              // 403 server overload block: Max 1 time occurrence for realistic testing
+              if (!this.hasEncountered403ThisSession && Math.random() < 0.45) {
+                this.hasEncountered403ThisSession = true;
+                this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
                   ? "403 Forbidden: 伺服器流量過載，請重新點擊立即購票。"
                   : "403 Forbidden: Server traffic overload. Please click Buy Now again.";
@@ -1439,7 +1444,6 @@
                 return;
               }
 
-              this.consecutive403Count = 0;
               this.openSeatmapWorkspace();
             }, 300);
           }
@@ -1458,6 +1462,13 @@
         this.backToVenue();
         const seatmapBackdrop = document.getElementById('step-seatmap-backdrop');
         if (seatmapBackdrop) seatmapBackdrop.classList.remove('hidden');
+        
+        // Show mobile bottom control bar if mobile
+        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
+        if (mobileSeatBar && window.innerWidth < 768) {
+          mobileSeatBar.classList.remove('hidden');
+        }
+
         this.promptCaptcha();
       },
 
@@ -1466,6 +1477,8 @@
         if (seatmapBackdrop) seatmapBackdrop.classList.add('hidden');
         const captchaModal = document.getElementById('modal-captcha');
         if (captchaModal) captchaModal.classList.add('hidden');
+        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
+        if (mobileSeatBar) mobileSeatBar.classList.add('hidden');
         this.selectedSection = null;
         this.selectedSeats = [];
       },
@@ -1609,7 +1622,6 @@
         const mobileVenueHeader = document.getElementById('mobile-venue-header-box');
         const mobileMatrixHeader = document.getElementById('mobile-matrix-header-box');
         const mobileStickyZone = document.getElementById('mobile-sticky-zone-label');
-        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
         const desktopSidebar = document.getElementById('desktop-sidebar-panel');
 
         if (svgWrap) svgWrap.classList.add('hidden');
@@ -1622,7 +1634,6 @@
           if (mobileVenueHeader) mobileVenueHeader.classList.add('hidden');
           if (mobileMatrixHeader) mobileMatrixHeader.classList.remove('hidden');
           if (mobileStickyZone) mobileStickyZone.innerText = sectionName;
-          if (mobileSeatBar) mobileSeatBar.classList.remove('hidden');
           if (desktopSidebar) desktopSidebar.classList.add('hidden');
         }
 
@@ -1662,7 +1673,6 @@
         
         const mobileVenueHeader = document.getElementById('mobile-venue-header-box');
         const mobileMatrixHeader = document.getElementById('mobile-matrix-header-box');
-        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
         const desktopSidebar = document.getElementById('desktop-sidebar-panel');
 
         if (gridWrap) gridWrap.classList.add('hidden');
@@ -1674,7 +1684,6 @@
         if (isMobile) {
           if (mobileVenueHeader) mobileVenueHeader.classList.remove('hidden');
           if (mobileMatrixHeader) mobileMatrixHeader.classList.add('hidden');
-          if (mobileSeatBar) mobileSeatBar.classList.add('hidden');
           if (desktopSidebar) desktopSidebar.classList.add('hidden');
         }
         
@@ -1705,6 +1714,9 @@
 
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeVIP;
         const isFloor = sectionName.startsWith('Floor');
+
+        // Higher depletion rates: Floor 55%-65% sold, Grandstand 40%-50% sold
+        const availThreshold = isFloor ? 0.40 : (row => row <= 6 ? 0.55 : 0.48);
 
         const floorConfig = [];
         for (let r = 1; r <= 16; r++) {
@@ -1750,6 +1762,8 @@
           rowLabel.innerText = cfg.row;
           rowDiv.appendChild(rowLabel);
 
+          const threshold = isFloor ? 0.42 : (cfg.row <= 6 ? 0.58 : 0.50);
+
           const leftBlock = document.createElement('div');
           leftBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.leftEmpty; i++) {
@@ -1758,7 +1772,7 @@
             leftBlock.appendChild(emptySpace);
           }
           for (let i = 0; i < cfg.leftCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme, isFloor);
+            const seat = this.createSeatCube(sectionName, cfg.row, `L${i+1}`, theme, threshold);
             leftBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(leftBlock);
@@ -1770,7 +1784,7 @@
           const midBlock = document.createElement('div');
           midBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.midCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme, isFloor);
+            const seat = this.createSeatCube(sectionName, cfg.row, `M${i+1}`, theme, threshold);
             midBlock.appendChild(seat.element);
           }
           rowDiv.appendChild(midBlock);
@@ -1782,7 +1796,7 @@
           const rightBlock = document.createElement('div');
           rightBlock.className = 'flex items-center';
           for (let i = 0; i < cfg.rightCols; i++) {
-            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme, isFloor);
+            const seat = this.createSeatCube(sectionName, cfg.row, `R${i+1}`, theme, threshold);
             rightBlock.appendChild(seat.element);
           }
           for (let i = 0; i < cfg.rightEmpty; i++) {
@@ -1796,9 +1810,8 @@
         });
       },
 
-      createSeatCube(sectionName, row, colIdentifier, theme, isFloor) {
-        let availThreshold = isFloor ? 0.72 : (row <= 6 ? 0.88 : 0.76);
-        const isAvail = Math.random() > availThreshold;
+      createSeatCube(sectionName, row, colIdentifier, theme, threshold) {
+        const isAvail = Math.random() > threshold;
         const seatId = `${sectionName}-R${row}-${colIdentifier}`;
 
         const seatObj = {
@@ -1832,10 +1845,14 @@
         const tapInterval = now - this.lastSeatClickTime;
         this.lastSeatClickTime = now;
 
-        // Strict anti-spam spamming detection: ONLY trigger try-again if clicking different seats aggressively < 150ms
-        if (tapInterval < 130 && this.selectedSeats.length > 0) {
+        // Platform-specific anti-spam sensitivity: Stricter on mobile (<280ms), relaxed on desktop (<120ms)
+        const isMobile = window.innerWidth < 768;
+        const spamThreshold = isMobile ? 280 : 120;
+
+        if (tapInterval < spamThreshold && this.selectedSeats.length > 0) {
           this.tryAgainCount++;
           this.mobileEvictionLockoutUntil = Date.now() + 12000;
+          this.depleteSeats(Math.floor(Math.random() * 8) + 8); // Strips 8-15 seats on conflict
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1928,28 +1945,19 @@
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         this.lastSubmitTime = now;
 
-        if (intervalFromLastSubmit < 350) {
+        const isMobile = window.innerWidth < 768;
+        const submitSpamThreshold = isMobile ? 350 : 180;
+
+        if (intervalFromLastSubmit < submitSpamThreshold) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 3) + 2);
+          this.depleteSeats(Math.floor(Math.random() * 8) + 8);
           this.showMelonAlert("Please try again.");
           return;
         }
 
-        if (this.submitAttemptsCount <= 2) {
+        if (this.submitAttemptsCount === 1 && Math.random() < 0.5) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
-          return;
-        }
-
-        const rand = Math.random();
-        if (rand < 0.45) {
-          this.conflictCount++;
-          this.handleSeatRaceConflict();
-          return;
-        } else if (rand < 0.78) {
-          this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 3) + 2);
-          this.showMelonAlert("Please try again.");
           return;
         }
 
@@ -1973,7 +1981,7 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 5) + 8;
+        const batchDepleteCount = Math.floor(Math.random() * 8) + 8; // Strips 8-15 seats
         this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
@@ -1984,9 +1992,12 @@
         this.recentRefreshClicks.push(now);
         this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1500);
 
-        if (this.recentRefreshClicks.length >= 4) {
+        const isMobile = window.innerWidth < 768;
+        const refreshLimit = isMobile ? 3 : 5;
+
+        if (this.recentRefreshClicks.length >= refreshLimit) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 4) + 3);
+          this.depleteSeats(Math.floor(Math.random() * 8) + 8);
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -2049,7 +2060,20 @@
         const adviceBox = document.getElementById('coaching-advice-box');
 
         if (logContainer) {
-          if (this.diagnosticsHistory.length === 0) {
+          let logsHtml = '';
+          if (this.encountered403Count > 0) {
+            const log403Text = this.currentLang === 'zh'
+              ? `本次遭遇 403 伺服器過載攔截 1 次：在熱門搶票瞬間這是常見的伺服器防線，你冷靜地重新排隊並成功突破，處理得非常漂亮！`
+              : `Encountered 403 server overload block 1 time: A standard concurrency firewall during peak ticket open hours. You calmly re-queued and broke through successfully!`;
+            logsHtml += `
+              <div class="p-2 bg-amber-50 border border-amber-200 rounded text-amber-800 flex flex-col space-y-0.5">
+                <div class="font-semibold"><span>🛡️ Server Concurrency Firewall (403 Event)</span></div>
+                <div class="text-[10px] text-amber-700">${log403Text}</div>
+              </div>
+            `;
+          }
+
+          if (this.diagnosticsHistory.length === 0 && this.encountered403Count === 0) {
             logContainer.innerHTML = `
               <div class="p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-700 flex items-center justify-between">
                 <span>${this.t('noIssuesReport')}</span>
@@ -2057,7 +2081,7 @@
               </div>
             `;
           } else {
-            logContainer.innerHTML = this.diagnosticsHistory.map((item, idx) => `
+            logContainer.innerHTML = logsHtml + this.diagnosticsHistory.map((item, idx) => `
               <div class="p-2 bg-gray-50 border border-gray-200 rounded flex flex-col space-y-0.5">
                 <div class="flex items-center justify-between font-semibold text-gray-800">
                   <span class="text-amber-700 font-medium">#${idx + 1} at ${item.timeSec}s: ${item.reason}</span>
