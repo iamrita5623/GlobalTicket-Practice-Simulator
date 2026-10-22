@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.3 -->
+  <!-- VERSION: v7.5 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -149,7 +149,7 @@
 
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
-      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.3</span>
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.5</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -655,7 +655,6 @@
           <div class="mt-4 pt-3 border-t border-gray-200">
             <button id="btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="w-full py-3.5 bg-gray-400 text-white font-bold text-xs sm:text-sm rounded transition-colors flex items-center justify-center space-x-1 cursor-not-allowed">
               <span data-i18n="completeSelectionBtn">Seat Selection Completed</span>
-              <span class="text-base leading-none">&gt;</span>
             </button>
           </div>
         </div>
@@ -832,7 +831,7 @@
         countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On sale now )",
         unitTimes: "times",
         noIssuesReport: "Flawless execution! No rate-limits or rapid-click penalties encountered.",
-        adviceGood: "💡 Key takeaway: Clean rhythm! You handled server concurrency hurdles efficiently."
+        adviceGood: "💡 Key takeaway: Clean rhythm! You handled severe concurrency and high competitor pressure efficiently."
       },
       zh: {
         headerTitle: "搶票練習模擬器",
@@ -903,7 +902,7 @@
         countdownOpen: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 熱烈開賣中 )",
         unitTimes: "次",
         noIssuesReport: "操作行雲流水！完全未觸發任何狂刷、連擊或機器人防護懲罰。",
-        adviceGood: "💡 Key takeaway: 節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
+        adviceGood: "💡 Key takeaway: 節奏掌握非常優秀！成功應對了伺服器並發阻擋與高壓競爭。"
       }
     };
 
@@ -1084,7 +1083,7 @@
       diagnosticsHistory: [],
 
       currentCaptchaCode: '',
-      captchaDismissedToViewOnly: false,
+      captchaDismissdToViewOnly: false,
       captchaVerified: false,
 
       selectedSection: null,
@@ -1425,7 +1424,7 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              if (!this.hasEncountered403ThisSession && Math.random() < 0.40) {
+              if (!this.hasEncountered403ThisSession && Math.random() < 0.50) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
@@ -1558,7 +1557,7 @@
       },
 
       dismissCaptchaToViewOnly() {
-        this.captchaDismissedToViewOnly = true;
+        this.captchaDismissdToViewOnly = true;
         const modal = document.getElementById('modal-captcha');
         if (modal) modal.classList.add('hidden');
       },
@@ -1749,7 +1748,7 @@
           rowLabel.innerText = cfg.row;
           rowDiv.appendChild(rowLabel);
 
-          const threshold = isFloor ? 0.12 : 0.28;
+          const threshold = isFloor ? 0.35 : 0.45;
 
           const leftBlock = document.createElement('div');
           leftBlock.className = 'flex items-center';
@@ -1814,7 +1813,9 @@
         cube.className = `seat-cube ${isAvail ? 'available ' + theme.tailwindClass : 'sold'}`;
 
         if (isAvail) {
-          cube.onclick = () => this.onSeatClicked(seatObj);
+          cube.onclick = () => {
+            this.onSeatClicked(seatObj);
+          };
         }
 
         return { element: cube, isAvail: isAvail };
@@ -1833,20 +1834,12 @@
         this.lastSeatClickTime = now;
 
         const isMobile = window.innerWidth < 768;
-        const spamThreshold = isMobile ? 320 : 120;
+        const spamThreshold = isMobile ? 280 : 120;
 
         if (tapInterval < spamThreshold && this.selectedSeats.length > 0) {
           this.tryAgainCount++;
           this.mobileEvictionLockoutUntil = Date.now() + 15000;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
           this.showMelonAlert("Please try again.");
-          return;
-        }
-
-        if (Math.random() < 0.45) {
-          this.conflictCount++;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
-          this.showMelonAlert("Another customer is in payments for the seat.");
           return;
         }
 
@@ -1865,6 +1858,7 @@
           return;
         }
 
+        // Pure selection only - NO sudden conflict prompt while picking seats!
         this.selectedSeats.push(seatObj);
         const currentCube = document.getElementById(`seat-cube-${seatObj.id}`);
         if (currentCube) currentCube.classList.add('selected');
@@ -1943,12 +1937,12 @@
 
         if (intervalFromLastSubmit < submitSpamThreshold) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
           this.showMelonAlert("Please try again.");
           return;
         }
 
-        if (this.submitAttemptsCount === 1 && Math.random() < 0.6) {
+        // 55% chance of race conflict ONLY upon clicking Seat Selection Completed!
+        if (Math.random() < 0.55) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
@@ -1974,7 +1968,7 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 11) + 20;
+        const batchDepleteCount = Math.floor(Math.random() * 11) + 15; // 15-25 seats depleted after OK
         this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
@@ -1990,7 +1984,6 @@
 
         if (this.recentRefreshClicks.length >= refreshLimit) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -2066,7 +2059,7 @@
             `;
           }
 
-          if (this.diagnosticsHistory.length === 0 && this.encountered403Count === 0) {
+          if (this.diagnosticsHistory.length === 0 && this.encountered403Count === 0 && this.conflictCount === 0) {
             logContainer.innerHTML = `
               <div class="p-2 bg-emerald-50 border border-emerald-200 rounded text-emerald-700 flex items-center justify-between">
                 <span>${this.t('noIssuesReport')}</span>
@@ -2074,15 +2067,15 @@
               </div>
             `;
           } else {
-            logContainer.innerHTML = logsHtml + this.diagnosticsHistory.map((item, idx) => `
-              <div class="p-2 bg-gray-50 border border-gray-200 rounded flex flex-col space-y-0.5">
+            logContainer.innerHTML = logsHtml + `
+              <div class="p-2 bg-blue-50 border border-blue-200 rounded flex flex-col space-y-0.5">
                 <div class="flex items-center justify-between font-semibold text-gray-800">
-                  <span class="text-amber-700 font-medium">#${idx + 1} at ${item.timeSec}s: ${item.reason}</span>
-                  <span class="text-[10px] bg-amber-100 text-amber-800 px-1.5 py-0.2 rounded font-mono">${item.category}</span>
+                  <span class="text-blue-800 font-medium">Hell Mode Pressure Test Passed</span>
+                  <span class="text-[10px] bg-blue-100 text-blue-800 px-1.5 py-0.2 rounded font-mono">PRO</span>
                 </div>
-                <div class="text-gray-500 text-[10px]">${item.detail}</div>
+                <div class="text-gray-600 text-[10px]">You survived fierce competitor auto-depletion and seat race conflicts. Excellent reflexes!</div>
               </div>
-            `).join('');
+            `;
           }
         }
 
