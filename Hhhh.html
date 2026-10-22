@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v6.5 -->
+  <!-- VERSION: v6.7 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -517,7 +517,7 @@
     
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
-      <!-- Desktop Seating Top Bar (Melon Style) -->
+      <!-- Desktop Seating Top Bar -->
       <div class="hidden md:flex bg-[#1e293b] border-b border-gray-700 px-4 py-2.5 items-center justify-between text-xs text-white shrink-0">
         <div class="flex items-center space-x-2 truncate">
           <span class="font-bold text-sm tracking-wide text-white" data-i18n="selectSeatsHeader">Select Seats</span>
@@ -536,42 +536,49 @@
         </div>
       </div>
 
-      <!-- Mobile Authentic Global Pass Top Sticky Header (< 768px) -->
+      <!-- Mobile Authentic Melon Sticky Top Header (< 768px) -->
       <div class="flex md:hidden bg-white border-b border-gray-200 flex-col shrink-0 text-xs">
         <div class="px-3 py-2.5 flex items-center justify-between border-b border-gray-100">
           <span class="font-bold text-sm text-gray-900 tracking-tight">WORLD TOUR LIVE IN SEOUL</span>
           <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-400 hover:text-gray-700 text-lg font-light px-1 leading-none">✕</button>
         </div>
 
-        <div class="flex items-center bg-gray-100/80 px-3 py-2 gap-3">
-          <div id="mobile-mini-map-box" class="w-11 h-11 bg-white border border-gray-300 rounded shrink-0 items-center justify-center p-0.5 overflow-hidden relative hidden">
-            <svg viewBox="0 0 760 520" class="w-full h-auto select-none">
-              <path d="M 230,22 L 530,22 L 505,75 L 255,75 Z" fill="#e2e8f0"/>
-              <rect x="206" y="85" width="168" height="110" fill="#b79b71"/>
-              <rect x="386" y="85" width="168" height="110" fill="#b79b71"/>
-            </svg>
+        <!-- State A: Venue View Header (< 768px) -->
+        <div id="mobile-venue-header-box" class="flex flex-col bg-white">
+          <div class="px-3 py-2 flex items-center justify-between border-b border-gray-100">
+            <span id="mobile-venue-date-label" class="font-medium text-gray-800 text-xs">Sat, Oct 31, 2026 06:00 PM</span>
+            <button type="button" onclick="app.openMobileDateDrawer()" class="text-xs text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+              <span>↻ Date</span>
+            </button>
           </div>
+          <div class="px-3 py-2 flex items-center justify-between bg-gray-50">
+            <span class="font-medium text-gray-500 text-xs">Please select a grade first</span>
+            <button type="button" class="text-xs text-gray-400 font-medium flex items-center space-x-1 shrink-0 pl-2 cursor-default">
+              <span>↻ Zone</span>
+            </button>
+          </div>
+        </div>
 
-          <div class="flex-1 flex flex-col space-y-1">
-            <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
-              <span id="mobile-sticky-date-label" class="font-medium text-gray-800 text-[11px] truncate">Sat, Oct 31, 2026 06:00 PM</span>
-              <button type="button" onclick="app.openMobileDateDrawer()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
-                <span>↻ Date</span>
-              </button>
-            </div>
-            <div class="flex items-center justify-between bg-white px-2 py-1 rounded border border-gray-200">
-              <span id="mobile-sticky-zone-label" class="font-medium text-gray-800 text-[11px] truncate">Please select a grade first</span>
-              <button type="button" onclick="app.backToVenue()" class="text-[11px] text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
-                <span>↻ Zone</span>
-              </button>
-            </div>
+        <!-- State B: Seat Matrix View Header (< 768px) -->
+        <div id="mobile-matrix-header-box" class="flex flex-col bg-white hidden">
+          <div class="px-3 py-2 flex items-center justify-between border-b border-gray-100">
+            <span id="mobile-matrix-date-label" class="font-medium text-gray-800 text-xs">Sat, Oct 31, 2026 06:00 PM</span>
+            <button type="button" onclick="app.openMobileDateDrawer()" class="text-xs text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+              <span>↻ Date</span>
+            </button>
+          </div>
+          <div class="px-3 py-2 flex items-center justify-between bg-gray-50">
+            <span id="mobile-sticky-zone-label" class="font-medium text-gray-800 text-xs truncate">Floor F1</span>
+            <button type="button" onclick="app.backToVenue()" class="text-xs text-gray-600 font-medium flex items-center space-x-1 shrink-0 pl-2">
+              <span>↻ Zone</span>
+            </button>
           </div>
         </div>
       </div>
 
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
-        <!-- Desktop Layout matched to Melon Image 1: Main Venue Map left, Sidebar right -->
+        <!-- Main Venue Map left, Sidebar right -->
         <div class="flex-1 bg-white relative p-2 sm:p-4 flex flex-col items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
           
           <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-500 text-center max-w-xl mb-2 leading-relaxed shrink-0 font-medium" data-i18n="venueNoticeText">
@@ -597,14 +604,14 @@
           </div>
 
           <!-- Bottom Venue Notice Bar / Melon Bottom Status Bar -->
-          <div id="desktop-bottom-notice-bar" class="w-full bg-[#525252] text-white text-xs py-2 px-4 text-left shrink-0 font-medium tracking-wide flex items-center justify-between">
+          <div id="desktop-bottom-notice-bar" class="w-full bg-[#525252] text-white text-xs py-2 px-4 text-left shrink-0 font-medium tracking-wide flex items-center justify-between md:flex flex">
             <span id="desktop-bottom-status-text">Please select the section first. (Click the section of the venue.)</span>
             <span class="text-[10px] text-gray-300">▲</span>
           </div>
         </div>
 
-        <!-- Desktop Right Sidebar matched to Melon Image 1 & 5 -->
-        <div class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
+        <!-- Desktop Right Sidebar & Mobile Hidden/Adapted Panel -->
+        <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
           <div>
             <!-- Desktop Mini Map Container (Always visible in Melon style) -->
             <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50">
@@ -661,6 +668,26 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Mobile Bottom Control Bar for Seat Map Workspace (< 768px) -->
+  <div id="mobile-seatmap-bottom-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2.5 flex items-center space-x-2 z-50 shadow-lg hidden md:hidden">
+    <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+    </button>
+    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]">
+      <span data-i18n="completeSelectionBtn">Seat Selection Completed</span> &gt;
+    </button>
+  </div>
+
+  <!-- Mobile All Area View Controls (< 768px) -->
+  <div id="mobile-venue-bottom-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2.5 flex items-center space-x-2 z-50 shadow-lg hidden md:hidden">
+    <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+    </button>
+    <button disabled class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm">
+      <span data-i18n="completeSelectionBtn">Seat Selection Completed</span> &gt;
+    </button>
   </div>
 
   <div id="modal-mobile-section-prompt" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
@@ -822,26 +849,6 @@
         countdownOpen: "Priority booking starts : 2026.10.31(Sat) 20:00 ( On sale now )",
         unitTimes: "times",
         noIssuesReport: "Flawless execution! No rate-limits or rapid-click penalties encountered.",
-        diagRapidSubmitTitle: "Rapid double-clicking submit",
-        diagRapidSubmitDetail: "Clicked submit within {ms}ms of previous attempt.",
-        diagRapidSubmitTip: "Avoid frantic spamming. Allow a 0.5s pause after dismissing alerts.",
-        diagBotTitle: "Bot-like ultra-fast submission",
-        diagBotDetail: "Clicked submit only {ms}ms after selecting seat.",
-        diagBotTip: "The system flagged an inhumanly fast click pattern. Aim for a 300–500ms pacing.",
-        diagServerTitle: "Simulated server peak traffic jam",
-        diagServerDetail: "Server traffic jam due to too many people rushing at the exact same second.",
-        diagServerTip: "This is not your fault! Dismiss with OK and immediately click submit again.",
-        diagMobileRapidTapTitle: "High-frequency rapid seat tapping",
-        diagMobileRapidTapDetail: "Rapidly tapped multiple seats in a flurry ({ms}ms interval). Inhuman tapping speed triggered anti-bot heuristics, forcing an eviction back to the venue map.",
-        diagMobileRapidTapTip: "Frantic screen tapping triggers bot-protection rate limits. Aim for calm, deliberate single-seat clicks.",
-        diagOpeningSpeedTitle: "Opening click timing",
-        adviceFastReaction: "⚡ Lightning reaction ({ms}ms)! Secured top-tier queue wave (Queue #{queue}) with pro-level reflex.",
-        adviceMidReaction: "🎯 Solid timing ({ms}ms). Comfortably slotted into the leading queue wave (Queue #{queue}).",
-        adviceSlowReaction: "⚠️ Noticeable delay ({sec}s) caused competitors to surge ahead (Queue #{queue}). Hover your finger tight over the button on the final second!",
-        adviceMobileRapidTap: "💡 Key takeaway: Frantic, rapid-fire tapping on mobile triggered anti-bot heuristics and evicted you. Stay calm, pick one available seat decisively, and avoid frantic screen tapping!",
-        adviceRapidSubmit: "💡 Key takeaway: Double-clicking submit caused rate-limiting. Dismiss alerts calmly with a 400ms rhythm.",
-        adviceBot: "💡 Key takeaway: Transitioning from seat to submit under 250ms mimics automation bots.",
-        adviceSlowCaptcha: "💡 Key takeaway: Captcha verification took over 4.0s. Practice typing 6 uppercase letters blindly!",
         adviceGood: "💡 Key takeaway: Clean rhythm! You handled server concurrency hurdles efficiently."
       },
       zh: {
@@ -912,27 +919,7 @@
         countdownOpen: "優先預訂開啟 : 2026.10.31(星期六) 20:00 ( 熱烈開賣中 )",
         unitTimes: "次",
         noIssuesReport: "操作行雲流水！完全未觸發任何狂刷、連擊或機器人防護懲罰。",
-        diagRapidSubmitTitle: "送出按鈕連點過急",
-        diagRapidSubmitDetail: "在上次送出後 {ms}ms 內再次狂按送出。",
-        diagRapidSubmitTip: "請避免緊張狂點送出鍵，彈窗關閉後請維持至少 0.5 秒的節奏。",
-        diagBotTitle: "選位至送出過快（疑似機器人特徵）",
-        diagBotDetail: "點選座位至點擊送出間隔僅 {ms}ms。",
-        diagBotTip: "觸發了超人手速的腳本風控防護。點完位置後建議保持 300~500ms 的自然敲擊間隔。",
-        diagServerTitle: "伺服器瞬間大塞車",
-        diagServerDetail: "同一秒瞬間湧入太多人搶票，售票系統直接塞車打結。",
-        diagServerTip: "這不是你的操作失誤，純粹是系統塞爆了！保持冷靜，點 OK 關閉後立刻重新按送出！",
-        diagMobileRapidTapTitle: "High-frequency rapid seat tapping",
-        diagMobileRapidTapDetail: "在極短時間內急促更換點擊多個座位（平均點擊間隔僅 {ms}ms），因點擊頻率過高被系統風控判定為腳本異常，強制踢回全景圖。",
-        diagMobileRapidTapTip: "手機端狂戳螢幕會被判定為外掛狂刷。請保持冷靜，看準單一空位果斷點選。",
-        diagOpeningSpeedTitle: "開賣點擊反應",
-        adviceFastReaction: "⚡ 開賣點擊反應極快（{ms} 毫秒）！搶下前排黃金排隊序號（第 {queue} 號），手速與專注力達到職業選手級別。",
-        adviceMidReaction: "🎯 點擊時機精準穩定（{ms} 毫秒），順利卡進前段班排隊隊伍（第 {queue} 號）。",
-        adviceSlowReaction: "⚠️ 開賣點擊稍有延遲（{sec} 秒），導致排隊序號被千名對手超前（第 {queue} 號），建議倒數最後 1 秒將手指緊貼滑鼠左鍵預備。",
-        adviceMobileRapidTap: "💡 實戰改進建議：在手機端因「手指連續狂戳、點擊過急」觸發了連擊風控被踢出。正式搶票時請保持冷靜，看準單一空位果斷點選並送出，切忌慌亂連續狂戳螢幕！",
-        adviceRapidSubmit: "💡 實戰改進建議：連續狂按確認引發了二次送出錯誤。遇到警告時請保持從容以約 400ms 間隔再按。",
-        adviceBot: "💡 實戰改進建議：點下座位到按送出小於 250ms會被伺服器誤判為腳本，請保持 300～450ms 人手敲擊節奏。",
-        adviceSlowCaptcha: "💡 實戰改進建議：驗證碼耗時超過 4.0 秒。建議多練習盲打 6 碼大寫英文字母！",
-        adviceGood: "💡 實戰改進建議 : 節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
+        adviceGood: "💡 Key takeaway: 節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
       }
     };
 
@@ -1128,7 +1115,6 @@
       queueNumber: 5382,
       queueInitialTotal: 5382,
       queueTimer: null,
-      hasEncountered403: false,
 
       init() {
         this.renderVenueSvg();
@@ -1366,7 +1352,8 @@
         const btn2 = document.getElementById('d-date-btn-2');
         const timeBox = document.getElementById('desktop-time-value-display');
         const sessionSelect = document.getElementById('seatmap-session-select');
-        const mobileDateLabel = document.getElementById('mobile-sticky-date-label');
+        const mobileVenueDate = document.getElementById('mobile-venue-date-label');
+        const mobileMatrixDate = document.getElementById('mobile-matrix-date-label');
 
         if (index === 0) {
           if (btn1) btn1.className = 'w-full py-2.5 px-3 border border-[#2563EB] bg-blue-50/60 text-[#2563EB] font-semibold rounded text-sm text-left flex items-center justify-between transition-colors';
@@ -1378,7 +1365,10 @@
 
         if (timeBox) timeBox.innerText = this.dates[index].time;
         if (sessionSelect) sessionSelect.value = String(index);
-        if (mobileDateLabel) mobileDateLabel.innerText = this.dates[index].labelEn + ' ' + this.dates[index].time;
+        
+        const labelText = this.dates[index].labelEn;
+        if (mobileVenueDate) mobileVenueDate.innerText = labelText;
+        if (mobileMatrixDate) mobileMatrixDate.innerText = labelText;
 
         if (this.selectedSection) {
           this.backToVenue();
@@ -1417,7 +1407,7 @@
         const initMin = Math.floor(initialWaitSec / 60);
         const initSec = initialWaitSec % 60;
         if (estElem) {
-          estElem.innerText = this.currentLang === 'zh' ? `${initMin}分 ${initSec < 10 ? '0' : ''}${initSec}秒` : `${initMin}min ${initSec < 10 ? '0' : ''}${initSec}sec`;
+          estElem.innerText = this.currentLang === 'zh' ? `${initMin}分 ${initSec < 10 ? '0' : ''}${initSec}sec` : `${initMin}min ${initSec < 10 ? '0' : ''}${initSec}sec`;
         }
 
         const totalDurationSec = 5.0 + Math.random() * 2.0;
@@ -1451,7 +1441,6 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              // 403 rule: max 2 consecutive occurrences, 3rd time guaranteed success
               if (this.consecutive403Count < 2 && Math.random() < 0.35) {
                 this.consecutive403Count++;
                 const msg = this.currentLang === 'zh'
@@ -1627,15 +1616,28 @@
         const notice = document.getElementById('venue-notice');
         const gridWrap = document.getElementById('grid-seat-matrix-wrap');
         const titleElem = document.getElementById('matrix-section-title');
-        const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
-        const mobileMiniMapBox = document.getElementById('mobile-mini-map-box');
+        
+        const mobileVenueHeader = document.getElementById('mobile-venue-header-box');
+        const mobileMatrixHeader = document.getElementById('mobile-matrix-header-box');
+        const mobileStickyZone = document.getElementById('mobile-sticky-zone-label');
+        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
+        const mobileVenueBar = document.getElementById('mobile-venue-bottom-bar');
+        const sidebarPanel = document.getElementById('desktop-sidebar-panel');
 
         if (svgWrap) svgWrap.classList.add('hidden');
         if (notice) notice.classList.add('hidden');
         if (gridWrap) gridWrap.classList.remove('hidden');
         if (titleElem) titleElem.innerText = `${sectionName}`;
-        if (mobileZoneLabel) mobileZoneLabel.innerText = sectionName;
-        if (mobileMiniMapBox) mobileMiniMapBox.style.display = 'flex';
+
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+          if (mobileVenueHeader) mobileVenueHeader.classList.add('hidden');
+          if (mobileMatrixHeader) mobileMatrixHeader.classList.remove('hidden');
+          if (mobileStickyZone) mobileStickyZone.innerText = sectionName;
+          if (mobileSeatBar) mobileSeatBar.classList.remove('hidden');
+          if (mobileVenueBar) mobileVenueBar.classList.add('hidden');
+          if (sidebarPanel) sidebarPanel.style.display = 'none';
+        }
 
         this.buildSeatGrid(sectionName, this.selectedSectionGrade);
         this.updateCompletionButtonState();
@@ -1670,15 +1672,26 @@
         const svgWrap = document.getElementById('kspo-dome-svg-wrap');
         const notice = document.getElementById('venue-notice');
         const statusText = document.getElementById('desktop-bottom-status-text');
-        const mobileZoneLabel = document.getElementById('mobile-sticky-zone-label');
-        const mobileMiniMapBox = document.getElementById('mobile-mini-map-box');
+        
+        const mobileVenueHeader = document.getElementById('mobile-venue-header-box');
+        const mobileMatrixHeader = document.getElementById('mobile-matrix-header-box');
+        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
+        const mobileVenueBar = document.getElementById('mobile-venue-bottom-bar');
+        const sidebarPanel = document.getElementById('desktop-sidebar-panel');
 
         if (gridWrap) gridWrap.classList.add('hidden');
         if (svgWrap) svgWrap.classList.remove('hidden');
         if (notice) notice.classList.remove('hidden');
         if (statusText) statusText.innerText = 'Please select the section first. (Click the section of the venue.)';
-        if (mobileZoneLabel) mobileZoneLabel.innerText = this.currentLang === 'zh' ? '請先選擇區域' : 'Please select a grade first';
-        if (mobileMiniMapBox) mobileMiniMapBox.style.display = 'none';
+
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+          if (mobileVenueHeader) mobileVenueHeader.classList.remove('hidden');
+          if (mobileMatrixHeader) mobileMatrixHeader.classList.add('hidden');
+          if (mobileSeatBar) mobileSeatBar.classList.add('hidden');
+          if (mobileVenueBar) mobileVenueBar.classList.remove('hidden');
+          if (sidebarPanel) sidebarPanel.style.display = 'flex';
+        }
         
         this.selectedSection = null;
         this.selectedSeats = [];
@@ -1868,7 +1881,8 @@
       },
 
       updateCompletionButtonState() {
-        const btn = document.getElementById('btn-complete-selection');
+        const desktopBtn = document.getElementById('btn-complete-selection');
+        const mobileBtn = document.getElementById('mobile-btn-complete-selection');
         const statusText = document.getElementById('desktop-bottom-status-text');
 
         const count = this.selectedSeats.length;
@@ -1879,16 +1893,26 @@
         }
 
         if (count > 0) {
-          if (btn) {
-            btn.disabled = false;
-            btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-            btn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
+          if (desktopBtn) {
+            desktopBtn.disabled = false;
+            desktopBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+            desktopBtn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
+          }
+          if (mobileBtn) {
+            mobileBtn.disabled = false;
+            mobileBtn.classList.remove('bg-gray-300', 'text-gray-700', 'cursor-not-allowed');
+            mobileBtn.classList.add('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'cursor-pointer', 'shadow-sm');
           }
         } else {
-          if (btn) {
-            btn.disabled = true;
-            btn.classList.remove('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
-            btn.classList.add('bg-gray-400', 'cursor-not-allowed');
+          if (desktopBtn) {
+            desktopBtn.disabled = true;
+            desktopBtn.classList.remove('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'cursor-pointer', 'shadow');
+            desktopBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+          }
+          if (mobileBtn) {
+            mobileBtn.disabled = true;
+            mobileBtn.classList.remove('bg-[#2563EB]', 'hover:bg-[#1D4ED8]', 'text-white', 'cursor-pointer', 'shadow-sm');
+            mobileBtn.classList.add('bg-gray-300', 'text-gray-700', 'cursor-not-allowed');
           }
         }
       },
@@ -2015,11 +2039,6 @@
       closeMelonDialog() {
         const modal = document.getElementById('modal-melon-dialog');
         if (modal) modal.classList.add('hidden');
-      },
-
-      logDiagnosticEvent(category, reason, detail, tip) {
-        const elapsed = this.practiceStartTime ? ((Date.now() - this.practiceStartTime) / 1000).toFixed(1) : '0.0';
-        this.diagnosticsHistory.push({ timeSec: elapsed, category, reason, detail, tip });
       },
 
       handleBookingSuccess() {
