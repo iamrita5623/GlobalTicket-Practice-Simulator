@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.2 -->
+  <!-- VERSION: v7.3 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -148,7 +148,8 @@
 <body class="min-h-screen flex flex-col items-center justify-start p-0 sm:py-6 sm:px-4">
 
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center">
+    <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.3</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -297,7 +298,7 @@
         </div>
         <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
           <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• Practice method:</p>
-          <p data-i18n="guideIntroText">The countdown is displayed inside the booking button. When it reaches 00:00, click the booking button to open the date selection menu and proceed.</p>
+          <p data-i18n="guideIntroText">The countdown is displayed on screen. When sales open, click the booking button to proceed.</p>
           <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
             ※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.
           </p>
@@ -394,7 +395,7 @@
 
       <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
         <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• Practice method:</p>
-        <p data-i18n="guideIntroText">The countdown is displayed inside the booking button. When it reaches 00:00, click the booking button to open the date selection menu and proceed.</p>
+        <p data-i18n="guideIntroText">The countdown is displayed on screen. When sales open, click the booking button to proceed.</p>
         <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.</p>
       </div>
     </div>
@@ -517,7 +518,6 @@
     
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
-      <!-- Desktop Seating Top Bar -->
       <div class="hidden md:flex bg-[#1e293b] border-b border-gray-700 px-4 py-2.5 items-center justify-between text-xs text-white shrink-0">
         <div class="flex items-center space-x-2 truncate">
           <span class="font-bold text-sm tracking-wide text-white" data-i18n="selectSeatsHeader">Select Seats</span>
@@ -536,14 +536,12 @@
         </div>
       </div>
 
-      <!-- Mobile Authentic Melon Sticky Top Header (< 768px) -->
       <div class="flex md:hidden bg-white border-b border-gray-200 flex-col shrink-0 text-xs">
         <div class="px-3 py-2.5 flex items-center justify-between border-b border-gray-100">
           <span class="font-bold text-sm text-gray-900 tracking-tight">WORLD TOUR LIVE IN SEOUL</span>
           <button type="button" onclick="app.closeSeatmapModal()" class="text-gray-400 hover:text-gray-700 text-lg font-light px-1 leading-none">✕</button>
         </div>
 
-        <!-- State A: Venue View Header (< 768px) -->
         <div id="mobile-venue-header-box" class="flex flex-col bg-white">
           <div class="px-3 py-2 flex items-center justify-between border-b border-gray-100">
             <span id="mobile-venue-date-label" class="font-medium text-gray-800 text-xs">Sat, Oct 31, 2026 06:00 PM</span>
@@ -559,7 +557,6 @@
           </div>
         </div>
 
-        <!-- State B: Seat Matrix View Header (< 768px) -->
         <div id="mobile-matrix-header-box" class="flex flex-col bg-white hidden">
           <div class="px-3 py-2 flex items-center justify-between border-b border-gray-100">
             <span id="mobile-matrix-date-label" class="font-medium text-gray-800 text-xs">Sat, Oct 31, 2026 06:00 PM</span>
@@ -578,7 +575,6 @@
 
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
-        <!-- Main Venue Map left, Sidebar right -->
         <div class="flex-1 bg-white relative p-2 sm:p-4 flex flex-col items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
           
           <div id="venue-notice" class="text-[10px] sm:text-[11px] text-gray-500 text-center max-w-xl mb-2 leading-relaxed shrink-0 font-medium" data-i18n="venueNoticeText">
@@ -603,17 +599,14 @@
             </div>
           </div>
 
-          <!-- Bottom Venue Notice Bar -->
           <div id="desktop-bottom-notice-bar" class="w-full bg-[#525252] text-white text-xs py-2 px-4 text-left shrink-0 font-medium tracking-wide flex items-center justify-between md:flex flex">
             <span id="desktop-bottom-status-text">Please select the section first. (Click the section of the venue.)</span>
             <span class="text-[10px] text-gray-300">▲</span>
           </div>
         </div>
 
-        <!-- Desktop Right Sidebar & Mobile Hidden Panel -->
         <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0 desktop-sidebar-panel">
           <div>
-            <!-- Desktop Mini Map Container -->
             <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 desktop-minimap-container">
               <div class="flex justify-between items-center mb-1 text-[11px] text-gray-500">
                 <span class="font-medium" data-i18n="miniMapTitle">Mini Map</span>
@@ -670,7 +663,6 @@
     </div>
   </div>
 
-  <!-- Mobile Bottom Control Bar for Seat Map Workspace (< 768px) -->
   <div id="mobile-seatmap-bottom-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2.5 flex items-center space-x-2 z-50 shadow-lg hidden md:hidden">
     <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -796,7 +788,7 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice method:",
-        guideIntroText: "The countdown is displayed inside the booking button. When it reaches 00:00, click the booking button to open the date selection menu and proceed.",
+        guideIntroText: "The countdown is displayed on screen. When sales open, click the booking button to proceed.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -867,7 +859,7 @@
         guideTab2: "演唱會詳情",
         guideTab3: "購票須知",
         guideIntroTitle: "• 練習說明：",
-        guideIntroText: "底部的按鈕包含即時倒數。倒數至 00:00 點擊購票按鈕即可喚出選擇日期選單並進行操作。",
+        guideIntroText: "畫面將顯示開賣倒數。開賣時請點擊購票按鈕以進行選位與操作。",
         guideDisclaimer: "※ 本系統為純粹的手速與反應練習模擬器，絕不進行任何真實交易、訂票或座位保留。",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -1433,8 +1425,7 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              // 403 server overload block: Max 1 time occurrence
-              if (!this.hasEncountered403ThisSession && Math.random() < 0.45) {
+              if (!this.hasEncountered403ThisSession && Math.random() < 0.40) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
@@ -1714,7 +1705,6 @@
         const theme = colorThemeMap[gradeKey] || colorThemeMap.gradeVIP;
         const isFloor = sectionName.startsWith('Floor');
 
-        // +15% higher depletion rates: Floor 70%-80% sold, Grandstand 55%-65% sold
         const floorConfig = [];
         for (let r = 1; r <= 16; r++) {
           floorConfig.push({ row: r, leftEmpty: 0, leftCols: 10, midCols: 10, rightCols: 0, rightEmpty: 0 });
@@ -1759,7 +1749,7 @@
           rowLabel.innerText = cfg.row;
           rowDiv.appendChild(rowLabel);
 
-          const threshold = isFloor ? 0.25 : (cfg.row <= 6 ? 0.40 : 0.45);
+          const threshold = isFloor ? 0.12 : 0.28;
 
           const leftBlock = document.createElement('div');
           leftBlock.className = 'flex items-center';
@@ -1843,13 +1833,20 @@
         this.lastSeatClickTime = now;
 
         const isMobile = window.innerWidth < 768;
-        const spamThreshold = isMobile ? 280 : 120;
+        const spamThreshold = isMobile ? 320 : 120;
 
         if (tapInterval < spamThreshold && this.selectedSeats.length > 0) {
           this.tryAgainCount++;
-          this.mobileEvictionLockoutUntil = Date.now() + 12000;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 15); // Strips 15-25 seats on conflict
+          this.mobileEvictionLockoutUntil = Date.now() + 15000;
+          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
           this.showMelonAlert("Please try again.");
+          return;
+        }
+
+        if (Math.random() < 0.45) {
+          this.conflictCount++;
+          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
+          this.showMelonAlert("Another customer is in payments for the seat.");
           return;
         }
 
@@ -1942,16 +1939,16 @@
         this.lastSubmitTime = now;
 
         const isMobile = window.innerWidth < 768;
-        const submitSpamThreshold = isMobile ? 350 : 180;
+        const submitSpamThreshold = isMobile ? 380 : 180;
 
         if (intervalFromLastSubmit < submitSpamThreshold) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 15);
+          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
           this.showMelonAlert("Please try again.");
           return;
         }
 
-        if (this.submitAttemptsCount === 1 && Math.random() < 0.5) {
+        if (this.submitAttemptsCount === 1 && Math.random() < 0.6) {
           this.conflictCount++;
           this.handleSeatRaceConflict();
           return;
@@ -1977,7 +1974,7 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 11) + 15; // Strips 15-25 seats
+        const batchDepleteCount = Math.floor(Math.random() * 11) + 20;
         this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
@@ -1993,7 +1990,7 @@
 
         if (this.recentRefreshClicks.length >= refreshLimit) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 11) + 15);
+          this.depleteSeats(Math.floor(Math.random() * 11) + 20);
           this.showMelonAlert("Please try again.");
           return;
         }
