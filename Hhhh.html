@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v6.8 -->
+  <!-- VERSION: v6.9 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -137,6 +137,11 @@
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+    @media (max-width: 767px) {
+      .mobile-hidden-sidebar {
+        display: none !important;
+      }
     }
   </style>
 </head>
@@ -606,7 +611,7 @@
         </div>
 
         <!-- Desktop Right Sidebar & Mobile Hidden Panel -->
-        <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0">
+        <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0 mobile-hidden-sidebar">
           <div>
             <!-- Desktop Mini Map Container -->
             <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50">
@@ -1688,7 +1693,7 @@
           if (mobileMatrixHeader) mobileMatrixHeader.classList.add('hidden');
           if (mobileSeatBar) mobileSeatBar.classList.add('hidden');
           if (mobileVenueBar) mobileVenueBar.classList.remove('hidden');
-          if (desktopSidebar) desktopSidebar.classList.remove('hidden');
+          if (desktopSidebar) desktopSidebar.classList.add('hidden');
         }
         
         this.selectedSection = null;
