@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v7.6 -->
+  <!-- VERSION: v8.0 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Global Pass Ticket Simulator</title>
+  <title>Global Pass Ticket Simulator v8.0</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -105,18 +105,11 @@
         line-height: 18px;
       }
     }
-    .kspo-block {
+    .kspo-block, .mini-kspo-block {
       cursor: pointer;
       transition: filter 0.15s ease;
     }
-    .kspo-block:hover {
-      filter: brightness(0.88);
-    }
-    .mini-kspo-block {
-      cursor: pointer;
-      transition: filter 0.15s ease;
-    }
-    .mini-kspo-block:hover {
+    .kspo-block:hover, .mini-kspo-block:hover {
       filter: brightness(0.88);
     }
     .drawer-enter {
@@ -151,9 +144,10 @@
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start p-0 sm:py-6 sm:px-4">
 
+  <!-- 準備開始遮罩 (Prep Modal) -->
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
-      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v7.6</span>
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v8.0</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -181,6 +175,7 @@
     </div>
   </div>
 
+  <!-- 電腦版桌面主頁 (Desktop Container) -->
   <div class="hidden md:flex w-full max-w-[1024px] bg-white border border-[#dce0e6] shadow-[0_2px_12px_rgba(0,0,0,0.06)] flex-col relative min-h-[720px]">
     
     <header class="border-b border-gray-100 px-6 py-3.5 flex items-center justify-between bg-white">
@@ -311,6 +306,7 @@
     </main>
   </div>
 
+  <!-- 手機版介面 (Mobile Container) -->
   <div class="flex md:hidden w-full min-h-screen bg-white flex-col relative overflow-x-hidden">
     
     <div class="w-full bg-[#18122B] text-white px-4 py-2.5 flex items-center justify-between text-xs shrink-0 z-10">
@@ -404,6 +400,7 @@
       </div>
     </div>
 
+    <!-- 手機版底部購票操作條 -->
     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex items-center space-x-2 z-20 shadow-lg">
       <button type="button" onclick="location.reload()" title="Reset" class="w-12 h-12 border border-gray-300 rounded flex items-center justify-center text-gray-500 hover:bg-gray-100 shrink-0">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -417,6 +414,7 @@
 
   </div>
 
+  <!-- 手機日期選擇抽屜 (Mobile Date Drawer) -->
   <div id="drawer-date-backdrop" class="fixed inset-0 bg-black/60 z-[9999] hidden flex flex-col justify-end">
     <div id="drawer-date-panel" class="w-full bg-white rounded-t-2xl p-4 drawer-enter flex flex-col max-h-[80vh] shadow-2xl">
       <div class="flex items-center justify-between pb-3 border-b border-gray-100">
@@ -437,6 +435,7 @@
     </div>
   </div>
 
+  <!-- 轉場加載動畫 (Spinner) -->
   <div id="view-spinner" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center hidden">
     <div class="absolute top-0 left-0 right-0 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
       <span class="text-sm font-bold text-gray-800">Global Ticket</span>
@@ -446,6 +445,7 @@
     <span class="text-xs text-gray-400 font-medium" data-i18n="loadingSession">Loading session...</span>
   </div>
 
+  <!-- 排隊佇列彈窗 (Queue Modal) -->
   <div id="modal-waiting-queue" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-sm border border-gray-200 p-6 relative flex flex-col items-center text-center shadow-2xl">
       <button type="button" onclick="app.cancelWaitingQueue()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl font-light leading-none">
@@ -473,6 +473,7 @@
     </div>
   </div>
 
+  <!-- 圖形驗證碼彈窗 (Captcha Modal) -->
   <div id="modal-captcha" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl w-full max-w-md border border-gray-200 p-6 flex flex-col items-center text-center shadow-2xl relative">
       <h2 class="text-2xl font-bold text-[#2563EB] mb-2" data-i18n="captchaHeading">Secure booking service</h2>
@@ -518,10 +519,12 @@
     </div>
   </div>
 
+  <!-- 選位大視窗 (Seatmap Workspace Backdrop) -->
   <div id="step-seatmap-backdrop" class="fixed inset-0 bg-black/60 z-40 hidden flex items-center justify-center p-0 md:p-4">
     
     <div id="step-seatmap" class="w-full h-full md:max-w-[1020px] md:h-[690px] bg-white rounded-none md:rounded border-none md:border border-gray-300 shadow-2xl flex flex-col overflow-hidden relative">
       
+      <!-- 電腦版選位 Header -->
       <div class="hidden md:flex bg-[#1e293b] border-b border-gray-700 px-4 py-2.5 items-center justify-between text-xs text-white shrink-0">
         <div class="flex items-center space-x-2 truncate">
           <span class="font-bold text-sm tracking-wide text-white" data-i18n="selectSeatsHeader">Select Seats</span>
@@ -540,6 +543,7 @@
         </div>
       </div>
 
+      <!-- 手機版選位 Header -->
       <div class="flex md:hidden bg-white border-b border-gray-200 flex-col shrink-0 text-xs">
         <div class="px-3 py-2.5 flex items-center justify-between border-b border-gray-100">
           <span class="font-bold text-sm text-gray-900 tracking-tight">WORLD TOUR LIVE IN SEOUL</span>
@@ -577,6 +581,7 @@
         </div>
       </div>
 
+      <!-- 選位主面板 -->
       <div class="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         
         <div class="flex-1 bg-white relative p-2 sm:p-4 flex flex-col items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-gray-200" id="seat-visual-panel">
@@ -585,11 +590,13 @@
             무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.
           </div>
 
+          <!-- KSPO DOME 全景 SVG -->
           <div id="kspo-dome-svg-wrap" class="w-full max-w-[620px] flex flex-col items-center justify-center my-auto">
             <svg id="main-kspo-svg" viewBox="0 0 760 520" class="w-full h-auto drop-shadow-sm select-none">
             </svg>
           </div>
 
+          <!-- 詳細座位矩陣 (Seat Grid Matrix) -->
           <div id="grid-seat-matrix-wrap" class="w-full h-full flex flex-col items-center justify-between hidden py-1 sm:py-2 overflow-hidden bg-white">
             <div class="w-full max-w-md py-1 bg-[#d7dade] text-[#4b5563] font-bold text-center tracking-widest text-[11px] sm:text-xs shrink-0 select-none">
               STAGE
@@ -603,12 +610,14 @@
             </div>
           </div>
 
+          <!-- 底部即時狀態列 (Status bar) -->
           <div id="desktop-bottom-notice-bar" class="w-full bg-[#525252] text-white text-xs py-2 px-4 text-left shrink-0 font-medium tracking-wide flex items-center justify-between md:flex flex">
             <span id="desktop-bottom-status-text">Please select the section first. (Click the section of the venue.)</span>
             <span class="text-[10px] text-gray-300">▲</span>
           </div>
         </div>
 
+        <!-- 電腦版側邊欄 (Sidebar) -->
         <div id="desktop-sidebar-panel" class="w-full md:w-72 bg-white p-4 flex flex-col justify-between shrink-0 border-t md:border-t-0 desktop-sidebar-panel">
           <div>
             <div id="desktop-minimap-container" class="border border-gray-200 rounded p-2 mb-3 bg-gray-50 desktop-minimap-container">
@@ -642,6 +651,7 @@
               </button>
             </div>
 
+            <!-- 手風琴折疊區域列表 -->
             <div class="border border-gray-200 rounded divide-y divide-gray-100 max-h-64 overflow-y-auto text-xs bg-white">
               
               <div class="select-none">
@@ -712,7 +722,7 @@
 
           <div class="mt-4 pt-3 border-t border-gray-200">
             <button id="btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="w-full py-3.5 bg-gray-400 text-white font-bold text-xs sm:text-sm rounded transition-colors flex items-center justify-center space-x-1 cursor-not-allowed">
-              <span data-i18n="completeSelectionBtn">選座完成</span>
+              <span data-i18n="completeSelectionBtn">Seat Selection Completed</span>
             </button>
           </div>
         </div>
@@ -720,6 +730,7 @@
     </div>
   </div>
 
+  <!-- 手機版選位底部操作條 (Mobile Seatmap Bottom Bar) -->
   <div id="mobile-seatmap-bottom-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2.5 flex items-center space-x-2 z-50 shadow-lg hidden md:hidden">
     <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
@@ -729,6 +740,7 @@
     </button>
   </div>
 
+  <!-- 手機版點擊區域確認彈窗 (Mobile Section Prompt) -->
   <div id="modal-mobile-section-prompt" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-xl w-full max-w-xs p-5 flex flex-col items-center text-center shadow-2xl">
       <h3 class="text-base font-bold text-gray-900 mb-1" data-i18n="selectSectionPromptTitle">Select section</h3>
@@ -744,6 +756,7 @@
     </div>
   </div>
 
+  <!-- 擬真官方提示彈窗 (Generic Alert Modal) -->
   <div id="modal-melon-dialog" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-lg w-full max-w-xs border border-gray-200 p-5 flex flex-col items-center text-center shadow-xl">
       <div id="melon-dialog-text" class="text-sm text-gray-800 font-medium mb-5 text-center leading-relaxed">
@@ -755,6 +768,49 @@
     </div>
   </div>
 
+  <!-- 超額張數限制彈窗 (Oops Modal) -->
+  <div id="modal-oops-dialog" class="fixed inset-0 bg-black/50 z-[9999] flex items-center justify-center p-4 hidden">
+    <div class="bg-white rounded-xl w-full max-w-xs border border-gray-100 p-6 flex flex-col items-center text-center shadow-2xl">
+      <h3 class="text-base font-black tracking-wider text-gray-900 mb-2">GLOBAL PASS</h3>
+      <p id="oops-dialog-text" class="text-xs text-gray-600 font-medium leading-relaxed mb-6">
+        Oops, too many tickets! Event limit : Max 1
+      </p>
+      <button type="button" onclick="app.closeOopsDialog()" class="w-full py-2.5 bg-transparent text-[#2563EB] font-bold text-sm hover:bg-blue-50 rounded-lg transition-colors border border-blue-200 cursor-pointer">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- 全螢幕加載異常/頻繁刷新錯誤頁 (Fatal Error Page) -->
+  <div id="view-fatal-error-page" class="fixed inset-0 bg-white z-[9999] flex flex-col items-center justify-between p-6 hidden select-none">
+    <div class="w-full flex items-center justify-center pt-2">
+      <span class="text-base font-black tracking-wider text-[#2563EB]">GLOBAL PASS</span>
+    </div>
+    
+    <div class="flex flex-col items-center text-center max-w-xs px-2 my-auto">
+      <div class="w-16 h-16 rounded-full border-4 border-gray-200 border-t-gray-400 mb-6 flex items-center justify-center">
+        <div class="w-2.5 h-2.5 rounded-full bg-gray-400"></div>
+      </div>
+      <p class="text-xs text-gray-600 leading-relaxed font-medium mb-8" data-i18n="fatalErrorDesc">
+        The webpage is not loading properly. Please check your network connection or try again later.
+      </p>
+      <div class="flex items-center space-x-3 w-full">
+        <button type="button" onclick="app.retryFromFatalError()" class="flex-1 py-2.5 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 flex items-center justify-center space-x-1 cursor-pointer">
+          <span class="text-sm">↻</span>
+          <span data-i18n="fatalRetryBtn">Try Again</span>
+        </button>
+        <button type="button" onclick="location.reload()" class="flex-1 py-2.5 border border-gray-300 rounded-lg text-xs font-bold text-gray-700 hover:bg-gray-50 cursor-pointer" data-i18n="fatalHomeBtn">
+          Home
+        </button>
+      </div>
+    </div>
+
+    <div class="text-[10px] text-gray-400 text-center pb-2 font-mono">
+      © GLOBAL PASS Corp.
+    </div>
+  </div>
+
+  <!-- 成功結算覆盤報告 (Success Post-Mortem Report) -->
   <div id="step-success" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl w-full max-w-lg p-6 text-center border border-gray-100 flex flex-col items-center shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="w-14 h-14 bg-blue-100 rounded-full flex items-center justify-center text-[#2563EB] mb-3 text-2xl font-bold shrink-0">
@@ -850,7 +906,7 @@
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
         viewAllArea: "View all area >",
-        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대和 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
+        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
         completeSelectionBtn: "Seat Selection Completed",
         completeSelectionBtnMobile: "Seat Selection Completed",
@@ -893,14 +949,17 @@
         selectGradeFirst: "Please select a grade first",
         captchaPlaceholder: "PLEASE ENTER THE CHARACTERS",
         loadingSession: "Loading session...",
-        alertMaxSeat: "You can select up to 1 seat.",
         statusSelectSection: "Please select the section first. (Click the section of the venue.)",
         statusSelectedSeats: "Selection seats. ",
         statusPleaseSelect: "Please select seats. 0seat(s)",
         seatUnit: "seat(s)",
         reportFirewallTitle: "🛡️ Server Concurrency Firewall (403 Event)",
         reportHellPassedTitle: "Hell Mode Pressure Test Passed",
-        reportHellPassedDesc: "You survived fierce competitor auto-depletion and seat race conflicts. Excellent reflexes!"
+        reportHellPassedDesc: "You survived fierce competitor auto-depletion and seat race conflicts. Excellent reflexes!",
+        fatalErrorDesc: "The webpage is not loading properly. Please check your network connection or try again later.",
+        fatalRetryBtn: "Try Again",
+        fatalHomeBtn: "Home",
+        oopsLimitMsg: "Oops, too many tickets! Event limit : Max 1"
       },
       zh: {
         headerTitle: "搶票練習模擬器",
@@ -932,7 +991,7 @@
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
         viewAllArea: "View all area >",
-        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대和 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
+        venueNoticeText: "무대는 예매 편의를 위해 표기된 것으로 실제 무대와 다를 수 있습니다.<br>구역 내 상단이 무대와 가까운 쪽입니다. 가로로 나란히 예매하시기 바랍니다.",
         miniMapTitle: "Mini Map",
         completeSelectionBtn: "Seat Selection Completed",
         completeSelectionBtnMobile: "Seat Selection Completed",
@@ -975,14 +1034,17 @@
         selectGradeFirst: "請先點選票價等級",
         captchaPlaceholder: "請輸入圖形驗證碼字符",
         loadingSession: "正在載入選位場次...",
-        alertMaxSeat: "每筆訂單最多僅能選擇 1 個座位。",
         statusSelectSection: "請先選擇區域。（點擊場館指定區域）",
         statusSelectedSeats: "已選取席位：",
         statusPleaseSelect: "請選擇座位。 0 席",
         seatUnit: "席",
         reportFirewallTitle: "🛡️ 伺服器並發流量防線 (403 事件)",
         reportHellPassedTitle: "地獄難度高壓搶票測試通過",
-        reportHellPassedDesc: "您在對手自動化狂掃空位與極限座位爭搶衝突中順利突圍，反應節奏無可挑剔！"
+        reportHellPassedDesc: "您在對手自動化狂掃空位與極限座位爭搶衝突中順利突圍，反應節奏無可挑剔！",
+        fatalErrorDesc: "網頁無法正常載入。請檢查您的網路連線或稍後再試。",
+        fatalRetryBtn: "重試",
+        fatalHomeBtn: "首頁",
+        oopsLimitMsg: "Oops, 選擇張數過多！本活動限購：最多 1 張"
       }
     };
 
@@ -1172,6 +1234,7 @@
       encountered403Count: 0,
       hasEncountered403ThisSession: false,
 
+      mobileActionHistory: [],
       mobileEvictionLockoutUntil: 0,
       pendingMobileSection: null,
 
@@ -1317,13 +1380,11 @@
           }
         });
 
-        // Captcha Placeholder
         const captchaInput = document.getElementById('captcha-input');
         if (captchaInput) {
           captchaInput.placeholder = this.t('captchaPlaceholder');
         }
 
-        // Desktop Date pure label
         document.querySelectorAll('.d-date-pure-1').forEach(el => {
           el.innerText = this.currentLang === 'zh' ? this.dates[0].desktopDateZh : this.dates[0].desktopDateEn;
         });
@@ -1331,7 +1392,6 @@
           el.innerText = this.currentLang === 'zh' ? this.dates[1].desktopDateZh : this.dates[1].desktopDateEn;
         });
 
-        // Mobile drawer labels
         document.querySelectorAll('.d-date-label-1').forEach(el => {
           el.innerText = this.currentLang === 'zh' ? this.dates[0].labelZh : this.dates[0].labelEn;
         });
@@ -1339,7 +1399,6 @@
           el.innerText = this.currentLang === 'zh' ? this.dates[1].labelZh : this.dates[1].labelEn;
         });
 
-        // Current selected time box
         if (this.selectedDateIndex !== -1) {
           const timeBox = document.getElementById('desktop-time-value-display');
           if (timeBox) {
@@ -1608,7 +1667,8 @@
             setTimeout(() => {
               if (modal) modal.classList.add('hidden');
               
-              if (!this.hasEncountered403ThisSession && Math.random() < (0.30 + Math.random() * 0.15)) {
+              const overloadChance = 0.30 + Math.random() * 0.15;
+              if (!this.hasEncountered403ThisSession && Math.random() < overloadChance) {
                 this.hasEncountered403ThisSession = true;
                 this.encountered403Count++;
                 const msg = this.currentLang === 'zh'
@@ -1746,6 +1806,52 @@
         if (modal) modal.classList.add('hidden');
       },
 
+      recordMobileAction() {
+        const isMobile = window.innerWidth < 768;
+        if (!isMobile) return false;
+
+        const now = Date.now();
+        this.mobileActionHistory.push(now);
+        this.mobileActionHistory = this.mobileActionHistory.filter(t => now - t < 10000);
+
+        if (this.mobileActionHistory.length >= 5) {
+          this.triggerFatalErrorPage();
+          return true;
+        }
+        return false;
+      },
+
+      triggerFatalErrorPage() {
+        const errorView = document.getElementById('view-fatal-error-page');
+        if (errorView) errorView.classList.remove('hidden');
+      },
+
+      retryFromFatalError() {
+        const errorView = document.getElementById('view-fatal-error-page');
+        const spinner = document.getElementById('view-spinner');
+
+        if (errorView) errorView.classList.add('hidden');
+        if (spinner) spinner.classList.remove('hidden');
+
+        setTimeout(() => {
+          if (spinner) spinner.classList.add('hidden');
+          this.mobileActionHistory = [];
+          this.backToVenue();
+        }, 1000);
+      },
+
+      showOopsLimitDialog() {
+        const modal = document.getElementById('modal-oops-dialog');
+        const text = document.getElementById('oops-dialog-text');
+        if (text) text.innerText = this.t('oopsLimitMsg');
+        if (modal) modal.classList.remove('hidden');
+      },
+
+      closeOopsDialog() {
+        const modal = document.getElementById('modal-oops-dialog');
+        if (modal) modal.classList.add('hidden');
+      },
+
       onSectionSelectedTrigger(sectionName, gradeKey) {
         if (!this.captchaVerified) {
           this.promptCaptcha();
@@ -1772,6 +1878,9 @@
       confirmMobileSectionEnter() {
         const promptModal = document.getElementById('modal-mobile-section-prompt');
         if (promptModal) promptModal.classList.add('hidden');
+        
+        if (this.recordMobileAction()) return;
+
         if (this.pendingMobileSection) {
           this.selectSection(this.pendingMobileSection.name, this.pendingMobileSection.grade);
         }
@@ -2040,7 +2149,7 @@
         }
 
         if (this.selectedSeats.length >= this.maxSeatsAllowed) {
-          this.showMelonAlert(this.t('alertMaxSeat'));
+          this.showOopsLimitDialog();
           return;
         }
 
@@ -2211,6 +2320,8 @@
       },
 
       onRefreshClicked() {
+        if (this.recordMobileAction()) return;
+
         const now = Date.now();
         this.recentRefreshClicks.push(now);
         this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1500);
