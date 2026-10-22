@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v6.9 -->
+  <!-- VERSION: v7.0 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Global Pass Ticket Simulator</title>
@@ -297,7 +297,7 @@
         </div>
         <div class="text-xs text-gray-600 space-y-2 bg-gray-50 p-4 rounded border border-gray-100 leading-relaxed">
           <p class="font-semibold text-gray-800" data-i18n="guideIntroTitle">• Practice method:</p>
-          <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
+          <p data-i18n="guideIntroText">The countdown is displayed inside the booking button. When it reaches 00:00, click the booking button to open the date selection menu and proceed.</p>
           <p class="text-gray-400 text-[11px] pt-1" data-i18n="guideDisclaimer">
             ※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.
           </p>
@@ -394,7 +394,7 @@
 
       <div class="p-4 mx-4 my-2 bg-gray-50 rounded border border-gray-200 text-[11px] text-gray-500 leading-relaxed space-y-1">
         <p class="font-bold text-gray-700" data-i18n="guideIntroTitle">• Practice method:</p>
-        <p data-i18n="guideIntroText">The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.</p>
+        <p data-i18n="guideIntroText">The countdown is displayed inside the booking button. When it reaches 00:00, click the booking button to open the date selection menu and proceed.</p>
         <p class="text-[10px] text-gray-400 pt-1" data-i18n="guideDisclaimer">※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.</p>
       </div>
     </div>
@@ -675,17 +675,8 @@
     <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
     </button>
-    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]">
-      <span data-i18n="completeSelectionBtn">Seat Selection Completed</span> &gt;
-    </button>
-  </div>
-
-  <div id="mobile-venue-bottom-bar" class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2.5 flex items-center space-x-2 z-50 shadow-lg hidden md:hidden">
-    <button type="button" onclick="app.onRefreshClicked()" title="Refresh" class="w-11 h-11 border border-gray-300 rounded flex items-center justify-center text-gray-600 hover:bg-gray-100 shrink-0 bg-white cursor-pointer">
-      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-    </button>
-    <button disabled class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm">
-      <span data-i18n="completeSelectionBtn">Seat Selection Completed</span> &gt;
+    <button id="mobile-btn-complete-selection" disabled onclick="app.submitSeatSelection()" class="flex-1 h-11 bg-gray-300 text-gray-700 font-bold text-xs rounded transition-all flex items-center justify-center cursor-not-allowed shadow-sm active:scale-[0.99]" data-i18n="completeSelectionBtn">
+      Seat Selection Completed
     </button>
   </div>
 
@@ -805,7 +796,7 @@
         guideTab2: "CONCERT DETAILS",
         guideTab3: "TICKETING NOTICE",
         guideIntroTitle: "• Practice method:",
-        guideIntroText: "The countdown is displayed inside the Buy Now button. When it reaches 00:00, click 'Buy Now' to open the date selection menu and proceed.",
+        guideIntroText: "The countdown is displayed inside the booking button. When it reaches 00:00, click the booking button to open the date selection menu and proceed.",
         guideDisclaimer: "※ Independent simulation tool designed for ticketing speed and reaction practice. No real booking.",
         selectSeatsHeader: "Select Seats",
         backToVenueBtn: "< Venue",
@@ -1087,7 +1078,6 @@
       conflictCount: 0,
       consecutive403Count: 0,
 
-      mobileTappedSeatCount: 0,
       mobileEvictionLockoutUntil: 0,
       pendingMobileSection: null,
 
@@ -1108,7 +1098,6 @@
       selectedSeats: [],
       maxSeatsAllowed: 1,
       recentRefreshClicks: [],
-      seatClickSpamCount: 0,
 
       miniMapZoomLevel: 1.0,
       queueNumber: 5382,
@@ -1295,6 +1284,7 @@
       openMobileDateDrawer() {
         const backdrop = document.getElementById('drawer-date-backdrop');
         const panel = document.getElementById('drawer-date-panel');
+        if (backdrop) backdrop.classList.add('hidden'); // Ensure no duplicate drawer layer
         if (backdrop) backdrop.classList.remove('hidden');
         setTimeout(() => {
           if (panel) panel.classList.add('drawer-active');
@@ -1478,10 +1468,6 @@
         if (captchaModal) captchaModal.classList.add('hidden');
         this.selectedSection = null;
         this.selectedSeats = [];
-        const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
-        const mobileVenueBar = document.getElementById('mobile-venue-bottom-bar');
-        if (mobileSeatBar) mobileSeatBar.classList.add('hidden');
-        if (mobileVenueBar) mobileVenueBar.classList.add('hidden');
       },
 
       promptCaptcha() {
@@ -1624,7 +1610,6 @@
         const mobileMatrixHeader = document.getElementById('mobile-matrix-header-box');
         const mobileStickyZone = document.getElementById('mobile-sticky-zone-label');
         const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
-        const mobileVenueBar = document.getElementById('mobile-venue-bottom-bar');
         const desktopSidebar = document.getElementById('desktop-sidebar-panel');
 
         if (svgWrap) svgWrap.classList.add('hidden');
@@ -1638,7 +1623,6 @@
           if (mobileMatrixHeader) mobileMatrixHeader.classList.remove('hidden');
           if (mobileStickyZone) mobileStickyZone.innerText = sectionName;
           if (mobileSeatBar) mobileSeatBar.classList.remove('hidden');
-          if (mobileVenueBar) mobileVenueBar.classList.add('hidden');
           if (desktopSidebar) desktopSidebar.classList.add('hidden');
         }
 
@@ -1679,7 +1663,6 @@
         const mobileVenueHeader = document.getElementById('mobile-venue-header-box');
         const mobileMatrixHeader = document.getElementById('mobile-matrix-header-box');
         const mobileSeatBar = document.getElementById('mobile-seatmap-bottom-bar');
-        const mobileVenueBar = document.getElementById('mobile-venue-bottom-bar');
         const desktopSidebar = document.getElementById('desktop-sidebar-panel');
 
         if (gridWrap) gridWrap.classList.add('hidden');
@@ -1692,7 +1675,6 @@
           if (mobileVenueHeader) mobileVenueHeader.classList.remove('hidden');
           if (mobileMatrixHeader) mobileMatrixHeader.classList.add('hidden');
           if (mobileSeatBar) mobileSeatBar.classList.add('hidden');
-          if (mobileVenueBar) mobileVenueBar.classList.remove('hidden');
           if (desktopSidebar) desktopSidebar.classList.add('hidden');
         }
         
@@ -1850,15 +1832,12 @@
         const tapInterval = now - this.lastSeatClickTime;
         this.lastSeatClickTime = now;
 
-        const isMobile = window.innerWidth < 768;
-        if (isMobile) {
-          this.mobileTappedSeatCount++;
-          if (this.mobileTappedSeatCount > 5 || tapInterval < 220) {
-            this.tryAgainCount++;
-            this.mobileEvictionLockoutUntil = Date.now() + 20000;
-            this.showMelonAlert("Please try again.");
-            return;
-          }
+        // Strict anti-spam spamming detection: ONLY trigger try-again if clicking different seats aggressively < 150ms
+        if (tapInterval < 130 && this.selectedSeats.length > 0) {
+          this.tryAgainCount++;
+          this.mobileEvictionLockoutUntil = Date.now() + 12000;
+          this.showMelonAlert("Please try again.");
+          return;
         }
 
         const existingIndex = this.selectedSeats.findIndex(s => s.id === seatObj.id);
@@ -1920,15 +1899,12 @@
         }
       },
 
-      depleteSeats(count, originSeat) {
+      depleteSeats(count) {
         let available = this.currentSeats.filter(s => s.status === 'available' && !this.selectedSeats.some(sel => sel.id === s.id));
         if (available.length === 0) return;
 
         available.sort(() => 0.5 - Math.random());
-
-        const isFloor = this.selectedSection && this.selectedSection.startsWith('Floor');
-        const multiplier = isFloor ? 2.5 : 1.0;
-        const toDeplete = Math.min(available.length, Math.ceil(count * multiplier));
+        const toDeplete = Math.min(available.length, count);
         const theme = colorThemeMap[this.selectedSectionGrade] || colorThemeMap.gradeVIP;
 
         for (let i = 0; i < toDeplete; i++) {
@@ -1952,9 +1928,9 @@
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         this.lastSubmitTime = now;
 
-        if (intervalFromLastSubmit < 450) {
+        if (intervalFromLastSubmit < 350) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 4) + 3);
+          this.depleteSeats(Math.floor(Math.random() * 3) + 2);
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1972,7 +1948,7 @@
           return;
         } else if (rand < 0.78) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 4) + 2);
+          this.depleteSeats(Math.floor(Math.random() * 3) + 2);
           this.showMelonAlert("Please try again.");
           return;
         }
@@ -1997,8 +1973,8 @@
         this.selectedSeats = [];
         this.updateCompletionButtonState();
 
-        const batchDepleteCount = Math.floor(Math.random() * 7) + 12;
-        this.depleteSeats(batchDepleteCount, targets[0]);
+        const batchDepleteCount = Math.floor(Math.random() * 5) + 8;
+        this.depleteSeats(batchDepleteCount);
 
         this.showMelonAlert("Another customer is in payments for the seat.");
       },
@@ -2006,11 +1982,11 @@
       onRefreshClicked() {
         const now = Date.now();
         this.recentRefreshClicks.push(now);
-        this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1200);
+        this.recentRefreshClicks = this.recentRefreshClicks.filter(t => now - t < 1500);
 
-        if (this.recentRefreshClicks.length >= 3) {
+        if (this.recentRefreshClicks.length >= 4) {
           this.tryAgainCount++;
-          this.depleteSeats(Math.floor(Math.random() * 5) + 3);
+          this.depleteSeats(Math.floor(Math.random() * 4) + 3);
           this.showMelonAlert("Please try again.");
           return;
         }
