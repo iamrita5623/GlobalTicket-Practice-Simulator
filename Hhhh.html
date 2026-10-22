@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!-- VERSION: v8.8 -->
+  <!-- VERSION: v9.1 -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Global Pass Ticket Simulator v8.8</title>
+  <title>Global Pass Ticket Simulator v9.1</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -147,7 +147,7 @@
   <!-- 準備開始遮罩 (Prep Modal) -->
   <div id="ready-prep-overlay" class="fixed inset-0 bg-white/95 z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-xl border border-gray-200 p-6 max-w-md w-full shadow-lg text-center relative">
-      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v8.8</span>
+      <span class="absolute top-3 right-4 text-[11px] text-gray-400 font-mono">v9.1</span>
       
       <div class="flex items-center justify-center space-x-1.5 font-medium bg-gray-100 p-1 rounded-full w-fit mx-auto mb-4 border border-gray-200">
         <button type="button" id="prep-lang-btn-en" onclick="app.setLanguage('en')" class="text-[#2563EB] bg-white font-bold shadow-sm px-3.5 py-1 rounded-full text-xs transition-all cursor-pointer">
@@ -829,6 +829,10 @@
           <span class="font-mono font-bold text-indigo-600" id="res-reaction-time">-</span>
         </div>
         <div class="flex justify-between">
+          <span class="text-gray-500" data-i18n="statDecisionTime">Seat-to-submit latency:</span>
+          <span class="font-mono font-bold text-purple-600" id="res-decision-time">-</span>
+        </div>
+        <div class="flex justify-between">
           <span class="text-gray-500" data-i18n="statTotalTime">Total practice elapsed:</span>
           <span class="font-mono font-bold text-[#2563EB]" id="res-total-time">-</span>
         </div>
@@ -928,6 +932,7 @@
         successSubheading: "You successfully locked the ticket before competitors!",
         statSelectedSeats: "Selected seats:",
         statReactionSpeed: "Opening reaction speed:",
+        statDecisionTime: "Seat-to-submit latency:",
         statTotalTime: "Total practice elapsed:",
         statCaptchaTime: "Captcha entry time:",
         statTryAgainCount: "\"Please try again\" overcome:",
@@ -981,9 +986,14 @@
         adviceMobileRapidTap: "💡 Key Takeaway: Rapid-fire tapping triggered anti-bot heuristics and evicted you. Stay calm, pick one available seat decisively, and avoid frantic screen tapping!",
         adviceRapidSubmit: "💡 Key Takeaway: Double-clicking submit caused rate-limiting. Dismiss alerts calmly with a 400ms rhythm.",
         adviceBot: "💡 Key Takeaway: Transitioning from seat to submit under 250ms mimics automation bots. Aim for a 300–450ms human pace.",
-        adviceSlowCaptcha: "💡 Key Takeaway: Captcha verification took over 4.0s. Practice typing 6 uppercase letters blindly!",
+        adviceHesitantSubmit: "💡 Key Takeaway: Delay between selecting a seat and clicking submit exceeded 1.0s. Every split second matters—train muscle memory to hit submit immediately upon seat selection!",
+        adviceSlowCaptcha: "💡 Key Takeaway: Captcha verification took over 4.0s. Always set your device to English input method BEFORE sales open to prevent non-English auto-correct or candidate selector delays!",
         adviceServerJam: "💡 Key Takeaway: Server congestion encountered. Dismiss warning alerts calmly with OK and re-submit with a stable 400ms rhythm!",
-        adviceGood: "💡 Key Takeaway: Clean rhythm! You handled server concurrency hurdles efficiently."
+        adviceGood: "💡 Key Takeaway: Clean rhythm! You handled server concurrency hurdles efficiently.",
+        tierSTitle: "【S Tier · Elite Pro】Opening reaction < 0.35s, top-tier captcha & submit rhythm, zero penalties.",
+        tierATitle: "【A Tier · Competitive】Swift reflexes across all steps, high probability of securing tickets.",
+        tierBTitle: "【B Tier · Average】Opening latency > 0.75s or decision delays, risk of landing in waitlist.",
+        tierCTitle: "【C Tier · High Risk】Triggered anti-bot penalties or mobile rate limits; high risk of lockout."
       },
       zh: {
         headerTitle: "搶票練習模擬器",
@@ -1037,6 +1047,7 @@
         successSubheading: "恭喜您在激烈競爭中成功搶下門票！",
         statSelectedSeats: "選定座位：",
         statReactionSpeed: "開賣點擊反應：",
+        statDecisionTime: "選位至送出反應：",
         statTotalTime: "本次練習總耗時：",
         statCaptchaTime: "驗證碼輸入耗時：",
         statTryAgainCount: "克服「Please Try Again」次數：",
@@ -1090,9 +1101,14 @@
         adviceMobileRapidTap: "💡 實戰改進建議：在手機端因「手指連續狂戳、點擊過急」觸發了連擊風控被踢出。正式搶票時請保持冷念，看準單一空位果斷點選並送出！",
         adviceRapidSubmit: "💡 實戰改進建議：連續狂按確認引發了二次送出錯誤。遇到警告時請保持從容以約 400ms 間隔再按。",
         adviceBot: "💡 實戰改進建議：點下座位到按送出小於 250ms 會被伺服器誤判為腳本，請保持 300～450ms 人手敲擊節奏。",
-        adviceSlowCaptcha: "💡 實戰改進建議：驗證碼耗時超過 4.0 秒。建議多練習盲打 6 碼大寫英文字母！",
+        adviceHesitantSubmit: "💡 實戰改進建議：點選座位至點擊送出間隔超過 1.0 秒。正式搶票分秒必爭，建議平時多練習「點中座位瞬間盲按送出」的肌肉記憶！",
+        adviceSlowCaptcha: "💡 實戰改進建議：圖形驗證碼輸入耗時偏長（超過 4 秒）。正式搶票開賣前，請務必先將裝置預先切換為「純英文輸入法」，避免輸入時跳出中文候選字或注音符號手忙腳亂重打！",
         adviceServerJam: "💡 實戰改進建議：遭遇伺服器瞬間並發塞車。請從容點擊 OK 關閉警告，並維持 400ms 節奏重新送出！",
-        adviceGood: "💡 實戰改進建議：節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。"
+        adviceGood: "💡 實戰改進建議：節奏掌握非常優秀！成功應對了伺服器並發阻擋，且未引發任何手動風控懲罰。",
+        tierSTitle: "【S 級 · 職業搶票手】開賣點擊 < 0.35 秒且驗證與送出節奏頂尖，無任何違規風控。",
+        tierATitle: "【A 級 · 高勝率選手】各環節反應迅速穩健，具備極高搶下原價票實力。",
+        tierBTitle: "【B 級 · 候補邊緣】開賣反應稍慢（> 0.75 秒）或操作有猶豫，熱門場次可能落入候補。",
+        tierCTitle: "【C 級 · 觸發風控】操作過急觸發連擊懲罰或手機防刷熔斷，正式搶票易被系統阻擋。"
       }
     };
 
@@ -1295,6 +1311,7 @@
 
       lastSeatClickTime: 0,
       lastSubmitTime: 0,
+      lastSuccessfulDecisionMs: 0,
       diagnosticsHistory: [],
 
       currentCaptchaCode: '',
@@ -2299,6 +2316,7 @@
         const intervalFromLastSubmit = this.lastSubmitTime ? (now - this.lastSubmitTime) : 9999;
         const transitionFromSeatMs = this.lastSeatClickTime ? (now - this.lastSeatClickTime) : 9999;
         this.lastSubmitTime = now;
+        this.lastSuccessfulDecisionMs = transitionFromSeatMs;
 
         const isMobile = this.isMobileDevice();
         const submitSpamThreshold = isMobile ? 380 : 180;
@@ -2464,9 +2482,15 @@
           ? `${(this.reactionLatencyMs / 1000).toFixed(2)} 秒 (${this.reactionLatencyMs} ms, 第 ${this.queueInitialTotal.toLocaleString()} 號)`
           : `${(this.reactionLatencyMs / 1000).toFixed(2)}s (${this.reactionLatencyMs}ms, Queue #${this.queueInitialTotal.toLocaleString()})`;
 
+        const decisionSecVal = (this.seatToSubmitDurationMs / 1000).toFixed(2);
+        const decisionStr = this.seatToSubmitDurationMs > 0
+          ? `${decisionSecVal}s (${this.seatToSubmitDurationMs}ms)`
+          : '-';
+
         const seatLabel = document.getElementById('res-seat-label');
         const timeLabel = document.getElementById('res-total-time');
         const reactionLabel = document.getElementById('res-reaction-time');
+        const decisionLabel = document.getElementById('res-decision-time');
         const captchaLabel = document.getElementById('res-captcha-time');
         const tryAgainLabel = document.getElementById('res-tryagain-count');
         const conflictLabel = document.getElementById('res-conflict-count');
@@ -2478,6 +2502,7 @@
         }
         if (timeLabel) timeLabel.innerText = `${elapsedSec}s`;
         if (reactionLabel) reactionLabel.innerText = reactionStr;
+        if (decisionLabel) decisionLabel.innerText = decisionStr;
         if (captchaLabel) captchaLabel.innerText = captchaSec;
         if (tryAgainLabel) tryAgainLabel.innerText = `${this.tryAgainCount} ${this.t('unitTimes')}`;
         if (conflictLabel) conflictLabel.innerText = `${this.conflictCount} ${this.t('unitTimes')}`;
@@ -2501,7 +2526,7 @@
             `;
           }
 
-          // 2. Opening Timing Telemetry Card (乾淨精簡的儀表板數據，不寫建議廢話)
+          // 2. Opening Timing Telemetry Card (純客觀數據)
           const openingSec = (this.reactionLatencyMs / 1000).toFixed(2);
           let openingFactText = '';
           if (this.reactionLatencyMs < 350) {
@@ -2602,7 +2627,7 @@
           logContainer.innerHTML = logsHtml;
         }
 
-        // 方案A核心：下方獨立藍框專注於戰術指導，不再重複覆誦上方已出現過的三遍數字
+        // 方案A核心：下方獨立藍框專注於戰術指導
         if (adviceBox) {
           let chosenAdvice = this.t('adviceGood');
 
@@ -2623,6 +2648,8 @@
             chosenAdvice = this.t('adviceBot');
           } else if (!isNaN(captchaSecNum) && captchaSecNum > 4.0) {
             chosenAdvice = this.t('adviceSlowCaptcha');
+          } else if (this.seatToSubmitDurationMs > 1000) {
+            chosenAdvice = this.t('adviceHesitantSubmit');
           } else if (this.reactionLatencyMs > 750) {
             chosenAdvice = this.t('adviceSlowReaction');
           } else if (hasServerJam) {
